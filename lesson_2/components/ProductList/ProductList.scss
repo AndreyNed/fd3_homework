@@ -1,17 +1,53 @@
 .ProductList {
-    .ProductList_list_item {
-        background-color: #ffffff;
-        width: 100%;
-        cursor: pointer;
-        padding: 8px 16px;
-        border: 1px solid #d3d3d3;
 
-        &:hover {
-            background-color: #f2f2f2;
+    & > .ProductList_filter_box {
+        background-color: #ffffff;
+
+        & > .ProductList_checkbox_container {
+            width: 32px;
+            height: 32px;
+            float: left;
+            position: relative;
+
+            & > .ProductList_checkbox {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+            }
         }
 
-        &[ data-selected="true" ] {
-            background-color: #d3d3d3;
+        & > .ProductList_filter_container {
+            margin-left: 32px;
+
+            & > .ProductList_filter {
+                width: 100%;
+                padding: 8px 16px;
+            }
         }
     }
+
+    & > .ProductList_list_box {
+
+        & > .ProductList_list {
+            & > .ProductList_list_item {
+                background-color: #ffffff;
+                width: 100%;
+                cursor: pointer;
+                padding: 8px 16px;
+                border: 1px solid #d3d3d3;
+
+                &:hover {
+                    background-color: #f2f2f2;
+                }
+
+                &[ data-selected="true" ] {
+                    background-color: #d3d3d3;
+                }
+            }
+        }
+
+
+    }
+
 }

@@ -6,4 +6,41 @@ const isNotEmpty = ( value ) => isExists( value ) && value.length > 0;
 
 const isNotNaN = ( value ) => isExists( value ) && !isNaN( value );
 
-export { isExists, isNotEmpty, isNotNaN };
+const arraySort = ( arr ) => {
+    let result = null;
+    if ( isExists( arr ) && arr.length > 1 ) {
+        result = [ ...arr ];
+        for ( let i = 0; i < result.length - 1; i++ ) {
+            for ( let j = i + 1; j < result.length; j++ ) {
+                if ( result[ i ] < result[ j ] ) {
+                    let temp = result[ i ];
+                    result[ i ] = result[ j ];
+                    result[ j ] = temp;
+                }
+            }
+        }
+    }
+    return ( result !== null ) ? result : arr;
+};
+
+const arraySortByField = ( arr, field ) => {
+    let result = null;
+    if ( isExists( arr ) && arr.length > 1 && isNotEmpty( field ) ) {
+        result = [ ...arr ];
+        for ( let i = 0; i < result.length - 1; i++ ) {
+            for ( let j = i + 1; j < result.length; j++ ) {
+                if ( result[ i ][ field ] > result[ j ][ field ] ) {
+                    let temp =    { ...result[ i ] };
+                    result[ i ] = { ...result[ j ] };
+                    result[ j ] = { ...temp };
+                }
+            }
+        }
+    }
+    return ( result !== null ) ? result : arr;
+};
+
+export {
+    isExists, isNotEmpty, isNotNaN,
+    arraySort, arraySortByField,
+};

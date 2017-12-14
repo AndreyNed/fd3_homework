@@ -1,8 +1,9 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import { isExists, isNotEmpty, isNotNaN } from "../../utils/utils";
+import { isExists, isNotEmpty, isNotNaN, arraySort, arraySortByField } from "../../utils/utils";
 
 import './ProductList.scss';
 
@@ -13,34 +14,37 @@ class ProductList extends React.PureComponent {
         this.state = { ...props };
     }
 
-    static defaultProps = {
-        listValue: [
-            {
-                name: 'product 1',
-                id:   'p_1',
-            },
-            {
-                name: 'product 1',
-                id:   'p_2',
-            },
-            {
-                name: 'product 1',
-                id:   'p_3',
-            },
-            {
-                name: 'product 1',
-                id:   'p_4',
-            },
-            {
-                name: 'product 1',
-                id:   'p_5',
-            },
+    static propTypes = {
+        isSorted:           PropTypes.bool,
+        defValue:           PropTypes.string,
+        value:              PropTypes.string,
+        listValue:          PropTypes.arrayOf(
+            PropTypes.shape({
+                id:         PropTypes.string,
+                name:       PropTypes.string,
+                price:      PropTypes.number,
+                count:      PropTypes.number,
+                comment:    PropTypes.string,
+                filtered:   PropTypes.bool,
+            })
+        ),
+        filterValue:        PropTypes.string,
+        cbChanged:          PropTypes.func,
+    };
 
-        ],
+    static defaultProps = {
+        isSorted:     false,
+        listValue:    null,
+        filterValue:  '',
+        cbChanged:    null,
     };
 
     componentWillMount() {
         this.prepareState( this.state );
+    }
+
+    componentWillReceiveProps( newProps ) {
+        this.prepareState( newProps );
     }
 
     prepareState = ( props ) => {
@@ -52,14 +56,25 @@ class ProductList extends React.PureComponent {
             ? { ...state.options, ...props.options }
             : null;
         state.listValue = ( isNotEmpty( state.listValue ) )
-            ? state.listValue.map( ( item, index ) => { return { ...item, filtered: true, }  } )
+            ? state.listValue.map( ( item, index ) => {
+                return {...item, itemIndex: index, filtered: true }
+              } )
             : null;
+        state.value = ( isNotEmpty( state.defValue ) )
+            ? state.defValue
+            : '';
         this.setState( state, () => {
             console.log( 'ProductList: prepareState: state: ', this.state );
         } );
     };
 
     classCSS = 'ProductList';
+
+    changed = ( value ) => {
+        if ( this.state.cbChanged ) this.state.cbChanged( value );
+    };
+
+    // == controller ==
 
     itemClick = ( e ) => {
         let index = parseInt( e.currentTarget.dataset.index );
@@ -71,21 +86,58 @@ class ProductList extends React.PureComponent {
 
     };
 
-    selectItem = ( index ) => {
+    checkboxChange = ( e ) => {
+        this.setState( {
+            isSorted: !this.state.isSorted,
+        }, () => {
+            console.log( "isSorted: ", this.state.isSorted );
+        } );
+    };
 
+    filterChange = ( e ) => {
+        this.setState( { filterValue: e.currentTarget.value }, () => {
+            console.log( "filterValue: ", this.state.filterValue );
+        } );
+    };
+
+    // == action functions ==
+
+    selectItem = ( index ) => {
+        let value = '';
         let listValue = this.state.listValue.map( ( item, itemIndex ) => {
+            value = ( itemIndex === index )
+                ? item.id
+                : value;
             return { ...item, selected: ( itemIndex === index ) };
         } );
 
         this.setState( {
+            value:     value,
             listValue: listValue,
         }, () => {
-
+            this.changed( this.state.value );
         } );
+    };
 
+    // == additional functions
+
+    filterItem = (obj, field, filterValue ) => {
+        console.log( 'filterItem: ', ( isExists( obj ) && isNotEmpty( field ) ) );
+        console.log( 'filterItem: ',  ( filterValue.indexOf( obj[ field ].trim() ) > -1 ) );
+        return ( !isNotEmpty( filterValue ) )
+            ? true
+            : ( isExists( obj ) && isNotEmpty( field ) && ( obj[ field ].trim().indexOf( filterValue.trim() ) > -1 ) );
     };
 
     render() {
+        console.log( '%c%s', 'color: red; font-weight: bold;', 'render...' );
+        let listSortedValue = null;
+        if ( isNotEmpty( this.state.listValue ) ) {
+            listSortedValue = ( this.state.isSorted )
+                ? arraySortByField( this.state.listValue, 'name' )
+                : [ ...this.state.listValue ];
+        }
+        console.log( 'render: listSortedValue', listSortedValue );
         return (
             <div className = { this.classCSS }>
                 <div className = { this.classCSS + "_label_box" }>
@@ -95,24 +147,32 @@ class ProductList extends React.PureComponent {
                 </div>
                 <div className = { this.classCSS + "_filter_box" }>
                     <div className = { this.classCSS + "_checkbox_container" }>
-                        <input type="checkbox"/>
+                        <input className = { this.classCSS + "_checkbox" }
+                               type="checkbox"
+                               checked =  { this.state.isSorted }
+                               onChange = { this.checkboxChange }/>
                     </div>
                     <div className = { this.classCSS + "_filter_container" }>
-                        <input type="text"/>
+                        <input className = { this.classCSS + "_filter" }
+                               type =      "text"
+                               value =     { this.state.filterValue }
+                               onChange =  { this.filterChange }/>
                     </div>
                 </div>
                 <div className = { this.classCSS + "_list_box" }>
                     {
-                        isNotEmpty( this.state.listValue ) &&
+                        isNotEmpty( listSortedValue ) &&
                             <div className = { this.classCSS + "_list" }>
                                 {
-                                    this.state.listValue.map( ( item, index ) => {
-                                        return ( item.filtered )
+                                    listSortedValue.map( ( item, index ) => {
+                                        console.log( "filter result: ", this.filterItem( item, 'name', this.state.filterValue ) );
+                                        return ( this.filterItem( item, 'name', this.state.filterValue ) )
                                             ? (
                                                 <div className = { this.classCSS + "_list_item" }
                                                      key = { item.id }
-                                                     data-index = { index }
-                                                     data-selected = { item.selected }
+                                                     data-value = { item.id }
+                                                     data-index = { item.itemIndex }
+                                                     data-selected = { item.id === this.state.value } // { item.selected }
                                                      onClick = { this.itemClick }>
                                                     { item.name }
                                                 </div>
@@ -121,7 +181,6 @@ class ProductList extends React.PureComponent {
                                     } )
                                 }
                             </div>
-
                     }
                 </div>
 
