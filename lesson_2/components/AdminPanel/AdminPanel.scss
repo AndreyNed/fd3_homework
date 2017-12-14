@@ -1,0 +1,11 @@
+.AdminPanel {
+
+    & > .AdminPanel_left_section {
+        width: 320px;
+        float: left;
+    }
+
+    & > .AdminPanel_main_section {
+        margin-left: 320px;
+    }
+}
