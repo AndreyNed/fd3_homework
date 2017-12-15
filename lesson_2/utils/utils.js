@@ -40,6 +40,16 @@ const arraySortByField = ( arr, field ) => {
     return ( result !== null ) ? result : arr;
 };
 
+const getIndexById = ( idValue, idField, list ) => {
+    let result = -1;
+    if ( isExists( idValue ) && isNotEmpty( idField ) && isNotEmpty( list ) ) {
+        list.forEach( ( item, index ) => {
+
+        } );
+    }
+    return result;
+};
+
 export {
     isExists, isNotEmpty, isNotNaN,
     arraySort, arraySortByField,
