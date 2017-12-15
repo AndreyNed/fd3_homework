@@ -1,11 +1,33 @@
 .AdminPanel {
+    min-height: 320px;
 
     & > .AdminPanel_left_section {
         width: 320px;
         float: left;
+
+        & > .AdminPanel_button_panel {
+            padding: 8px 8px 16px 8px;
+        }
     }
 
     & > .AdminPanel_main_section {
         margin-left: 320px;
+        padding: 8px;
     }
+}
+
+.invalid_field {
+    font: normal 14px / 100% Arial,sans-serif;
+    color: #ff0000;
+    padding: 2px 0;
+    margin-left: 16px;
+    width: 200px;
+    height: 18px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.rows {
+    padding-top:    4px;
+    padding-bottom: 4px;
 }

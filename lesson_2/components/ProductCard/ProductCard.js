@@ -3,6 +3,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import TextInput from '../TextInput/TextInput';
+
 import { isExists, isNotEmpty, isNotNaN, arraySort, arraySortByField } from "../../utils/utils";
 
 import './ProductCard.scss';
@@ -20,6 +22,7 @@ class ProductCard extends React.PureComponent {
         price:          PropTypes.object,
         count:          PropTypes.object,
         comment:        PropTypes.object,
+        isVisible:      PropTypes.bool,
     };
 
     static defaultProps = {
@@ -28,6 +31,7 @@ class ProductCard extends React.PureComponent {
         price:          {},
         count:          {},
         comment:        {},
+        isVisible:      false,
     };
 
     componentWillMount() {
@@ -72,26 +76,43 @@ class ProductCard extends React.PureComponent {
         console.log( '%c%s', 'color: red; font-weight: bold;', 'render...' );
 
         return (
+            ( this.state.isVisible ) &&
             <div className = { this.classCSS }>
-                <div className = { this.classCSS + "rows" }
+                <div className = { this.classCSS + "_header rows " }
+                     key = { 'Row_' + 'header' }>
+                    <h2>Карточка товара</h2>
+                </div>
+                <div className = { this.classCSS + "_row rows" }
                      key = { 'Row_' + 'id' }>
-                    { this.state.id.defValue }
+                    <TextInput { ...this.state.id }/>
                 </div>
-                <div className = { this.classCSS + "rows" }
+                <div className = { this.classCSS + "_row rows" }
                      key = { 'Row_' + 'name' }>
-                    { this.state.name.defValue }
+                    <TextInput { ...this.state.name }/>
+                    <label className = { "invalid_field" }>
+                        { this.state.name.validationMessage }
+                    </label>
                 </div>
-                <div className = { this.classCSS + "rows" }
+                <div className = { this.classCSS + "_row rows" }
                      key = { 'Row_' + 'price' }>
-                    { this.state.price.defValue }
+                    <TextInput { ...this.state.price }/>
+                    <label className = { "invalid_field" }>
+                        { this.state.price.validationMessage }
+                    </label>
                 </div>
-                <div className = { this.classCSS + "rows" }
+                <div className = { this.classCSS + "_row rows" }
                      key = { 'Row_' + 'count' }>
-                    { this.state.count.defValue }
+                    <TextInput { ...this.state.count }/>
+                    <label className = { "invalid_field" }>
+                        { this.state.count.validationMessage }
+                    </label>
                 </div>
-                <div className = { this.classCSS + "rows" }
+                <div className = { this.classCSS + "_row rows" }
                      key = { 'Row_' + 'comment' }>
-                    { this.state.comment.defValue }
+                    <TextInput { ...this.state.comment }/>
+                    <label className = { "invalid_field" }>
+                        { this.state.comment.validationMessage }
+                    </label>
                 </div>
             </div>
         )

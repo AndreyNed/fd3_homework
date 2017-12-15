@@ -6,6 +6,8 @@ const isNotEmpty = ( value ) => isExists( value ) && value.length > 0;
 
 const isNotNaN = ( value ) => isExists( value ) && !isNaN( value );
 
+const isGTZero = ( value ) => isExists( value ) && value > 0;
+
 const arraySort = ( arr ) => {
     let result = null;
     if ( isExists( arr ) && arr.length > 1 ) {
@@ -44,13 +46,15 @@ const getIndexById = ( idValue, idField, list ) => {
     let result = -1;
     if ( isExists( idValue ) && isNotEmpty( idField ) && isNotEmpty( list ) ) {
         list.forEach( ( item, index ) => {
-
+            result = ( item[ idField ] === idValue )
+                ? index
+                : result;
         } );
     }
     return result;
 };
 
 export {
-    isExists, isNotEmpty, isNotNaN,
-    arraySort, arraySortByField,
+    isExists, isNotEmpty, isNotNaN, isGTZero,
+    arraySort, arraySortByField, getIndexById,
 };

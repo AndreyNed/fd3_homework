@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { isExists, isNotEmpty, isNotNaN, arraySort, arraySortByField } from "../../utils/utils";
+import { isExists, isNotEmpty, isNotNaN, isGTZero, arraySort, arraySortByField } from "../../utils/utils";
 
 import './ProductList.scss';
 
@@ -29,14 +29,22 @@ class ProductList extends React.PureComponent {
             })
         ),
         filterValue:        PropTypes.string,
-        cbChanged:          PropTypes.func,
+        options:            PropTypes.shape({
+            listBoxHeight:  PropTypes.number,
+        }),
+        cbItemClicked:      PropTypes.func,
+        cbCheckboxClicked:  PropTypes.func,
     };
 
     static defaultProps = {
-        isSorted:     false,
-        listValue:    null,
-        filterValue:  '',
-        cbChanged:    null,
+        isSorted:           false,
+        listValue:          null,
+        filterValue:        '',
+        options: {
+            listBoxHeight:  0,
+        },
+        cbItemClicked:      null,
+        cbCheckboxClicked:  null,
     };
 
     componentWillMount() {
@@ -70,10 +78,6 @@ class ProductList extends React.PureComponent {
 
     classCSS = 'ProductList';
 
-    changed = ( value ) => {
-        if ( this.state.cbChanged ) this.state.cbChanged( value );
-    };
-
     // == controller ==
 
     itemClick = ( e ) => {
@@ -87,15 +91,19 @@ class ProductList extends React.PureComponent {
     };
 
     checkboxChange = ( e ) => {
-        this.setState( {
+        if ( this.state.cbCheckboxClicked )
+            this.state.cbCheckboxClicked( !this.state.isSorted );
+        /*this.setState( {
             isSorted: !this.state.isSorted,
         }, () => {
             console.log( "isSorted: ", this.state.isSorted );
-        } );
+        } );*/
     };
 
     filterChange = ( e ) => {
-        this.setState( { filterValue: e.currentTarget.value }, () => {
+        this.setState( {
+            filterValue: e.currentTarget.value,
+        }, () => {
             console.log( "filterValue: ", this.state.filterValue );
         } );
     };
@@ -115,7 +123,8 @@ class ProductList extends React.PureComponent {
             value:     value,
             listValue: listValue,
         }, () => {
-            this.changed( this.state.value );
+            if ( this.state.cbItemClicked )
+                this.state.cbItemClicked( this.state.value );
         } );
     };
 
@@ -159,7 +168,12 @@ class ProductList extends React.PureComponent {
                                onChange =  { this.filterChange }/>
                     </div>
                 </div>
-                <div className = { this.classCSS + "_list_box" }>
+                <div className = { this.classCSS + "_list_box" }
+                     style = {{
+                         height: ( isGTZero( this.state.options.listBoxHeight > 0 ) )
+                             ? this.state.options.listBoxHeight
+                             : 'auto',
+                     }}>
                     {
                         isNotEmpty( listSortedValue ) &&
                             <div className = { this.classCSS + "_list" }>

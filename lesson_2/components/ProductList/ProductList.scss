@@ -1,7 +1,7 @@
 .ProductList {
 
     & > .ProductList_filter_box {
-        background-color: #ffffff;
+        /*background-color: #ffffff;*/
 
         & > .ProductList_checkbox_container {
             width: 32px;
@@ -18,16 +18,26 @@
         }
 
         & > .ProductList_filter_container {
-            margin-left: 32px;
+            padding-right:  8px;
+            padding-top:    4px;
+            padding-bottom: 4px;
+            margin-left:   32px;
 
             & > .ProductList_filter {
                 width: 100%;
-                padding: 8px 16px;
+                padding: 4px 8px;
+                outline: none;
+                border: 1px solid #d3d3d3;
+                border-radius: 4px;
+                background-color: #ffffff;
             }
         }
     }
 
     & > .ProductList_list_box {
+        padding: 8px;
+        border: 1px solid #d3d3d3;
+        border-radius: 4px;
 
         & > .ProductList_list {
             & > .ProductList_list_item {

@@ -1,0 +1,22 @@
+.TextInput {
+    display: inline-block;
+
+    & > .TextInput_label_box {
+        padding: 4px 0;
+        min-height: 24px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    & > .TextInput_input_box {
+        display: inline-block;
+        vertical-align: middle;
+
+        & > .TextInput_input {
+            padding: 4px 8px;
+            background-color: #ffffff;
+            border: 1px solid #d3d3d3;
+            border-radius: 4px;
+        }
+    }
+}
