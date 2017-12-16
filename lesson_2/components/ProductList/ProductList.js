@@ -69,14 +69,17 @@ class ProductList extends React.PureComponent {
             : null;
         state.listValue = ( isNotEmpty( state.listValue ) )
             ? state.listValue.map( ( item, index ) => {
-                return {...item, itemIndex: index, filtered: true }
+                return {...item, itemIndex: index, filtered: this.filterItem( item, 'name', state.filterValue ) }
               } )
             : null;
+        state.listSortedValue = ( state.isSorted )
+            ? arraySortByField( state.listValue, 'name' )
+            : state.listValue;
         state.value = ( isNotEmpty( state.defValue ) )
             ? state.defValue
             : '';
         this.setState( state, () => {
-            // console.log( 'ProductList: prepareState: state: ', this.state );
+            console.log( 'ProductList: prepareState: state: ', this.state );
         } );
     };
 
@@ -145,8 +148,6 @@ class ProductList extends React.PureComponent {
     // == additional functions
 
     filterItem = (obj, field, filterValue ) => {
-        // console.log( 'filterItem: ', ( isExists( obj ) && isNotEmpty( field ) ) );
-        // console.log( 'filterItem: ',  ( filterValue.indexOf( obj[ field ].trim() ) > -1 ) );
         return ( !isNotEmpty( filterValue ) )
             ? true
             : ( isExists( obj ) &&
@@ -157,13 +158,7 @@ class ProductList extends React.PureComponent {
 
     render() {
         console.log( '%c%s', 'color: red; font-weight: bold;', 'render...' );
-        let listSortedValue = null;
-        if ( isNotEmpty( this.state.listValue ) ) {
-            listSortedValue = ( this.state.isSorted )
-                ? arraySortByField( this.state.listValue, 'name' )
-                : [ ...this.state.listValue ];
-        }
-        // console.log( 'render: listSortedValue', listSortedValue );
+
         return (
             <div className = { this.classCSS }>
                 <div className = { this.classCSS + "_label_box" }>
@@ -187,7 +182,7 @@ class ProductList extends React.PureComponent {
                 </div>
                 <div className = { this.classCSS + "_list_box" }>
                     {
-                        isNotEmpty( listSortedValue ) &&
+                        isNotEmpty( this.state.listSortedValue ) &&
                             <div className = { this.classCSS + "_list" }
                                  style = {{
                                      height: ( isGTZero( this.state.options.listBoxHeight > 0 ) )
@@ -195,9 +190,8 @@ class ProductList extends React.PureComponent {
                                          : 'auto',
                                  }}>
                                 {
-                                    listSortedValue.map( ( item, index ) => {
-                                        console.log( "filter result: ", this.filterItem( item, 'name', this.state.filterValue ) );
-                                        return ( this.filterItem( item, 'name', this.state.filterValue ) )
+                                    this.state.listSortedValue.map( ( item ) => {
+                                        return ( item.filtered )
                                             ? (
                                                 <div className = { this.classCSS + "_list_item" }
                                                      key = { item.id }
