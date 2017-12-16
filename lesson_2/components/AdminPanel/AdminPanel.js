@@ -273,6 +273,7 @@ class AdminPanel extends React.PureComponent {
         this.setState( {
             isNewProductCreated: false,
             isProductCardEdited: false,
+            productValidationData: { ...AdminPanel.defaultProps.productValidationData },
         }, () => {
             console.log( 'btnPanel_Edit_cbClicked: ', this.state.isNewProductCreated );
         } );
