@@ -67,7 +67,7 @@ class Button extends React.PureComponent {
             ? state.value
             : '';
         this.setState( state, () => {
-            console.log( 'Button: prepareState: state: ', this.state );
+            // console.log( 'Button: prepareState: state: ', this.state );
         } );
     };
 

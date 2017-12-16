@@ -21,6 +21,15 @@ class AdminPanel extends React.PureComponent {
 
     static propTupes = {
         selectedProductID:      PropTypes.string,
+        productsData:           PropTypes.arrayOf(
+            PropTypes.shape({
+                id:             PropTypes.number,
+                name:           PropTypes.string,
+                price:          PropTypes.number,
+                count:          PropTypes.number,
+                comment:        PropTypes.string,
+            })
+        ),
         productsList:           PropTypes.arrayOf(
             PropTypes.shape({
                 id:             PropTypes.string,
@@ -43,13 +52,15 @@ class AdminPanel extends React.PureComponent {
             count:              PropTypes.string,
             comment:            PropTypes.string,
         }),
-        isSorted:               false,
-        isProductCardEdited:    false,
-        isNewProductCreated:    false,
+        isSorted:               PropTypes.bool,
+        filterValue:            PropTypes.string,
+        isProductCardEdited:    PropTypes.bool,
+        isNewProductCreated:    PropTypes.bool,
     };
 
     static defaultProps = {
         selectedProductID:      '',
+        productsData:           null,
         productsList:           productsList,
         productValue:           {
             id:                 '',
@@ -65,6 +76,7 @@ class AdminPanel extends React.PureComponent {
             comment:            '',
         },
         isSorted:               false,
+        filterValue:            '',
         isProductCardEdited:    false,
         isNewProductCreated:    false,
     };
@@ -86,6 +98,10 @@ class AdminPanel extends React.PureComponent {
                 ...state,
                 ...props,
             };
+        state.productsList = ( isNotEmpty( state.productsData ) )
+            ? state.productsData.map(
+                ( item ) => { return { ...item, id: ( item.id + '' ) } } )
+            : state.productsList;
         this.setState( state, ()=>{} );
     };
 
@@ -95,8 +111,13 @@ class AdminPanel extends React.PureComponent {
             defValue:          this.state.selectedProductID,
             listValue:         this.state.productsList,
             isSorted:          this.state.isSorted,
+            filterValue:       this.state.filterValue,
+            options: {
+                               listBoxHeight: 300,
+            },
             cbItemClicked:     this.pl_cbItemClicked,
             cbCheckboxClicked: this.pl_cbCheckboxClicked,
+            cbFilterChanged:   this.pl_cbFilterChanged,
         }
     };
 
@@ -185,7 +206,15 @@ class AdminPanel extends React.PureComponent {
         this.setState( {
             isSorted: value,
         }, () => {
-            console.log( "ProductList callback checkbox: ", value );
+            // console.log( "ProductList callback checkbox: ", value );
+        } );
+    };
+
+    pl_cbFilterChanged = ( value ) => {
+        this.setState( {
+            filterValue: value,
+        }, () => {
+            // console.log( "ProductList callback checkbox: ", value );
         } );
     };
 
