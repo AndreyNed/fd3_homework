@@ -10,7 +10,7 @@ import Button      from '../Button/Button';
 import { productsList } from "../../mocks/mock_products";
 
 import './AdminPanel.scss';
-import {isExists, getIndexById, isNotEmpty, isNotNaN} from "../../utils/utils";
+import { isExists, getIndexById, isNotEmpty, isNotNaN } from "../../utils/utils";
 
 class AdminPanel extends React.PureComponent {
 
@@ -219,6 +219,7 @@ class AdminPanel extends React.PureComponent {
     pl_cbFilterChanged = ( value ) => {
         this.setState( {
             filterValue: value,
+            selectedProductID: '',
         }, () => {
             // console.log( "ProductList callback checkbox: ", value );
         } );
@@ -228,12 +229,15 @@ class AdminPanel extends React.PureComponent {
         let productValue = { ...this.state.productValue };
         productValue.name = value;
         let productValidationData = { ...this.state.productValidationData };
-        productValidationData.name = this.valProductName( value );
         this.setState(
             {
                 productValue:          productValue,
-                productValidationData: productValidationData,
-            }, () => {}
+            }, () => {
+                productValidationData.name = this.valProductName( this.state.productValue.name );
+                this.setState( {
+                    productValidationData: productValidationData,
+                }, () => {} );
+            }
         );
     };
 
@@ -244,12 +248,15 @@ class AdminPanel extends React.PureComponent {
             ? productValue.price
             : 0;
         let productValidationData = { ...this.state.productValidationData };
-        productValidationData.price = this.valProductPrice( value );
         this.setState(
             {
                 productValue:          productValue,
-                productValidationData: productValidationData,
-            }, () => {}
+            }, () => {
+                productValidationData.price = this.valProductPrice( this.state.productValue.price );
+                this.setState( {
+                    productValidationData: productValidationData,
+                }, () => {} );
+            }
         );
     };
 
@@ -260,12 +267,15 @@ class AdminPanel extends React.PureComponent {
             ? productValue.count
             : 0;
         let productValidationData = { ...this.state.productValidationData };
-        productValidationData.count = this.valProductCount( value );
         this.setState(
             {
                 productValue:          productValue,
-                productValidationData: productValidationData,
-            }, () => {}
+            }, () => {
+                productValidationData.count = this.valProductCount( this.state.productValue.count );
+                this.setState( {
+                    productValidationData: productValidationData,
+                }, () => {} );
+            }
         );
     };
 
@@ -273,12 +283,15 @@ class AdminPanel extends React.PureComponent {
         let productValue = { ...this.state.productValue };
         productValue.comment = value;
         let productValidationData = { ...this.state.productValidationData };
-        productValidationData.comment = this.valProductComment( value );
         this.setState(
             {
                 productValue:          productValue,
-                productValidationData: productValidationData,
-            }, () => {}
+            }, () => {
+                productValidationData.comment = this.valProductComment( this.state.productValue.comment );
+                this.setState( {
+                    productValidationData: productValidationData,
+                }, () => {} );
+            }
         );
     };
 
@@ -307,13 +320,7 @@ class AdminPanel extends React.PureComponent {
     };
 
     btnPanel_Cancel_cbClicked = ( value ) => {
-        this.setState( {
-            isNewProductCreated: false,
-            isProductCardEdited: false,
-            productValidationData: { ...AdminPanel.defaultProps.productValidationData },
-        }, () => {
-            console.log( 'btnPanel_Edit_cbClicked: ', this.state.isNewProductCreated );
-        } );
+        this.productCancel();
     };
 
     btnPanel_Delete_cbClicked = ( value ) => {
@@ -388,8 +395,34 @@ class AdminPanel extends React.PureComponent {
 
     };
 
+    productCancel = () => {
+        let index = getIndexById( this.state.selectedProductID, 'id', this.state.productsList );
+        let productValue = ( index > -1 )
+            ? { ...this.state.productsList[ index ] }
+            : { ...AdminPanel.defaultProps.productValue };
+        this.setState( {
+            isNewProductCreated: false,
+            isProductCardEdited: false,
+            productValidationData: { ...AdminPanel.defaultProps.productValidationData },
+            productValue: productValue,
+        }, () => {
+            console.log( 'btnPanel_Edit_cbClicked: ', this.state.isNewProductCreated );
+        } );
+    };
+
     clearProductCard = () => {
         console.log( "Product card is going to be cleared..." );
+        let productValue = ( isExists( this.state.productValue ) )
+            ? { ...this.state.productValue }
+            : {};
+        productValue = {
+            ...productValue,
+            name:       '',
+            price:      0,
+            count:      0,
+            comment:    '',
+        };
+        this.setState( { productValue }, () => {} );
     };
 
     // == validation functions ==

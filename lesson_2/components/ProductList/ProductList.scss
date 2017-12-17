@@ -2,6 +2,7 @@
 
     & > .ProductList_filter_box {
         /*background-color: #ffffff;*/
+        padding-bottom: 12px;
 
         & > .ProductList_checkbox_container {
             width: 32px;
@@ -22,14 +23,26 @@
             padding-top:    4px;
             padding-bottom: 4px;
             margin-left:   32px;
+            position: relative;
 
             & > .ProductList_filter {
                 width: 100%;
-                padding: 4px 8px;
+                padding-top: 4px;
+                padding-bottom: 4px;
+                padding-left: 8px;
+                padding-right: 8px;
                 outline: none;
                 border: 1px solid #d3d3d3;
                 border-radius: 4px;
                 background-color: #ffffff;
+            }
+
+            & > .ProductList_icon_container {
+                position: absolute;
+                top: 50%;
+                right: 12px;
+                transform: translateY(-50%);
+                cursor: pointer;
             }
         }
     }

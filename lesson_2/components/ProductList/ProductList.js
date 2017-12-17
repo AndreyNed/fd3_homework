@@ -125,6 +125,18 @@ class ProductList extends React.PureComponent {
         }
     };
 
+    clearFilterClick = () => {
+        if ( this.state.cbFilterChanged ) {
+            this.state.cbFilterChanged( '' );
+        }
+        else
+        {
+            this.setState( {
+                filterValue: '',
+            }, () => {} );
+        }
+    };
+
     // == action functions ==
 
     selectItem = ( index ) => {
@@ -177,7 +189,35 @@ class ProductList extends React.PureComponent {
                         <input className = { this.classCSS + "_filter" }
                                type =      "text"
                                value =     { this.state.filterValue }
+                               style =     {{
+                                    paddingRight: ( isNotEmpty( this.state.filterValue ) )
+                                        ? '20px'
+                                        : '8px',
+                               }}
                                onChange =  { this.filterChange }/>
+                        {
+                            ( isNotEmpty( this.state.filterValue ) ) &&
+                            <div className = { this.classCSS + "_icon_container" }
+                                 onClick = { this.clearFilterClick }>
+                                <svg className = { this.classCSS + "_icon" }
+                                     width =   "16px"
+                                     height =  "16px"
+                                     viewBox = "0 0 16 16"
+                                     preserveAspectRatio = "xMidYMid"
+                                     xmlns = "http://www.w3.org/2000/svg">
+                                    <g>
+                                        <circle cx="8" cy="8" r="7.5"
+                                                stroke = "#ffffff"
+                                                strokeWidth = "1"
+                                                fill = "#ffffff"/>
+                                        <path d = "M 4 4 L 12 12 M4 12 L 12 4"
+                                              stroke = "#000000"
+                                              strokeWidth = "1"
+                                              fill = "none"/>
+                                    </g>
+                                </svg>
+                            </div>
+                        }
                     </div>
                 </div>
                 <div className = { this.classCSS + "_list_box" }>

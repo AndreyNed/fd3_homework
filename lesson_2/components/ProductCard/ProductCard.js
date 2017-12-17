@@ -82,10 +82,13 @@ class ProductCard extends React.PureComponent {
                      key = { 'Row_' + 'header' }>
                     <h2>Карточка товара</h2>
                 </div>
-                <div className = { this.classCSS + "_row rows" }
-                     key = { 'Row_' + 'id' }>
-                    <TextInput { ...this.state.id }/>
-                </div>
+                {
+                    ( isNotEmpty( this.state.id.defValue ) ) &&
+                    <div className = { this.classCSS + "_row rows" }
+                         key = { 'Row_' + 'id' }>
+                        <TextInput { ...this.state.id }/>
+                    </div>
+                }
                 <div className = { this.classCSS + "_row rows" }
                      key = { 'Row_' + 'name' }>
                     <TextInput { ...this.state.name }/>

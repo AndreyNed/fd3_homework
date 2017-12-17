@@ -141,9 +141,9 @@ class App extends React.Component {
         };
         return (
             <div className="IShop_wrapper">
-                <div className="IShop_header border">
-                    <h1>iSHOP</h1>
-                    <span>Take it easy</span>
+                <div className="IShop_header_panel">
+                    <h1 className = { "IShop_header" }>iSHOP</h1>
+                    <span className = { "IShop_slogan" }>Take it easy</span>
                 </div>
                 <AdminPanel { ...props }/>
             </div>

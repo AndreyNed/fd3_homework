@@ -18,8 +18,24 @@ body {
     width: 960px;
     margin: 0 auto;
 
-    & > .IShop_header {
-        height: 64px;
+    & > .IShop_header_panel {
+        height: 80px;
+        padding-left: 5%;
+        padding-top: 16px;
+        border-bottom: 1px solid #d3d3d3;
+        box-shadow: 0 2px 2px #d3d3d3;
+        background-color: #ffffff;
+
+        & > .IShop_header {
+            font-size: 48px;
+            font-weight: bold;
+            display: inline-block;
+            color: darkblue;
+        }
+
+        & > .IShop_slogan {
+            font-style: italic;
+        }
     }
 
 }
