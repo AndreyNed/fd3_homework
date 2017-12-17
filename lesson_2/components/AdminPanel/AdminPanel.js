@@ -56,6 +56,9 @@ class AdminPanel extends React.PureComponent {
         filterValue:            PropTypes.string,
         isProductCardEdited:    PropTypes.bool,
         isNewProductCreated:    PropTypes.bool,
+        cbProductChanged:       PropTypes.func,
+        cbProductCreated:       PropTypes.func,
+        cbProductDeleted:       PropTypes.func,
     };
 
     static defaultProps = {
@@ -79,6 +82,9 @@ class AdminPanel extends React.PureComponent {
         filterValue:            '',
         isProductCardEdited:    false,
         isNewProductCreated:    false,
+        cbProductChanged:       null,
+        cbProductCreated:       null,
+        cbProductDeleted:       null,
     };
 
     classCSS = 'AdminPanel';
@@ -295,7 +301,9 @@ class AdminPanel extends React.PureComponent {
     };
 
     btnPanel_Save_cbClicked = ( value ) => {
-        this.productSave();
+        ( this.state.isNewProductCreated )
+            ? this.productCreate()
+            : this.productSave();
     };
 
     btnPanel_Cancel_cbClicked = ( value ) => {
@@ -306,6 +314,10 @@ class AdminPanel extends React.PureComponent {
         }, () => {
             console.log( 'btnPanel_Edit_cbClicked: ', this.state.isNewProductCreated );
         } );
+    };
+
+    btnPanel_Delete_cbClicked = ( value ) => {
+        this.productDelete();
     };
 
     btnPanel_Clear_cbClicked = ( value ) => {
@@ -327,10 +339,53 @@ class AdminPanel extends React.PureComponent {
                             isNewProductCreated: false,
                         }, () => {
                             console.log( "Product is going to be saved..." );
+                            if ( this.state.cbProductChanged )
+                                this.state.cbProductChanged( this.state.productValue );
                     } );
                 }
             }
         );
+    };
+
+    productCreate = () => {
+        let validationResult = this.valProductCard();
+        this.setState(
+            {
+                productValidationData: validationResult.productValidationData,
+            }, () => {
+                if ( validationResult.isValid ) {
+                    this.setState(
+                        {
+                            isProductCardEdited: false,
+                            isNewProductCreated: false,
+                        }, () => {
+                            console.log( "Product is going to be created..." );
+                            if ( this.state.cbProductCreated )
+                                this.state.cbProductCreated( this.state.productValue );
+                        } );
+                }
+            }
+        );
+    };
+
+    productDelete = () => {
+        if ( !this.state.isNewProductCreated &&
+             !this.state.isProductCardEdited &&
+             isExists( this.state.productValue) &&
+             isNotEmpty( this.state.productValue.id ) ) {
+            this.setState(
+                {
+                    productValidationData: { ...AdminPanel.defaultProps.productValidationData },
+                }, () => {
+                    console.log( "Product is going to be deleted..." );
+                    console.log( 'id: ', this.state.productValue.id );
+                    if ( this.state.cbProductDeleted )
+                        this.state.cbProductDeleted( this.state.productValue.id );
+                }
+            );
+        }
+
+
     };
 
     clearProductCard = () => {
@@ -384,6 +439,9 @@ class AdminPanel extends React.PureComponent {
                     !this.state.isProductCardEdited,
             save:   this.state.isProductCardEdited || this.state.isNewProductCreated,
             cancel: this.state.isProductCardEdited || this.state.isNewProductCreated,
+            delete: !this.state.isProductCardEdited &&
+                    isNotEmpty( this.state.selectedProductID ) &&
+                    !this.state.isNewProductCreated,
             clear:  this.state.isProductCardEdited || this.state.isNewProductCreated,
         };
 
@@ -420,6 +478,13 @@ class AdminPanel extends React.PureComponent {
                                         buttonWidth: 150,
                                     }}
                                     cbClicked = { this.btnPanel_Cancel_cbClicked }/>
+                            <Button key = { 'Btn_delete' }
+                                    value = 'Удалить'
+                                    isVisible = { buttonVisibility.delete }
+                                    options = {{
+                                        buttonWidth: 150,
+                                    }}
+                                    cbClicked = { this.btnPanel_Delete_cbClicked }/>
                             <Button key = { 'Btn_clear' }
                                     value = 'Очистить'
                                     isVisible = { buttonVisibility.clear }
