@@ -79,7 +79,7 @@ class ProductList extends React.PureComponent {
             ? state.defValue
             : '';
         this.setState( state, () => {
-            console.log( 'ProductList: prepareState: state: ', this.state );
+            // console.log( 'ProductList: prepareState: state: ', this.state );
         } );
     };
 
@@ -112,16 +112,21 @@ class ProductList extends React.PureComponent {
     };
 
     filterChange = ( e ) => {
-        if ( this.state.cbFilterChanged ) {
-            this.state.cbFilterChanged( e.currentTarget.value );
+        let filterValue = e.currentTarget.value;
+        this.setState( { filterValue }, () => {} );
+    };
+
+    filterKeyDown = ( e ) => {
+        switch ( e.keyCode ) {
+            case 13:
+                this.filterAccept();
+                break;
         }
-        else
-        {
-            this.setState( {
-                filterValue: e.currentTarget.value,
-            }, () => {
-                // console.log( "filterValue: ", this.state.filterValue );
-            } );
+    };
+
+    filterAccept = () => {
+        if ( this.state.cbFilterChanged ) {
+            this.state.cbFilterChanged( this.state.filterValue );
         }
     };
 
@@ -169,7 +174,7 @@ class ProductList extends React.PureComponent {
     };
 
     render() {
-        console.log( '%c%s', 'color: red; font-weight: bold;', 'render...' );
+        // console.log( '%c%s', 'color: red; font-weight: bold;', 'render...' );
 
         return (
             <div className = { this.classCSS }>
@@ -194,7 +199,9 @@ class ProductList extends React.PureComponent {
                                         ? '20px'
                                         : '8px',
                                }}
-                               onChange =  { this.filterChange }/>
+                               onChange =  { this.filterChange }
+                               onBlur =    { this.filterAccept }
+                               onKeyDown = { this.filterKeyDown }/>
                         {
                             ( isNotEmpty( this.state.filterValue ) ) &&
                             <div className = { this.classCSS + "_icon_container" }

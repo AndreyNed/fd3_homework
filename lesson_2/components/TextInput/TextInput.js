@@ -62,6 +62,10 @@ class TextInput extends React.PureComponent {
         this.prepareState( newProps );
     }
 
+    /*shouldComponentUpdate( nextProps, nextState ) {
+        return ( this.state.value !== nextState.value || this.state.isEditable !== nextState.isEditable );
+    }*/
+
     prepareState = ( props ) => {
         let state = { ...TextInput.defaultProps };
         state = ( isExists( props ) )
@@ -74,26 +78,28 @@ class TextInput extends React.PureComponent {
             ? state.defValue
             : '';
         this.setState( state, () => {
-            console.log( 'TextInput: prepareState: state: ', this.state );
+            // console.log( 'TextInput: prepareState: state: ', this.state );
         } );
     };
 
     classCSS = 'TextInput';
 
     changed = ( value ) => {
-        if ( this.state.cbChanged ) this.state.cbChanged( value );
-    };
-
-    // == controller ==
-    inputChanged = ( e ) => {
         if ( this.state.cbChanged ) {
-            this.state.cbChanged( e.currentTarget.value );
+            this.state.cbChanged( value );
         }
         else {
+            console.log('hhhhhhhhh');
             this.setState( {
                 value: e.currentTarget.value,
             }, () => {} );
         }
+    };
+
+    // == controller ==
+    inputChanged = ( e ) => {
+        let value = e.currentTarget.value;
+        this.changed( value );
     };
 
 
@@ -108,7 +114,7 @@ class TextInput extends React.PureComponent {
     // == render ==
 
     render() {
-        console.log( '%c%s', 'color: red; font-weight: bold;', 'TextInput: render...' );
+        // console.log( '%c%s', 'color: red; font-weight: bold;', 'TextInput: render...' );
 
         return (
             <div className = { this.classCSS }>
@@ -137,8 +143,7 @@ class TextInput extends React.PureComponent {
                            id =        { this.state.HTMLID }
                            value =     { this.state.value }
                            disabled =  { !this.state.isEditable }
-                           onChange =  { this.inputChanged }
-                           onBlur =    { this.inputChanged }/>
+                           onChange =  { this.inputChanged }/>
                 </div>
 
             </div>

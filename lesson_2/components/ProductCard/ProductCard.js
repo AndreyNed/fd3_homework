@@ -51,7 +51,7 @@ class ProductCard extends React.PureComponent {
             ? { ...state.options, ...props.options }
             : null;
         this.setState( state, () => {
-            console.log( 'ProductCard: prepareState: state: ', this.state );
+            // console.log( 'ProductCard: prepareState: state: ', this.state );
         } );
     };
 
@@ -73,7 +73,7 @@ class ProductCard extends React.PureComponent {
 
 
     render() {
-        console.log( '%c%s', 'color: red; font-weight: bold;', 'render...' );
+        // console.log( '%c%s', 'color: red; font-weight: bold;', 'Product card: render...' );
 
         return (
             ( this.state.isVisible ) &&

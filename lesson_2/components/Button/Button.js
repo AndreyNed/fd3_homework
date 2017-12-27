@@ -83,7 +83,7 @@ class Button extends React.PureComponent {
             this.state.cbClicked( e.currentTarget );
         }
         else {
-            console.log( 'Button ', this.state.value, ' has been clicked...' );
+            // console.log( 'Button ', this.state.value, ' has been clicked...' );
         }
     };
 
@@ -98,7 +98,7 @@ class Button extends React.PureComponent {
     // == render ==
 
     render() {
-        console.log( '%c%s', 'color: red; font-weight: bold;', 'Button: render...' );
+        // console.log( '%c%s', 'color: red; font-weight: bold;', 'Button: render...' );
 
         return (
             ( this.state.isVisible ) &&

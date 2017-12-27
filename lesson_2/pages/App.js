@@ -35,7 +35,7 @@ class App extends React.Component {
             state.productsData = data;
             console.log( 'prepareState: productsData: ', state.productsData );
             this.setState( state, () => {
-                console.log( 'App: prepareState: ', this.state );
+                // console.log( 'App: prepareState: ', this.state );
             } )
         };
 

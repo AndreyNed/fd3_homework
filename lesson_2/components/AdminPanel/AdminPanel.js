@@ -132,7 +132,7 @@ class AdminPanel extends React.PureComponent {
             this.state.selectedProductID,
             'id',
             this.state.productsList );
-        console.log( 'AdminPanel: prepareProductCard: this.state.productsList: ', this.state.productsList );
+        // console.log( 'AdminPanel: prepareProductCard: this.state.productsList: ', this.state.productsList );
 
         return ( productIndex > -1 || this.state.isNewProductCreated )
             ? {
@@ -204,7 +204,7 @@ class AdminPanel extends React.PureComponent {
             selectedProductID: value,
             productValue:      productValue,
         }, () => {
-            console.log( "ProductList callback item: ", this.state.selectedProductID );
+            // console.log( "ProductList callback item: ", this.state.selectedProductID );
         } );
     };
 
@@ -299,7 +299,7 @@ class AdminPanel extends React.PureComponent {
         this.setState( {
             isProductCardEdited: true,
         }, () => {
-            console.log( 'btnPanel_Edit_cbClicked: ', this.state.isProductCardEdited );
+            // console.log( 'btnPanel_Edit_cbClicked: ', this.state.isProductCardEdited );
         } );
     };
 
@@ -335,21 +335,21 @@ class AdminPanel extends React.PureComponent {
 
     productSave = () => {
         let validationResult = this.valProductCard();
+        let isProductCardEdited = this.state.isProductCardEdited;
+        let isNewProductCreated = this.state.isNewProductCreated;
+        if ( validationResult.isValid ) {
+            isProductCardEdited = false;
+            isNewProductCreated = false;
+        }
         this.setState(
             {
                 productValidationData: validationResult.productValidationData,
+                isProductCardEdited: isProductCardEdited,
+                isNewProductCreated: isNewProductCreated,
             }, () => {
-                if ( validationResult.isValid ) {
-                    this.setState(
-                        {
-                            isProductCardEdited: false,
-                            isNewProductCreated: false,
-                        }, () => {
-                            console.log( "Product is going to be saved..." );
-                            if ( this.state.cbProductChanged )
-                                this.state.cbProductChanged( this.state.productValue );
-                    } );
-                }
+                // console.log( "Product is going to be saved..." );
+                if ( this.state.cbProductChanged )
+                    this.state.cbProductChanged( this.state.productValue );
             }
         );
     };
@@ -480,7 +480,8 @@ class AdminPanel extends React.PureComponent {
 
         return (
                 <div className = { this.classCSS }>
-                    <div className = { this.classCSS + "_left_section" }>
+                    <div className = { this.classCSS + "_left_section" }
+                         key =      { this.state.selectedProductID + '_' + Math.random() }>
                         <ProductList { ...this.prepareProductList() }/>
                         <div className = { this.classCSS + "_button_panel" }>
                             <Button key = { 'Btn_edit' }
