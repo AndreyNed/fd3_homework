@@ -82,7 +82,7 @@ class App extends React.Component {
              isNotNaN( product.count ) &&
              isNotEmpty( product.comment )
         ) {
-            commandChangeProduct( product, cbSuccess() );
+            commandChangeProduct( product, cbSuccess );
         }
     };
 
@@ -103,7 +103,7 @@ class App extends React.Component {
             isNotNaN( product.count ) &&
             isNotEmpty( product.comment )
         ) {
-            commandCreateProduct( product, cbSuccess() );
+            commandCreateProduct( product, cbSuccess );
         }
     };
 
@@ -122,7 +122,7 @@ class App extends React.Component {
 
             };
 
-            commandDeleteProduct( id, cbSuccess() );
+            commandDeleteProduct( id, cbSuccess );
 
         }
         else console.log( 'Error on deleting: wrong ID: ', productID );
