@@ -30,12 +30,13 @@ class App extends React.Component {
     };
 
     render() {
-
         return (
             <div className="container">
                 {
                     ( isNotEmpty( COLORS ) ) &&
-                        <ColorBox boxes = { COLORS }/>
+                        <ColorBox>
+                            { COLORS }
+                        </ColorBox>
                 }
             </div>
         );

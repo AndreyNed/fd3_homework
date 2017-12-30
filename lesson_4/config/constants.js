@@ -1,3 +1,3 @@
 export const COLORS = [
-    'red', 'green', 'yellow', 'blue', 'gray', 'violet,'
+    'red', 'green', 'yellow', 'blue', 'gray', 'violet'
 ];

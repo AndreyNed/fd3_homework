@@ -29,10 +29,11 @@ class ColorBox extends React.Component {
     }
 
     prepareState = ( props ) => {
-        if ( isExists( props ) && isNotEmpty( props.boxes ) ) {
-            let color = props.boxes[ 0 ];
-            let boxes = ( props.boxes.length > 1 )
-            ? props.boxes.filter( ( item, index ) => {
+        console.log( 'children: ', props.children );
+        if ( isExists( props ) && isNotEmpty( props.children ) ) {
+            let color = props.children[ 0 ];
+            let boxes = ( props.children.length > 1 )
+            ? props.children.filter( ( item, index ) => {
                 return ( index !== 0 )
                 } )
             : null;
@@ -46,11 +47,14 @@ class ColorBox extends React.Component {
     render() {
 
         return (
-            <div className="container"
+            <div className="ColorBox"
                  style = {{ backgroundColor: this.state.color }}>
+                { this.state.color }
                 {
                     ( this.state.boxes !== null ) &&
-                        <ColorBox boxes = { this.state.boxes } />
+                        <ColorBox>
+                            { this.state.boxes }
+                        </ColorBox>
                 }
             </div>
         );
