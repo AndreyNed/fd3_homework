@@ -1,0 +1,24 @@
+$mainMenuNavLinkColor: #d3d3d3;
+$mainMenuNavLinkColorActive: #898989;
+
+.iAccount_main_menu {
+    padding: 8px 16px;
+    box-shadow: 0 2px 3px #898989;
+
+    & > .main_menu_links {
+        display: inline-block;
+        width: 100px;
+        text-align: center;
+        text-decoration: none;
+        font: normal 18px/100% Arial,sans-serif;
+    }
+
+    .iAccount_nav_link {
+        color: $mainMenuNavLinkColor;
+    }
+
+    .iAccount_nav_link_active {
+        color: $mainMenuNavLinkColorActive;
+    }
+}
+

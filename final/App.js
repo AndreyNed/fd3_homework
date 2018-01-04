@@ -1,14 +1,35 @@
-﻿"use strict";
+'use strict';
+
+require('es6-promise').polyfill();
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
+import { createStore }   from 'redux';
+import { Provider }      from 'react-redux';
+import combinedReducer   from './reducers'
 
-import TestComponent from './components/TestComponent';
+import PagesRouter from './pages/PagesRouter';
+import PagesLinks  from './pages/PagesLinks';
 
-// если необходимо, вид сборки можно проверить в коде:
-// if (process.env.NODE_ENV === 'production') {
-// if (process.env.NODE_ENV !== 'production') {
+import './App.scss';
 
-ReactDOM.render( 
-  <TestComponent />
-, document.getElementById('container') );
+let store = createStore( combinedReducer );
+
+class App extends React.PureComponent {
+
+    classCSS = 'App';
+
+    render() {
+        let state = store.getState();
+        return (
+            <BrowserRouter>
+                <div className = { this.classCSS }>
+                    <PagesLinks />
+                    <PagesRouter />
+                </div>
+            </BrowserRouter>
+        )
+    }
+}
+
+export default App;
