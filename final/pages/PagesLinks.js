@@ -14,13 +14,12 @@ class PagesLinks extends React.Component {
     render() {
         return (
             <div className = { this.cssClass }>
-                <NavLink to = "/main"       className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Главная</NavLink>
+                <NavLink to = "/" exact     className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Главная</NavLink>
                 <NavLink to = "/accounts"   className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Счета</NavLink>
                 <NavLink to = "/operations" className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Операции</NavLink>
                 <NavLink to = "/about"      className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>О системе</NavLink>
             </div>
         )
-
     }
 
 }

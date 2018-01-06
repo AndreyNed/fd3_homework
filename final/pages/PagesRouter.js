@@ -14,7 +14,7 @@ class PagesRouter extends React.Component {
         return (
             <div>
                 <Route path = "/" exact     component = { PageMain }/>
-                <Route path = "/main"       component = { PageMain }/>
+                {/*<Route path = "/main"       component = { PageMain }/>*/}
                 <Route path = "/about"      component = { PageAbout }/>
                 <Route path = "/accounts"   component = { PageAccounts }/>
                 <Route path = "/operations" component = { PageOperations }/>
