@@ -3,15 +3,12 @@
 require('es6-promise').polyfill();
 
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import Loader from './components/loader/Loader';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import combinedReducer from './reducers'
-
-import PagesRouter from './pages/PagesRouter';
-import PagesLinks  from './pages/PagesLinks';
 
 import './App.scss';
 
@@ -22,17 +19,11 @@ class App extends React.PureComponent {
     classCSS = 'App';
 
     render() {
-        let state = store.getState();
+        // let state = store.getState();
         return (
             <Provider store = { store }>
-                <BrowserRouter>
-                    <div className = { this.classCSS }>
-                        <PagesLinks />
-                        <PagesRouter />
-                    </div>
-                </BrowserRouter>
+                <Loader />
             </Provider>
-
         )
     }
 }
