@@ -42,7 +42,9 @@ class MatGlass extends React.PureComponent {
             ( isVisible ) &&
             <div className = { this.classCSS }
                  onClick = { this.glassClick }>
-
+                <div className = { this.classCSS + "_message" }>
+                    Загрузка данных...
+                </div>
             </div>
         )
     }

@@ -1,2 +1,2 @@
-export const SERVER_URL = 'http://localhost:8080/iaccount/IAccount';
+export const SERVER_URI = 'http://localhost:8080/iaccount/IAccount';
 

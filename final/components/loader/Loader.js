@@ -8,24 +8,42 @@ import { BrowserRouter } from 'react-router-dom';
 import PagesRouter from '../../pages/PagesRouter';
 import PagesLinks  from '../../pages/PagesLinks';
 
-import { fDataLoadAccounts } from "../../network/fLoader";
-import { acShowMatGlass } from "../../actions/acUI";
+import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
+import {acHideMatGlass, acShowMatGlass} from "../../actions/acUI";
 
 class Loader extends React.PureComponent {
 
     static propTypes = {
-        accountsData:       PropTypes.arrayOf(
+        accountsData:                   PropTypes.arrayOf(
             PropTypes.shape({
-                id:         PropTypes.number,
-                name:       PropTypes.string,
-                amount:     PropTypes.number,
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+                amount:                 PropTypes.number,
             })
         ),
-        accountsLoadStatus: PropTypes.number,
+        operationCategoriesData:        PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+            })
+        ),
+        operationsData:                 PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                accountId:              PropTypes.number,
+                categoryId:             PropTypes.number,
+                type:                   PropTypes.string,
+                sum:                    PropTypes.number,
+                date:                   PropTypes.any,
+                comment:                PropTypes.string,
+            })
+        ),
+        accountsLoadStatus:             PropTypes.number,
+        operationCategoriesLoadStatus:  PropTypes.number,
     };
 
     static defaultProps = {
-        accountsLoadStatus: 0,
+        // accountsLoadStatus: 0,
     };
 
     classCSS = 'Loader';
@@ -41,28 +59,72 @@ class Loader extends React.PureComponent {
     prepareData = ( data ) => {
         console.log( 'Loader: prepareData: data: ', data );
         let props = { ...data };
-        const { accountsLoadStatus, dispatch,  } = props;
-        if ( !accountsLoadStatus ) {
-            console.log( 'Accounts needs to be loaded...' );
+
+        const {
+            dispatch,
+            accountsLoadStatus,
+            operationCategoriesLoadStatus,
+            operationsLoadStatus,
+            matGlassIsVisible,
+        } = props;
+
+        if ( !accountsLoadStatus ||
+             !operationCategoriesLoadStatus )
             dispatch( acShowMatGlass() );
+
+        if ( !accountsLoadStatus ) {
+            console.log( 'Accounts need to be loaded...' );
             fDataLoadAccounts(
                 dispatch,
                 () => { /*console.log( 'Accounts are loaded: ', this.props.accountsData )*/ },
                 () => { console.log( 'Error: ', text ) },
             )
         }
+
+        if ( !operationCategoriesLoadStatus ) {
+            console.log( 'Operation categories need to be loaded...' );
+            fDataLoadOperationCategories(
+                dispatch,
+                () => { /*console.log( 'Operation categories are loaded: ', this.props.operationCategoriesData )*/ },
+                () => { console.log( 'Error: ', text ) },
+            )
+        }
+
+        if ( !operationsLoadStatus ) {
+            console.log( 'Operations need to be loaded...' );
+            fDataLoadOperations(
+                dispatch,
+                () => { /*console.log( 'Operations are loaded: ', this.props.operationsData )*/ },
+                () => { console.log( 'Error: ', text ) },
+            )
+        }
+
+        if ( accountsLoadStatus == 2 &&
+             operationCategoriesLoadStatus == 2 &&
+             operationsLoadStatus == 2 &&
+             matGlassIsVisible )
+            setTimeout( () => { dispatch( acHideMatGlass() ) }, 1000 );
     };
 
     render() {
+        const {
+            accountsLoadStatus, operationCategoriesLoadStatus, operationsLoadStatus, matGlassIsVisible
+        } = this.props;
         return (
             <div className = { this.classCSS }>
                 <MatGlass />
-                <BrowserRouter>
-                    <div className = { this.classCSS + "_router" }>
-                        <PagesLinks />
-                        <PagesRouter />
-                    </div>
-                </BrowserRouter>
+                {
+                    ( accountsLoadStatus == 2 &&
+                      operationCategoriesLoadStatus == 2 &&
+                      operationsLoadStatus == 2 &&
+                      !matGlassIsVisible ) &&
+                    <BrowserRouter>
+                        <div className = { this.classCSS + "_router" }>
+                            <PagesLinks />
+                            <PagesRouter />
+                        </div>
+                    </BrowserRouter>
+                }
             </div>
         )
     }
@@ -70,8 +132,15 @@ class Loader extends React.PureComponent {
 
 const mapStateToProps = function ( state ) {
     return {
-        accountsData:       state.data.accountsData,
-        accountsLoadStatus: state.data.accountsLoadStatus,
+        accountsData:                   state.data.accountsData,
+        operationCategoriesData:        state.data.operationCategoriesData,
+        operationsData:                 state.data.operationsData,
+
+        accountsLoadStatus:             state.data.accountsLoadStatus,
+        operationCategoriesLoadStatus:  state.data.operationCategoriesLoadStatus,
+        operationsLoadStatus:           state.data.operationsLoadStatus,
+
+        matGlassIsVisible:              state.ui.matGlassIsVisible,
     }
 };
 

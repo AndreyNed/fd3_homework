@@ -1,0 +1,25 @@
+.Table {
+    display: table;
+    margin: 0 auto;
+
+    & > .Table_header {
+        display: table-header-group;
+
+        & > .Table_th {
+            display: table-cell;
+        }
+    }
+
+    & > .Table_body {
+        display: table-row-group;
+
+        & > .Table_tr {
+            display: table-row;
+
+            & > .Table_td {
+                display: table-cell;
+            }
+        }
+
+    }
+}
