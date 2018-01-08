@@ -1,11 +1,43 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Table from '../components/Table/Table';
-import { isExists, isNotEmpty } from "../utils/utils";
+import { isExists, isNotEmpty, findArrayItem, findArrayItemIndex } from "../utils/utils";
 
 class PageOperations extends React.PureComponent {
+
+    static propTypes = {
+        accountsData:                   PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+                amount:                 PropTypes.number,
+            })
+        ),
+        operationCategoriesData:        PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+            })
+        ),
+        operationsData: PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                accountId:              PropTypes.number,
+                categoryId:             PropTypes.number,
+                type:                   PropTypes.string,
+                sum:                    PropTypes.number,
+                date:                   PropTypes.any,
+                comment:                PropTypes.string,
+            })
+        ),
+    };
+
+    static defaultProps = {
+
+    };
 
     debug_mode = true;
     classCSS = 'App_page_operations';
@@ -23,7 +55,7 @@ class PageOperations extends React.PureComponent {
             console.log( this.classCSS + ': prepareData: new props: ', props );
 
         const { operationsData } = props;
-        let state = { headers: [], rows: [] };
+        let state = {};
 
         if ( isNotEmpty( operationsData ) ) {
             state.table = this.preparePropsTable();
@@ -36,7 +68,7 @@ class PageOperations extends React.PureComponent {
     };
 
     preparePropsTable = () => {
-        const { operationsData } = this.props;
+        const { operationsData, accountsData, operationCategoriesData } = this.props;
         let headers = [
             {
                 id:         'id',
@@ -103,12 +135,43 @@ class PageOperations extends React.PureComponent {
             },
         ];
         let rows = operationsData.map( ( item, index ) => {
-            let cells = headers.map( ( th, thIndex ) => {
-                return {
-                    cellId:   th.id,
-                    cellText: item[ th.id ] + '',
-                }
-            } );
+            let cells = [
+                {
+                    id:    'id',
+                    value: item.id,
+                    text:  item.id + '',
+                },
+                {
+                    id:    'accountId',
+                    value: item.accountId,
+                    text:  findArrayItem( accountsData, { id: item.accountId } ).name,
+                },
+                {
+                    id:    'categoryId',
+                    value: item.categoryId,
+                    text:  findArrayItem( operationCategoriesData, { id: item.categoryId } ).name,
+                },
+                {
+                    id:    'type',
+                    value: item.type,
+                    text:  ( item.type.toLowerCase() === 'credit') ? 'расход' : 'приход',
+                },
+                {
+                    id:    'sum',
+                    value: item.sum,
+                    text:  item.sum + '',
+                },
+                {
+                    id:    'date',
+                    value: item.date,
+                    text:  new Date( item.date ).toDateString(),
+                },
+                {
+                    id:    'comment',
+                    value: item.comment,
+                    text:  item.comment,
+                },
+            ];
             return {
                 isSelected: false,
                 rowIndex:   index + '',
@@ -138,7 +201,10 @@ class PageOperations extends React.PureComponent {
 
 const mapStateToProps = function ( state ) {
     return {
+        accountsData:                   state.data.accountsData,
+        operationCategoriesData:        state.data.operationCategoriesData,
         operationsData:                 state.data.operationsData,
+
         //matGlassIsVisible:              state.ui.matGlassIsVisible,
     }
 };

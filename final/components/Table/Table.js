@@ -162,8 +162,10 @@ class Table extends React.PureComponent {
     renderCell = ( cell, cellIndex ) => {
         return (
             <div className = { this.classCSS + '_td' }
-                 key = { cellIndex }>
-                { cell.cellText }
+                 key = { cellIndex }
+                 data-cell_id = { cell.id }
+                 data-cell_value = { cell.value }>
+                { cell.text }
             </div>
         )
     };
