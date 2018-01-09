@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
-import { isExists, isNotEmpty } from "../../utils/utils";
+import {findArrayItemIndex, isExists, isNotEmpty} from "../../utils/utils";
 
 import './Table.scss';
 
@@ -42,8 +42,9 @@ class Table extends React.PureComponent {
                 rowIndex:               PropTypes.string,
                 cells:                  PropTypes.arrayOf(
                     PropTypes.shape({
-                        cellId:         PropTypes.string,
-                        cellText:       PropTypes.string,
+                        id:             PropTypes.string,
+                        value:          PropTypes.any,
+                        text:           PropTypes.string,
                     })
                 ),
             }),
@@ -61,7 +62,8 @@ class Table extends React.PureComponent {
         rows:           [],
         options: {
             tableWidth: 0,
-        }
+        },
+        cbChanged: null,
     };
 
     static classID = 0;
@@ -80,7 +82,7 @@ class Table extends React.PureComponent {
         }
     }
 
-    debug_mode = true;
+    debug_mode = false;
 
     classCSS = 'Table';
 
@@ -112,6 +114,27 @@ class Table extends React.PureComponent {
                 && console.log( this.classCSS + ': prepareData: new state: ', this.state );
         } );
     };
+
+    /* == controller == */
+
+    rowClick = ( e ) => {
+        let rowIndex = e.currentTarget.dataset.row_index;
+        this.rowSelect( rowIndex );
+    };
+
+    /* == action functions == */
+
+    rowSelect = ( rowIndex ) => {
+        const { cbChanged } = this.props;
+        const { rows } = this.state;
+        let index = findArrayItemIndex( rows, { rowIndex: rowIndex } );
+        const { cells } = rows[ index ];
+        let value = cells[ 0 ].value;
+        // console.log( 'Table: rowSelect: operation`s id: ', value );
+        if ( cbChanged ) cbChanged( value );
+    };
+
+    /* == renders == */
 
     renderHeader = () => {
         const { headers } = this.state;
@@ -151,7 +174,9 @@ class Table extends React.PureComponent {
         return (
             <div className = { this.classCSS + '_tr' }
                  key = { item.rowIndex }
-                 data-row_index = { item.rowIndex }>
+                 data-row_index = { item.rowIndex }
+                 data-selected = { item.isSelected }
+                 onClick = { this.rowClick }>
                 { item.cells.map( ( cell, cellIndex ) => {
                     return this.renderCell( cell, cellIndex )
                 } ) }

@@ -1,12 +1,20 @@
+@import '../../data_const/style_const';
+
 .Table {
     display: table;
     margin: 0 auto;
 
-    & > .Table_header {
+    & > div.Table_header {
         display: table-header-group;
 
         & > .Table_th {
             display: table-cell;
+            font-size:   18px;
+            font-weight: bold;
+            color: #898989;
+            /*text-align: center;*/
+            padding: 8px 8px;
+            border-bottom: 1px solid #d3d3d3;
         }
     }
 
@@ -16,8 +24,20 @@
         & > .Table_tr {
             display: table-row;
 
+            &:hover {
+                background-color: $tableRowHovered;
+            }
+
+            &[ data-selected="true" ] {
+                background-color: $tableRowSelected;
+            }
+
             & > .Table_td {
                 display: table-cell;
+                font-size: 14px;
+                color: #898989;
+                padding: 8px;
+                border-bottom: 1px dotted #d3d3d3;
             }
         }
 

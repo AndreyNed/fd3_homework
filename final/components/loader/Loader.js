@@ -57,7 +57,7 @@ class Loader extends React.PureComponent {
     }
 
     prepareData = ( data ) => {
-        console.log( 'Loader: prepareData: data: ', data );
+        // console.log( 'Loader: prepareData: data: ', data );
         let props = { ...data };
 
         const {
@@ -73,7 +73,7 @@ class Loader extends React.PureComponent {
             dispatch( acShowMatGlass() );
 
         if ( !accountsLoadStatus ) {
-            console.log( 'Accounts need to be loaded...' );
+            // console.log( 'Accounts need to be loaded...' );
             fDataLoadAccounts(
                 dispatch,
                 () => { /*console.log( 'Accounts are loaded: ', this.props.accountsData )*/ },
@@ -82,7 +82,7 @@ class Loader extends React.PureComponent {
         }
 
         if ( !operationCategoriesLoadStatus ) {
-            console.log( 'Operation categories need to be loaded...' );
+            // console.log( 'Operation categories need to be loaded...' );
             fDataLoadOperationCategories(
                 dispatch,
                 () => { /*console.log( 'Operation categories are loaded: ', this.props.operationCategoriesData )*/ },
@@ -91,7 +91,7 @@ class Loader extends React.PureComponent {
         }
 
         if ( !operationsLoadStatus ) {
-            console.log( 'Operations need to be loaded...' );
+            // console.log( 'Operations need to be loaded...' );
             fDataLoadOperations(
                 dispatch,
                 () => { /*console.log( 'Operations are loaded: ', this.props.operationsData )*/ },

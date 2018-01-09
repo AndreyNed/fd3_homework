@@ -13,15 +13,19 @@ import {
     DATA_OPERATIONS_LOAD_SUCCESS,
     DATA_OPERATIONS_LOAD_ERROR,
     DATA_OPERATIONS_SHOULD_BE_RELOADED,
+    DATA_OPERATION_SELECT,
 } from "../actions/acData"
 
 const initState = {
     accountsData:                   [],
     accountsLoadStatus:             0,
+
     operationCategoriesData:        [],
     operationCategoriesLoadStatus:  0,
+
     operationsData:                 [],
     operationsLoadStatus:           0,
+    operationSelectedIndex:         -1,
 };
 
 function rdData ( state = initState, action ) {
@@ -117,6 +121,13 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationsLoadStatus: 0,
+                }
+            };
+
+        case DATA_OPERATION_SELECT:
+            return {
+                ...state, ...{
+                    operationSelectedIndex: action.operationSelectedIndex,
                 }
             };
 

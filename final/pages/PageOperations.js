@@ -4,7 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Table from '../components/Table/Table';
+import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
 import { isExists, isNotEmpty, findArrayItem, findArrayItemIndex } from "../utils/utils";
+import {acDataOperationSelect} from "../actions/acData";
+
+import './PageOperations.scss';
 
 class PageOperations extends React.PureComponent {
 
@@ -40,7 +44,7 @@ class PageOperations extends React.PureComponent {
     };
 
     debug_mode = true;
-    classCSS = 'App_page_operations';
+    classCSS = 'PageOperations';
 
     componentWillMount() {
         this.prepareData( this.props );
@@ -52,23 +56,11 @@ class PageOperations extends React.PureComponent {
 
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
-            console.log( this.classCSS + ': prepareData: new props: ', props );
-
-        const { operationsData } = props;
-        let state = {};
-
-        if ( isNotEmpty( operationsData ) ) {
-            state.table = this.preparePropsTable();
-        }
-
-        this.setState( state, () => {
-            ( this.debug_mode ) &&
-                console.log( this.classCSS + ': prepareData: new state: ', this.state );
-        } );
+            console.log( 'PageOperations: prepareData: new props: ', props );
     };
 
     preparePropsTable = () => {
-        const { operationsData, accountsData, operationCategoriesData } = this.props;
+        const { operationsData, accountsData, operationCategoriesData, operationSelectedIndex } = this.props;
         let headers = [
             {
                 id:         'id',
@@ -99,7 +91,7 @@ class PageOperations extends React.PureComponent {
             },
             {
                 id:         'type',
-                text:       'Тип (приход/расход)',
+                text:       'Тип',
                 isSortable: false,
                 isSorted:   Table.SORT_TYPES.NONE,
                 options: {
@@ -172,8 +164,9 @@ class PageOperations extends React.PureComponent {
                     text:  item.comment,
                 },
             ];
+            // console.log( 'PageOperations: preparePropsTable: operationSelectedIndex: ', operationSelectedIndex, ': item`s index: ', index );
             return {
-                isSelected: false,
+                isSelected: ( index === operationSelectedIndex ),
                 rowIndex:   index + '',
                 cells:      cells,
             }
@@ -183,17 +176,69 @@ class PageOperations extends React.PureComponent {
             headers: headers,
             rows: rows,
             options: {
-                tableWidth: '80%',
+                tableWidth: '100%',
             },
+            cbChanged: this.operationsTable_cbChanged,
         }
     };
 
+    /* == callbacks == */
+
+    operationsTable_cbChanged = ( operationId ) => {
+        const { dispatch, operationsData } = this.props;
+        let newOperationSelectedIndex = findArrayItemIndex( operationsData, { id: operationId } );
+        // console.log( 'PageOperations: operationsTable_cbChanged: newOperationSelectedIndex: ', newOperationSelectedIndex );
+        dispatch( acDataOperationSelect( newOperationSelectedIndex ) );
+    };
+
+    /* == renders == */
+
+    renderFilters = () => {
+        return (
+            <div className = { this.classCSS + '_filters_section' }>
+                <div className="rows">
+                    <div className="cols col_16">
+                        FILTERS
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
+    renderMainSection = () => {
+        const table = this.preparePropsTable();
+        return(
+            <div className = { this.classCSS + '_main_section' }>
+                <div className="rows">
+                    <div className="cols col_16">
+                        <Table { ...table } />
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
+    renderButtonSection = () => {
+        return (
+            <div className = { this.classCSS + '_button_section' }>
+                <div className="rows button_panel">
+                    <div className="cols col_2">
+                        <ButtonAdd label="Новая"/>
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
     render() {
-        const { table } = this.state;
-        // const op
         return (
             <div className = { this.classCSS }>
-                <Table { ...table } />
+                <div className="wrapper">
+                    { this.renderFilters() }
+                    { this.renderMainSection() }
+                    { this.renderButtonSection() }
+                </div>
+
             </div>
         )
     }
@@ -205,6 +250,7 @@ const mapStateToProps = function ( state ) {
         operationCategoriesData:        state.data.operationCategoriesData,
         operationsData:                 state.data.operationsData,
 
+        operationSelectedIndex:         state.data.operationSelectedIndex,
         //matGlassIsVisible:              state.ui.matGlassIsVisible,
     }
 };

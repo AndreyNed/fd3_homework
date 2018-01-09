@@ -15,6 +15,8 @@ const DATA_OPERATIONS_LOAD_SUCCESS =                    'DATA_OPERATIONS_LOAD_SU
 const DATA_OPERATIONS_LOAD_ERROR =                      'DATA_OPERATIONS_LOAD_ERROR';
 const DATA_OPERATIONS_SHOULD_BE_RELOADED =              'DATA_OPERATIONS_SHOULD_BE_RELOADED';
 
+const DATA_OPERATION_SELECT =                           'DATA_OPERATION_SELECT';
+
 const acDataAccountsLoadStart = function () {
     return {
         type:               DATA_ACCOUNTS_LOAD_START,
@@ -90,6 +92,13 @@ const acDataOperationsShouldBeReloaded = function () {
     }
 };
 
+const acDataOperationSelect = function ( index ) {
+    return {
+        type:                   DATA_OPERATION_SELECT,
+        operationSelectedIndex: index,
+    }
+};
+
 export {
     DATA_ACCOUNTS_LOAD_START,           acDataAccountsLoadStart,
     DATA_ACCOUNTS_LOAD_SUCCESS,         acDataAccountsLoadSuccess,
@@ -105,4 +114,6 @@ export {
     DATA_OPERATIONS_LOAD_SUCCESS,       acDataOperationsLoadSuccess,
     DATA_OPERATIONS_LOAD_ERROR,         acDataOperationsLoadError,
     DATA_OPERATIONS_SHOULD_BE_RELOADED, acDataOperationsShouldBeReloaded,
+
+    DATA_OPERATION_SELECT,              acDataOperationSelect,
 }
