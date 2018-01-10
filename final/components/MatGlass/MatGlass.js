@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { acHideMatGlass } from "../../actions/acUI";
+import { acUIHideMatGlass } from "../../actions/acUI";
 
 import './MatGlass.scss';
 
@@ -33,7 +33,7 @@ class MatGlass extends React.PureComponent {
     classCSS = 'MatGlass';
 
     glassClick = ( e ) => {
-        this.props.dispatch( acHideMatGlass() );
+        this.props.dispatch( acUIHideMatGlass() );
     };
 
     render() {

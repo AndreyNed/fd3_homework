@@ -1,13 +1,10 @@
+@import '../../../data_const/style_const';
+
 .Button {
     display: block;
 
-    &[ data-hover="true" ] {
-        path {
-            stroke: rgba(0,102,153,1);
-        }
-    }
-
     & > .Button_icon_box {
+        position: relative;
         margin: 0 auto;
     }
 

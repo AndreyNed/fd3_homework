@@ -1,20 +1,38 @@
-const SHOW_MAT_GLASS = 'SHOW_MAT_GLASS';
+const UI_SHOW_MAT_GLASS = 'UI_SHOW_MAT_GLASS';
 
-const HIDE_MAT_GLASS = 'HIDE_MAT_GLASS';
+const UI_HIDE_MAT_GLASS = 'UI_HIDE_MAT_GLASS';
 
-const acShowMatGlass = function() {
+const UI_SHOW_OPERATION_CARD = 'UI_SHOW_OPERATION_CARD';
+
+const UI_HIDE_OPERATION_CARD = 'UI_HIDE_OPERATION_CARD';
+
+const acUIShowMatGlass = function() {
     return {
-        type:               SHOW_MAT_GLASS,
+        type:               UI_SHOW_MAT_GLASS,
     }
 };
 
-const acHideMatGlass = function() {
+const acUIHideMatGlass = function() {
     return {
-        type:               HIDE_MAT_GLASS,
+        type:               UI_HIDE_MAT_GLASS,
+    }
+};
+
+const acUIShowOperationCard = function() {
+    return {
+        type:               UI_SHOW_OPERATION_CARD,
+    }
+};
+
+const acUIHideOperationCard = function() {
+    return {
+        type:               UI_HIDE_OPERATION_CARD,
     }
 };
 
 export {
-    SHOW_MAT_GLASS, acShowMatGlass,
-    HIDE_MAT_GLASS, acHideMatGlass,
+    UI_SHOW_MAT_GLASS, acUIShowMatGlass,
+    UI_HIDE_MAT_GLASS, acUIHideMatGlass,
+    UI_SHOW_OPERATION_CARD, acUIShowOperationCard,
+    UI_HIDE_OPERATION_CARD, acUIHideOperationCard,
 }

@@ -1,5 +1,51 @@
-.AddHover {
-    path {
-        stroke: rgba(0,102,153,1);
+@import "../../../data_const/style_const";
+@import "../../../data_const/style_animations";
+
+.Button_icon_box {
+    & > svg.ButtonAdd_icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: pointer;
+
+        circle {
+            fill: $wrapperFieldColor;
+        }
+    }
+
+    &:hover {
+        animation: zoom_in 0.3s;
+        animation-fill-mode: both;
+        /*transform: scale(1.1);*/
+
+        & > svg.ButtonAdd_icon {
+            /*top: -4px;*/
+
+            circle {
+                fill: rgba(255,255,255,1);
+                stroke: #d3d3d3;
+                stroke-width: 2;
+            }
+
+            path {
+                stroke: rgba(0,102,153,1);
+            }
+        }
+    }
+
+    &:active {
+        animation: zoom_in 0.15s;
+        animation-fill-mode: both;
+        animation-direction: reverse;
+
+        & > svg.ButtonAdd_icon {
+            /*top: -4px;*/
+
+            circle {
+                stroke-width: 1;
+            }
+        }
     }
 }
+
+

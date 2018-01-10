@@ -4,12 +4,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MatGlass from  '../MatGlass/MatGlass';
+import OperationCard from '../OperationCard/OperationCard';
 import { BrowserRouter } from 'react-router-dom';
 import PagesRouter from '../../pages/PagesRouter';
 import PagesLinks  from '../../pages/PagesLinks';
 
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
-import {acHideMatGlass, acShowMatGlass} from "../../actions/acUI";
+import {acUIHideMatGlass, acUIShowMatGlass} from "../../actions/acUI";
 
 class Loader extends React.PureComponent {
 
@@ -70,7 +71,7 @@ class Loader extends React.PureComponent {
 
         if ( !accountsLoadStatus ||
              !operationCategoriesLoadStatus )
-            dispatch( acShowMatGlass() );
+            dispatch( acUIShowMatGlass() );
 
         if ( !accountsLoadStatus ) {
             // console.log( 'Accounts need to be loaded...' );
@@ -103,7 +104,7 @@ class Loader extends React.PureComponent {
              operationCategoriesLoadStatus == 2 &&
              operationsLoadStatus == 2 &&
              matGlassIsVisible )
-            setTimeout( () => { dispatch( acHideMatGlass() ) }, 1000 );
+            setTimeout( () => { dispatch( acUIHideMatGlass() ) }, 1000 );
     };
 
     render() {
@@ -113,6 +114,7 @@ class Loader extends React.PureComponent {
         return (
             <div className = { this.classCSS }>
                 <MatGlass />
+                <OperationCard />
                 {
                     ( accountsLoadStatus == 2 &&
                       operationCategoriesLoadStatus == 2 &&

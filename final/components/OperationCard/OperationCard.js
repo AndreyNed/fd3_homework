@@ -4,16 +4,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-// import './ComponentTemplate.scss';
+import './OperationCard.scss';
 
-class ComponentTemplate extends React.PureComponent {
+class OperationCard extends React.PureComponent {
 
     static propTypes = {
-
+        operationCardIsVisible: PropTypes.bool,
     };
 
     static defaultProps = {
-
+        operationCardIsVisible: false,
     };
 
     static classID = 0;
@@ -21,20 +21,20 @@ class ComponentTemplate extends React.PureComponent {
     static getHtmlID = ( data ) => {
         return ( data !== null && data !== undefined )
             ? data
-            : 'ComponentTemplate_' + ComponentTemplate.classID;
+            : 'OperationCard_' + OperationCard.classID;
     };
 
     constructor( props ) {
         super( props );
-        ComponentTemplate.classID++;
+        OperationCard.classID++;
         this.state = {
-            htmlID: ComponentTemplate.getHtmlID( props.htmlID ),
+            htmlID: OperationCard.getHtmlID( props.htmlID ),
         }
     }
 
     debug_mode = true;
 
-    classCSS = 'ComponentTemplate';
+    classCSS = 'OperationCard';
 
     componentWillMount() {
         this.prepareData( this.props );
@@ -46,17 +46,19 @@ class ComponentTemplate extends React.PureComponent {
 
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
-            console.log( 'ComponentTemplate: prepareData: new props: ', props )
-        
+        console.log( 'OperationCard: prepareData: new props: ', props )
+
         // todo
     };
 
     render() {
-        return (
+        const { operationCardIsVisible } = this.props;
+        return ( operationCardIsVisible ) &&
             <div className = { this.classCSS }>
-
+                <div className = { this.classCSS + '_form' }>
+                    Operation card
+                </div>
             </div>
-        )
     }
 
 }
@@ -64,8 +66,8 @@ class ComponentTemplate extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         accountsData:                   state.data.accountsData,
-        matGlassIsVisible:              state.ui.matGlassIsVisible,
+        operationCardIsVisible:         state.ui.operationCardIsVisible,
     }
 };
 
-export default connect( mapStateToProps )( ComponentTemplate );
+export default connect( mapStateToProps )( OperationCard );

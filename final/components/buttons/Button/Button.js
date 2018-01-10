@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import './Button.scss';
+import {isNotEmpty} from "../../../utils/utils";
 
 class Button extends React.PureComponent {
 
@@ -71,25 +72,13 @@ class Button extends React.PureComponent {
         // todo
     };
 
-    iconMouseEnter = ( e ) => {
-        e.currentTarget.dataset.hover = true;
-    };
-
-    iconMouseLeave = ( e ) => {
-        e.currentTarget.dataset.hover = false;
-    };
-
-    render( innerSVG ) {
+    render( innerSVG, addedClass ) {
         const { iconWidth, iconHeight, preserveAspectRatio, viewBox } = this.props.options;
-        console.log( 'viewBox: ', viewBox );
         return (
-            <div className = { this.classCSS }
-                 onClick = { this.props.cbChanged }
-                 onMouseEnter = { this.iconMouseEnter }
-                 onMouseLeave = { this.iconMouseLeave }
-                 data-hover = { false }>
+            <div className = { this.classCSS }>
                 <div className = { this.classCSS + '_icon_box' }
                      key='icon'
+                     onClick = { this.props.cbChanged }
                      style = {{
                          width: ( iconWidth !== 0 )
                             ? iconWidth
@@ -98,7 +87,7 @@ class Button extends React.PureComponent {
                             ? iconHeight
                             : 'auto',
                      }}>
-                    <svg className = { this.classCSS + '_icon' }
+                    <svg className = { isNotEmpty ( addedClass ) ? addedClass + '_icon ' : this.classCSS + '_icon' }
                          width =   "100%"
                          height =  "100%"
                          viewBox = { viewBox }

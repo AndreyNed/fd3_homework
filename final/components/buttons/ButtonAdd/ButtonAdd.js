@@ -20,11 +20,11 @@ class ButtonAdd extends Button {
     static defaultProps = {
         label:      '',
         options:    {
-            iconWidth: 32,
-            iconHeight: 32,
+            iconWidth: 48,
+            iconHeight: 48,
             viewBox:    '0 0 64 64',
             preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'AddHover',
+            addedClass: 'ButtonAdd',
         },
         cbChanged:  null,
     };
@@ -51,14 +51,22 @@ class ButtonAdd extends Button {
 
     render() {
         let innerSVG = (
-            <path d="M 32 0 V 64 M 0 32 H 64"
-                  strokeWidth="4"
-                  stroke="#898989"
-                  fill="none"
-            />
+            <g className="ButtonAdd_inner_svg">
+                <circle cx="32" cy="32" r="31"
+                        stroke="#d3d3d3"
+                        strokeWidth="1"
+                        fill="rgba(255,255,255,0)"
+                />
+                <path d="M 32 8 V 56 M 8 32 H 56"
+                      strokeWidth="6"
+                      stroke="#898989"
+                      fill="none"
+                />
+            </g>
+
         );
 
-        return super.render( innerSVG )
+        return super.render( innerSVG, this.props.options.addedClass )
     }
 }
 

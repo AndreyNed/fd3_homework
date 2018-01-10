@@ -3,10 +3,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import Table from '../components/Table/Table';
 import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
+import OperationCard from '../components/OperationCard/OperationCard';
+
 import { isExists, isNotEmpty, findArrayItem, findArrayItemIndex } from "../utils/utils";
+
 import {acDataOperationSelect} from "../actions/acData";
+import { acUIShowOperationCard, acUIHideOperationCard } from "../actions/acUI";
 
 import './PageOperations.scss';
 
@@ -37,6 +42,8 @@ class PageOperations extends React.PureComponent {
                 comment:                PropTypes.string,
             })
         ),
+
+        operationCardIsVisible:         PropTypes.bool,
     };
 
     static defaultProps = {
@@ -182,6 +189,15 @@ class PageOperations extends React.PureComponent {
         }
     };
 
+    preparePropsButtonPanel = () => {
+        return {
+            btnAdd: {
+                label: 'Добавить',
+                cbChanged: this.buttonPanel_btnAdd_cbChanged,
+            },
+        }
+    };
+
     /* == callbacks == */
 
     operationsTable_cbChanged = ( operationId ) => {
@@ -189,6 +205,12 @@ class PageOperations extends React.PureComponent {
         let newOperationSelectedIndex = findArrayItemIndex( operationsData, { id: operationId } );
         // console.log( 'PageOperations: operationsTable_cbChanged: newOperationSelectedIndex: ', newOperationSelectedIndex );
         dispatch( acDataOperationSelect( newOperationSelectedIndex ) );
+    };
+
+    buttonPanel_btnAdd_cbChanged = () => {
+        console.log( 'PageOperations: buttonPanel_btnAdd_cbChanged: click...' );
+        const { dispatch, operationCardIsVisible } = this.props;
+        dispatch( acUIShowOperationCard() );
     };
 
     /* == renders == */
@@ -223,7 +245,7 @@ class PageOperations extends React.PureComponent {
             <div className = { this.classCSS + '_button_section' }>
                 <div className="rows button_panel">
                     <div className="cols col_2">
-                        <ButtonAdd label="Новая"/>
+                        <ButtonAdd { ...this.preparePropsButtonPanel().btnAdd }/>
                     </div>
                 </div>
             </div>
@@ -231,6 +253,7 @@ class PageOperations extends React.PureComponent {
     };
 
     render() {
+        const { operationCardIsVisible } = this.props;
         return (
             <div className = { this.classCSS }>
                 <div className="wrapper">
@@ -251,6 +274,7 @@ const mapStateToProps = function ( state ) {
         operationsData:                 state.data.operationsData,
 
         operationSelectedIndex:         state.data.operationSelectedIndex,
+
         //matGlassIsVisible:              state.ui.matGlassIsVisible,
     }
 };

@@ -1,3 +1,5 @@
+@import "./data_const/style_const";
+
 html, body, * {
     padding: 0;
     margin: 0;
@@ -13,6 +15,10 @@ html {
 .wrapper {
     width: 1400px;
     margin: 0 auto;
+    background-color: #f9f9f9;
+    margin-top:4px;
+    position: relative;
+    min-height: 800px;
 }
 
 .rows {

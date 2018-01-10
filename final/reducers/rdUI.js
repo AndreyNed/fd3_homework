@@ -1,25 +1,45 @@
 'use strict';
 
-import { SHOW_MAT_GLASS, HIDE_MAT_GLASS } from "../actions/acUI";
+import {
+    UI_SHOW_MAT_GLASS,
+    UI_HIDE_MAT_GLASS,
+    UI_SHOW_OPERATION_CARD,
+    UI_HIDE_OPERATION_CARD,
+} from "../actions/acUI";
 
 const initState = {
     matGlassIsVisible:      true,
+    operationCardIsVisible: false,
 };
 
 function rdUI ( state = initState, action ) {
     switch ( action.type ) {
 
-        case SHOW_MAT_GLASS:
+        case UI_SHOW_MAT_GLASS:
             return {
                 ...state, ...{
                     matGlassIsVisible:  true,
                 }
             };
 
-        case HIDE_MAT_GLASS:
+        case UI_HIDE_MAT_GLASS:
             return {
                 ...state, ...{
                     matGlassIsVisible:  false,
+                }
+            };
+
+        case UI_SHOW_OPERATION_CARD:
+            return {
+                ...state, ...{
+                    operationCardIsVisible:  true,
+                }
+            };
+
+        case UI_HIDE_OPERATION_CARD:
+            return {
+                ...state, ...{
+                    operationCardIsVisible:  false,
                 }
             };
 
