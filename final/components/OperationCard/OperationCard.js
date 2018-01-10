@@ -4,12 +4,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { MODAL_CONTENT } from "../../data_const/data_const";
+
 import './OperationCard.scss';
 
 class OperationCard extends React.PureComponent {
 
     static propTypes = {
         operationCardIsVisible: PropTypes.bool,
+        modalContent:           PropTypes.string,
     };
 
     static defaultProps = {
@@ -52,8 +55,8 @@ class OperationCard extends React.PureComponent {
     };
 
     render() {
-        const { operationCardIsVisible } = this.props;
-        return ( operationCardIsVisible ) &&
+        const { modalContent } = this.props;
+        return ( modalContent === MODAL_CONTENT.OPERATION_CARD ) &&
             <div className = { this.classCSS }>
                 <div className = { this.classCSS + '_form' }>
                     Operation card
@@ -66,7 +69,7 @@ class OperationCard extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         accountsData:                   state.data.accountsData,
-        operationCardIsVisible:         state.ui.operationCardIsVisible,
+        modalContent:                   state.ui.modalContent,
     }
 };
 

@@ -6,6 +6,8 @@ const UI_SHOW_OPERATION_CARD = 'UI_SHOW_OPERATION_CARD';
 
 const UI_HIDE_OPERATION_CARD = 'UI_HIDE_OPERATION_CARD';
 
+const UI_SHOW_DATA_LOADING_MESSAGE = 'UI_SHOW_DATA_LOADING_MESSAGE';
+
 const acUIShowMatGlass = function() {
     return {
         type:               UI_SHOW_MAT_GLASS,
@@ -24,9 +26,9 @@ const acUIShowOperationCard = function() {
     }
 };
 
-const acUIHideOperationCard = function() {
+const acUIShowDataLoadingMessage = function() {
     return {
-        type:               UI_HIDE_OPERATION_CARD,
+        type:               UI_SHOW_DATA_LOADING_MESSAGE,
     }
 };
 
@@ -34,5 +36,5 @@ export {
     UI_SHOW_MAT_GLASS, acUIShowMatGlass,
     UI_HIDE_MAT_GLASS, acUIHideMatGlass,
     UI_SHOW_OPERATION_CARD, acUIShowOperationCard,
-    UI_HIDE_OPERATION_CARD, acUIHideOperationCard,
+    UI_SHOW_DATA_LOADING_MESSAGE, acUIShowDataLoadingMessage,
 }

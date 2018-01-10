@@ -1,15 +1,18 @@
 'use strict';
 
+import { MODAL_CONTENT } from "../data_const/data_const";
+
 import {
     UI_SHOW_MAT_GLASS,
     UI_HIDE_MAT_GLASS,
     UI_SHOW_OPERATION_CARD,
-    UI_HIDE_OPERATION_CARD,
+    UI_SHOW_DATA_LOADING_MESSAGE,
 } from "../actions/acUI";
 
 const initState = {
     matGlassIsVisible:      true,
     operationCardIsVisible: false,
+    modalContent:           MODAL_CONTENT.DATA_LOADING,
 };
 
 function rdUI ( state = initState, action ) {
@@ -25,21 +28,24 @@ function rdUI ( state = initState, action ) {
         case UI_HIDE_MAT_GLASS:
             return {
                 ...state, ...{
+                    modalContent:       MODAL_CONTENT.NONE,
                     matGlassIsVisible:  false,
+                }
+            };
+
+        case UI_SHOW_DATA_LOADING_MESSAGE:
+            return {
+                ...state, ...{
+                    modalContent:       MODAL_CONTENT.DATA_LOADING,
+                    matGlassIsVisible:  true,
                 }
             };
 
         case UI_SHOW_OPERATION_CARD:
             return {
                 ...state, ...{
-                    operationCardIsVisible:  true,
-                }
-            };
-
-        case UI_HIDE_OPERATION_CARD:
-            return {
-                ...state, ...{
-                    operationCardIsVisible:  false,
+                    modalContent:      MODAL_CONTENT.OPERATION_CARD,
+                    matGlassIsVisible: true,
                 }
             };
 

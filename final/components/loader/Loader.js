@@ -9,8 +9,10 @@ import { BrowserRouter } from 'react-router-dom';
 import PagesRouter from '../../pages/PagesRouter';
 import PagesLinks  from '../../pages/PagesLinks';
 
+import { MODAL_CONTENT } from "../../data_const/data_const";
+
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
-import {acUIHideMatGlass, acUIShowMatGlass} from "../../actions/acUI";
+import {acUIHideMatGlass, acUIShowMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
 
 class Loader extends React.PureComponent {
 
@@ -41,6 +43,8 @@ class Loader extends React.PureComponent {
         ),
         accountsLoadStatus:             PropTypes.number,
         operationCategoriesLoadStatus:  PropTypes.number,
+        matGlassIsVisible:              PropTypes.bool,
+        modalContent:                   PropTypes.string,
     };
 
     static defaultProps = {
@@ -67,11 +71,12 @@ class Loader extends React.PureComponent {
             operationCategoriesLoadStatus,
             operationsLoadStatus,
             matGlassIsVisible,
+            modalContent,
         } = props;
 
         if ( !accountsLoadStatus ||
              !operationCategoriesLoadStatus )
-            dispatch( acUIShowMatGlass() );
+            dispatch( acUIShowDataLoadingMessage() );
 
         if ( !accountsLoadStatus ) {
             // console.log( 'Accounts need to be loaded...' );
@@ -103,23 +108,22 @@ class Loader extends React.PureComponent {
         if ( accountsLoadStatus == 2 &&
              operationCategoriesLoadStatus == 2 &&
              operationsLoadStatus == 2 &&
-             matGlassIsVisible )
+             modalContent === MODAL_CONTENT.DATA_LOADING )
             setTimeout( () => { dispatch( acUIHideMatGlass() ) }, 1000 );
     };
 
     render() {
         const {
-            accountsLoadStatus, operationCategoriesLoadStatus, operationsLoadStatus, matGlassIsVisible
+            accountsLoadStatus, operationCategoriesLoadStatus, operationsLoadStatus, matGlassIsVisible, modalContent
         } = this.props;
         return (
             <div className = { this.classCSS }>
                 <MatGlass />
-                <OperationCard />
                 {
                     ( accountsLoadStatus == 2 &&
                       operationCategoriesLoadStatus == 2 &&
                       operationsLoadStatus == 2 &&
-                      !matGlassIsVisible ) &&
+                      modalContent !== MODAL_CONTENT.DATA_LOADING ) &&
                     <BrowserRouter>
                         <div className = { this.classCSS + "_router" }>
                             <PagesLinks />
@@ -143,6 +147,7 @@ const mapStateToProps = function ( state ) {
         operationsLoadStatus:           state.data.operationsLoadStatus,
 
         matGlassIsVisible:              state.ui.matGlassIsVisible,
+        modalContent:                   state.ui.modalContent,
     }
 };
 
