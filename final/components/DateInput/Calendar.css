@@ -1,0 +1,155 @@
+div.CalendarR {
+    /*position: relative;*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    z-index: 100000;
+}
+
+div.CalendarR_head {
+    padding: 0.5em;
+}
+
+input.CalendarR_input_month {
+    display: inline-block;
+    width: 60%;
+    margin-left: calc(20% - 1em);
+    text-align: center;
+    border: none;
+    cursor: pointer;
+}
+
+div.CalendarR_btn {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+}
+
+div.CalendarR_btn > svg {
+    fill: none;
+}
+
+div.CalendarR_btn > svg:hover {
+    fill: #d3d3d3;
+}
+
+div.CalendarR_btn_prev {
+    float: left;
+}
+
+div.CalendarR_btn_next {
+    float: right;
+}
+
+div.CalendarR_body {
+    font-size: 0.85em;
+    padding: 0.5em;
+}
+
+div.CalendarR_body > table tr {
+    box-sizing: border-box;
+}
+
+div.CalendarR_body > table td {
+    position: relative;
+    box-sizing: border-box;
+    text-align: center;
+    cursor: pointer;
+}
+
+div.CalendarR_body > table td.calendar_month_current.calendar_workday {
+    color: #000000;
+}
+
+div.CalendarR_body > table td.calendar_month_current.calendar_weekend {
+    color: #ff0000;
+}
+
+div.CalendarR_body > table td.calendar_month_current.calendar_current_date {
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+}
+
+div.CalendarR_body > table td.calendar_month_other.calendar_workday {
+    color: #d3d3d3;
+}
+
+div.CalendarR_body > table td.calendar_month_other.calendar_weekend {
+    color: #808080;
+}
+
+div.CalendarR_body > table td:hover {
+    font-weight: bold;
+    text-shadow: 1px 1px 1px darkgrey;
+}
+
+div.CalendarR_body > table td > .CalendarR_day_frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.CalendarR_years_box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 205px;
+    height: 222px;
+    background-color: #ffffff;
+}
+
+div.CalendarR_years_box.years_box_hidden {
+    display: none;
+}
+
+div.CalendarR_years_table_box {
+    position: absolute;
+    top: 1em;
+    left: 20%;
+    display: inline-block;
+    /*width: 50%;*/
+    padding-left: 1em;
+}
+
+table.CalendarR_years_table {
+    padding-right: 2em;
+    border-right: 1px solid #d3d3d3;
+    color: #808080;
+}
+
+table.CalendarR_years_table td {
+    cursor: pointer;
+}
+
+table.CalendarR_years_table td:hover{
+    color: #000000;
+    text-shadow: 2px 2px 2px #d3d3d3;
+}
+
+div.CalendarR_years_btn_box {
+    position: absolute;
+    left: 72.5%;
+    top: 50%;
+    transform: translateY(-50%);
+    /*width: 50%;*/
+}
+
+div.CalendarR_years_btn {
+    width: 2em;
+    height: 2em;
+    fill: #ffffff;
+    cursor: pointer;
+}
+
+div.CalendarR_years_btn:hover {
+    fill: #d3d3d3;
+}
+/*
+.calendar_hidden {
+    display: none;
+}*/
