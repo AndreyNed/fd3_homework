@@ -11,7 +11,7 @@ import {
 
 const initState = {
     matGlassIsVisible:      true,
-    operationCardIsVisible: false,
+    isNewOperationAdded:    false,
     modalContent:           MODAL_CONTENT.DATA_LOADING,
 };
 
@@ -44,8 +44,9 @@ function rdUI ( state = initState, action ) {
         case UI_SHOW_OPERATION_CARD:
             return {
                 ...state, ...{
-                    modalContent:      MODAL_CONTENT.OPERATION_CARD,
-                    matGlassIsVisible: true,
+                    modalContent:        MODAL_CONTENT.OPERATION_CARD,
+                    matGlassIsVisible:   true,
+                    isNewOperationAdded: action.isNewOperationAdded,
                 }
             };
 

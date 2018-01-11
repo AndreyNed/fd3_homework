@@ -1,0 +1,174 @@
+/* color */
+$inputContainerBorder:       #d3d3d3;
+$listBoxFill:                #ffffff;
+$listBoxBorder:              #d3d3d3;
+$listItemHoverBackground:    #f2f2f2;
+$listItemSelectedBackground: #d8d8d8;
+
+/* size */
+$minBlockHeight:             32px;
+
+.ComboInputR {
+
+    // == display ==
+    &[ data-display="dNone" ] {
+        display: none !important;
+    }
+    &[ data-display="dHidden" ] {
+        visibility: hidden !important;
+    }
+    &[ data-display="dBlock" ] {
+        display: block !important;
+    }
+    &[ data-display="dInlineBlock" ] {
+        display: inline-block !important;
+    }
+
+    // == labelPosition and labelVerticalAlign ==
+    &[ data-label_position="top" ] {
+        & > .ComboInputR_label_box {
+            display: block;
+        }
+        & > .ComboInputR_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="left" ] {
+        & > .ComboInputR_label_box,
+        & > .ComboInputR_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+    &[ data-label_position="bottom" ] {
+        & > .ComboInputR_label_box {
+            display: block;
+        }
+        & > .ComboInputR_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="right" ] {
+        & > .ComboInputR_label_box,
+        & > .ComboInputR_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    & > .ComboInputR_label_box {
+        font: normal 16px / 150% Arial, sans-serif;
+        min-height: $minBlockHeight;
+        padding: 4px 0 0 0;
+    }
+
+    & > .ComboInputR_input_box {
+        position: relative;
+
+        & > .ComboInputR_input_container {
+            position: relative;
+            border: 1px solid $inputContainerBorder;
+
+            & > .ComboInputR_input {
+                width: 100%;
+                min-height: $minBlockHeight;
+                outline: none;
+                padding: 2px 24px 2px 8px;
+                border: none;
+                font: normal 16px / 150% Arial, sans-serif;
+
+                &[ data-readonly="true" ] {
+                    cursor: default;
+                }
+
+                &[ data-filter="true" ] {
+                    padding-right: 40px;
+                }
+            }
+
+            & > .ComboInputR_icon_filter_container {
+                /*background: grey;*/
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                right: 24px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+
+                &[ data-readonly="true" ] {
+                    cursor: default;
+                }
+            }
+
+            & > .ComboInputR_icon_container {
+                /*background: grey;*/
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                right: 4px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+
+                &[ data-readonly="true" ] {
+                    cursor: default;
+                }
+            }
+        }
+        & > .ComboInputR_list_container {
+            position: absolute;
+            overflow: auto;
+            background-color: $listBoxFill;
+            border: 1px solid $listBoxBorder;
+            z-index: 1000;
+
+            &[ data-show_list="false" ] {
+                display: none;
+            }
+
+            & > .ComboInputR_list {
+                position: relative;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+
+                & > .ComboInputR_item {
+                    position: relative;
+                    min-height: $minBlockHeight;
+                    padding: 6px 8px 2px  8px;
+                    vertical-align: middle;
+                    cursor: pointer;
+                    -ms-user-select: none;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+
+                    &:hover {
+                        background-color: $listItemHoverBackground;
+                    }
+
+                    &[ data-selected="true" ] {
+                        background-color: $listItemSelectedBackground;
+                    }
+                }
+            }
+        }
+    }
+}

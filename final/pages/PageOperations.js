@@ -209,8 +209,8 @@ class PageOperations extends React.PureComponent {
 
     buttonPanel_btnAdd_cbChanged = () => {
         console.log( 'PageOperations: buttonPanel_btnAdd_cbChanged: click...' );
-        const { dispatch, operationCardIsVisible } = this.props;
-        dispatch( acUIShowOperationCard() );
+        const { dispatch } = this.props;
+        dispatch( acUIShowOperationCard( true ) );
     };
 
     /* == renders == */

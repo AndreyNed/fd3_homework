@@ -1,0 +1,125 @@
+/* color */
+$inputContainerBorder:       #d3d3d3;
+$calendarBackgroundColor:    #ffffff;
+/*$listBoxFill:                #ffffff;
+$listBoxBorder:              #d3d3d3;
+$listItemHoverBackground:    #f2f2f2;
+$listItemSelectedBackground: #d8d8d8;*/
+
+/* size */
+$minBlockHeight:             32px;
+
+.DateInputR {
+
+    // == display ==
+    &[ data-display="dNone" ] {
+        display: none !important;
+    }
+    &[ data-display="dHidden" ] {
+        visibility: hidden !important;
+    }
+    &[ data-display="dBlock" ] {
+        display: block !important;
+    }
+    &[ data-display="dInlineBlock" ] {
+        display: inline-block !important;
+    }
+
+    // == labelPosition and labelVerticalAlign ==
+    &[ data-label_position="top" ] {
+        & > .DateInputR_label_box {
+            display: block;
+        }
+        & > .DateInputR_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="left" ] {
+        & > .DateInputR_label_box,
+        & > .DateInputR_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+    &[ data-label_position="bottom" ] {
+        & > .DateInputR_label_box {
+            display: block;
+        }
+        & > .DateInputR_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="right" ] {
+        & > .DateInputR_label_box,
+        & > .DateInputR_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    & > .DateInputR_label_box {
+        font: normal 16px / 150% Arial, sans-serif;
+        min-height: $minBlockHeight;
+        padding: 4px 0 0 0;
+    }
+
+    & > .DateInputR_input_box {
+        position: relative;
+
+        & > .DateInputR_input_container {
+            position: relative;
+            border: 1px solid $inputContainerBorder;
+
+            & > .DateInputR_input {
+                width: 100%;
+                min-height: $minBlockHeight;
+                outline: none;
+                padding: 2px 24px 2px 8px;
+                border: none;
+                font: normal 16px / 150% Arial, sans-serif;
+
+                &[ data-readonly="true" ] {
+                    cursor: default;
+                }
+            }
+
+            & > .DateInputR_icon_container {
+                /*background: grey;*/
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                right: 4px;
+                top: 50%;
+                transform: translateY(-50%) ;
+                cursor: pointer;
+
+                &[ data-readonly="true" ] {
+                    cursor: default;
+                }
+            }
+        }
+
+        & > .CalendarR {
+            position: absolute;
+            right: 0;
+            background-color: $calendarBackgroundColor;
+            border: 1px solid $inputContainerBorder;
+        }
+    }
+}

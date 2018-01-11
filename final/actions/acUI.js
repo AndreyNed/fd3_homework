@@ -20,9 +20,10 @@ const acUIHideMatGlass = function() {
     }
 };
 
-const acUIShowOperationCard = function() {
+const acUIShowOperationCard = function( isNew ) {
     return {
-        type:               UI_SHOW_OPERATION_CARD,
+        type:                UI_SHOW_OPERATION_CARD,
+        isNewOperationAdded: isNew,
     }
 };
 

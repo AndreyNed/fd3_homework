@@ -4,11 +4,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { MODAL_CONTENT } from "../../data_const/data_const";
-
 import { acUIHideMatGlass } from "../../actions/acUI";
 
 import OperationCard from "../OperationCard/OperationCard";
+import DataLoading from "../DataLoading/DataLoading";
 
 import './MatGlass.scss';
 
@@ -16,7 +15,6 @@ class MatGlass extends React.PureComponent {
 
     static propTypes = {
         isVisible:              PropTypes.bool,
-        modalContent:           PropTypes.string,
     };
 
     static defaultProps = {
@@ -47,12 +45,7 @@ class MatGlass extends React.PureComponent {
             ( isVisible ) &&
             <div className = { this.classCSS }
                  onClick = { this.glassClick }>
-                {
-                    ( modalContent === MODAL_CONTENT.DATA_LOADING ) &&
-                        <div className = { this.classCSS + "_message" }>
-                            Загрузка данных...
-                        </div>
-                }
+                <DataLoading />
                 <OperationCard />
             </div>
         )
@@ -63,7 +56,6 @@ class MatGlass extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         isVisible:      state.ui.matGlassIsVisible,
-        modalContent:   state.ui.modalContent,
     };
 };
 

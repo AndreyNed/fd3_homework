@@ -2,6 +2,8 @@
 @import "../../../data_const/style_animations";
 
 .Button_icon_box {
+    transition: transform 0.3s;
+
     & > svg.ButtonAdd_icon {
         position: absolute;
         top: 0;
@@ -14,12 +16,9 @@
     }
 
     &:hover {
-        animation: zoom_in 0.3s;
-        animation-fill-mode: both;
-        /*transform: scale(1.1);*/
+        transform: scale(1.15);
 
         & > svg.ButtonAdd_icon {
-            /*top: -4px;*/
 
             circle {
                 fill: rgba(255,255,255,1);
@@ -34,12 +33,10 @@
     }
 
     &:active {
-        animation: zoom_in 0.15s;
-        animation-fill-mode: both;
-        animation-direction: reverse;
+        transform: scale(0.85);
+        transition: transform 0.15s;
 
         & > svg.ButtonAdd_icon {
-            /*top: -4px;*/
 
             circle {
                 stroke-width: 1;
