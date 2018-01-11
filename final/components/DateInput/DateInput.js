@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import IconCalendar from '../icons/IconCalendar';
 import Calendar     from './Calendar';
 
-import Label from './Label';
+import Label from '../Label/Label';
 
 require('./DateInput.scss');
 

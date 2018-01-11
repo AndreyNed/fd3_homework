@@ -55,6 +55,8 @@ class Table extends React.PureComponent {
                 PropTypes.string,
             ]),
         }),
+        cbChanged:                      PropTypes.func,
+        cbSelected:                     PropTypes.func,
     };
 
     static defaultProps = {
@@ -122,6 +124,10 @@ class Table extends React.PureComponent {
         this.rowSelect( rowIndex );
     };
 
+    rowDoubleClick = ( e ) => {
+        this.rowChoose();
+    };
+
     /* == action functions == */
 
     rowSelect = ( rowIndex ) => {
@@ -132,6 +138,11 @@ class Table extends React.PureComponent {
         let value = cells[ 0 ].value;
         // console.log( 'Table: rowSelect: operation`s id: ', value );
         if ( cbChanged ) cbChanged( value );
+    };
+
+    rowChoose = () => {
+        const { cbSelected } = this.props;
+        if ( cbSelected ) cbSelected();
     };
 
     /* == renders == */
@@ -176,7 +187,8 @@ class Table extends React.PureComponent {
                  key = { item.rowIndex }
                  data-row_index = { item.rowIndex }
                  data-selected = { item.isSelected }
-                 onClick = { this.rowClick }>
+                 onClick = { this.rowClick }
+                 onDoubleClick = { this.rowDoubleClick }>
                 { item.cells.map( ( cell, cellIndex ) => {
                     return this.renderCell( cell, cellIndex )
                 } ) }

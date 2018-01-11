@@ -185,7 +185,8 @@ class PageOperations extends React.PureComponent {
             options: {
                 tableWidth: '100%',
             },
-            cbChanged: this.operationsTable_cbChanged,
+            cbChanged:  this.operationsTable_cbChanged,
+            cbSelected: this.operationTable_cbSelected,
         }
     };
 
@@ -205,6 +206,11 @@ class PageOperations extends React.PureComponent {
         let newOperationSelectedIndex = findArrayItemIndex( operationsData, { id: operationId } );
         // console.log( 'PageOperations: operationsTable_cbChanged: newOperationSelectedIndex: ', newOperationSelectedIndex );
         dispatch( acDataOperationSelect( newOperationSelectedIndex ) );
+    };
+
+    operationTable_cbSelected = () => {
+        const { dispatch } = this.props;
+        dispatch( acUIShowOperationCard( false ) );
     };
 
     buttonPanel_btnAdd_cbChanged = () => {

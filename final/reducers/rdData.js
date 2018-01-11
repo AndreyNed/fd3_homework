@@ -26,6 +26,7 @@ const initState = {
     operationsData:                 [],
     operationsLoadStatus:           0,
     operationSelectedIndex:         -1,
+    operationValue:                 {},
 };
 
 function rdData ( state = initState, action ) {

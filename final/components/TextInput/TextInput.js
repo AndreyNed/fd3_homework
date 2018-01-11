@@ -1,10 +1,10 @@
 "use strict";
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import Label from './Label';
+import Label from '../Label/Label';
+import {isExists} from "../../utils/utils";
 
 require('./TextInput.scss');
 
@@ -61,13 +61,19 @@ class TextInput extends React.PureComponent {
         currValue:              PropTypes.string,
         display:                PropTypes.string,
         isReadOnly:             PropTypes.bool,
-        isInlineBlock:          PropTypes.bool,
         isUpdateByDefValue:     PropTypes.bool,
-        options:                PropTypes.object,
-        labelBoxWidth:          PropTypes.number,
-        inputBoxWidth:          PropTypes.number,
-        labelPosition:          PropTypes.string,
-        labelVerticalAlign:     PropTypes.string,
+        options:                PropTypes.shape({
+            labelBoxWidth:      PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string,
+            ]),
+            inputBoxWidth:      PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string,
+            ]),
+            labelPosition:      PropTypes.string,
+            labelVerticalAlign: PropTypes.string,
+        }),
         cbChanged:              PropTypes.func,
         callbacks:              PropTypes.object,
         cbSearched:             PropTypes.func,
@@ -79,7 +85,6 @@ class TextInput extends React.PureComponent {
         inputType:              TextInput.inputTypes.text,
         isVisible:              true,
         isReadOnly:             false,
-        isInlineBlock:          true,
         isUpdateByDefValue:     true,
         isFirstIsEmpty:         false,
         display:                TextInput.displayTypes.inlineBlock,
@@ -122,7 +127,7 @@ class TextInput extends React.PureComponent {
         }
     }
 
-    classCSS = 'TextInputR';   // name of the className of component
+    classCSS = 'TextInput';   // name of the className of component
 
     componentWillMount() {
         this.prepareProps( this.state );
@@ -259,13 +264,15 @@ class TextInput extends React.PureComponent {
 
     // == render functions ==
     renderLabel = () => {
+        const { labelBoxWidth } = this.props.options;
         return (
             ( this.state.withLabel ) &&
             <div className = { this.classCSS + "_label_box" }
                  key = { "label_box" }
                  style = {{
-                     width: ( this.isGTZero( this.state.options.labelBoxWidth ) ) ?
-                         this.state.options.labelBoxWidth : 'auto',
+                     width: ( isExists( labelBoxWidth ) && labelBoxWidth !== 0 )
+                         ? labelBoxWidth
+                         : 'auto',
                  }}
                  data-label_vertical_align = { this.state.options.labelVerticalAlign || 'middle' }>
                 {
@@ -279,14 +286,16 @@ class TextInput extends React.PureComponent {
     };
 
     renderInputBox = () => {
+        const { inputBoxWidth } = this.props.options;
         return (
             <div className = { this.classCSS + "_input_box" }
                  key = { "input_box" }
                  ref = { ( elm ) => { this.inputBox = elm } }
                  onClick = { this.inputBoxClick }
                  style = {{
-                     width: ( this.isGTZero( this.state.options.inputBoxWidth ) ) ?
-                         this.state.options.inputBoxWidth : 'auto',
+                     width: ( isExists( inputBoxWidth ) && inputBoxWidth !== 0 )
+                         ? inputBoxWidth
+                         : 'auto',
                  }}
                  data-label_vertical_align = { this.state.options.labelVerticalAlign || TextInput.position.middle }>
                 <div className = { this.classCSS + "_input_container" }
