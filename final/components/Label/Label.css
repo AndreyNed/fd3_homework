@@ -1,0 +1,16 @@
+label[ data-label_position = "left" ] {
+    float: left;
+}
+
+label[ data-label_position = "top" ] {
+    float: none;
+    padding-left: 0;
+    display: block;
+}
+
+label {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}

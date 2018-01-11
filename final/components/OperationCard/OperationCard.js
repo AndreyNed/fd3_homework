@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 
 import { MODAL_CONTENT } from "../../data_const/data_const";
 
+import TextInput from '../TextInput/TextInput';
+import ComboInput from '../ComboInput/ComboInput';
+import DateInput from '../DateInput/DateInput';
+
 import './OperationCard.scss';
 
 class OperationCard extends React.PureComponent {
