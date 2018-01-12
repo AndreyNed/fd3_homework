@@ -9,9 +9,10 @@ import { MODAL_CONTENT, OPERATION_TYPES } from "../../data_const/data_const";
 import TextInput from '../TextInput/TextInput';
 import ComboInput from '../ComboInput/ComboInput';
 import DateInput from '../DateInput/DateInput';
+import NumberInput from '../NumberInput/NumberInput';
 
 import './OperationCard.scss';
-import {isExists, isNotNaN} from "../../utils/utils";
+import { isExists, isNotNaN } from "../../utils/utils";
 
 class OperationCard extends React.PureComponent {
 
@@ -179,11 +180,11 @@ class OperationCard extends React.PureComponent {
             },
             sum: {
                 label:              'Сумма',
-                defValue:           sum + '',
+                defValue:           sum,
                 withLabel:          true,
-                display:            TextInput.displayTypes.block,
+                display:            NumberInput.displayTypes.block,
                 options: {
-                    labelPosition:  TextInput.position.left,
+                    labelPosition:  NumberInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
@@ -247,7 +248,7 @@ class OperationCard extends React.PureComponent {
 
     sum_cbChanged = ( value ) => {
         let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.sum = parseFloat( value );
+        newOperationValue.sum = value;
         newOperationValue.sum = ( isNotNaN( newOperationValue.sum ) && newOperationValue.sum > 0 )
             ? newOperationValue.sum
             : 0;
@@ -319,7 +320,7 @@ class OperationCard extends React.PureComponent {
                     <div className="rows"
                          key="sum">
                         <div className="cols col_16">
-                            <TextInput { ...props.sum } />
+                            <NumberInput { ...props.sum } />
                         </div>
                     </div>
                     <div className="rows"

@@ -1,34 +1,102 @@
-div.NumberInput {
-    display: table-cell;
-}
+/* color */
+$inputContainerBorder:       #d3d3d3;
 
-div.NumberInput_label_box {
-    display: inline-block;
-    vertical-align: middle;
-    min-height: 2em;
-}
+/* size */
+$minBlockHeight:             32px;
 
-/*div.NumberInput_label_box[ data-label_position='left' ] {
-    display: inline-block;
-    float: left;
-}*/
+.NumberInput {
 
-label.Label_NumberInput {
-    display: inline-block;
-    padding: 0.4em 0;
-}
+    // == display ==
+    &[ data-display="dNone" ] {
+        display: none !important;
+    }
+    &[ data-display="dHidden" ] {
+        visibility: hidden !important;
+    }
+    &[ data-display="dBlock" ] {
+        display: block !important;
+    }
+    &[ data-display="dInlineBlock" ] {
+        display: inline-block !important;
+    }
 
-div.NumberInput_input_box {
-    display: inline-block;
-    vertical-align: middle;
-    height: 2em;
-}
+    // == labelPosition and labelVerticalAlign ==
+    &[ data-label_position="top" ] {
+        & > .NumberInput_label_box {
+            display: block;
+        }
+        & > .NumberInput_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="left" ] {
+        & > .NumberInput_label_box,
+        & > .NumberInput_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+    &[ data-label_position="bottom" ] {
+        & > .NumberInput_label_box {
+            display: block;
+        }
+        & > .NumberInput_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="right" ] {
+        & > .NumberInput_label_box,
+        & > .NumberInput_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
 
-input.NumberInput_input {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    padding: 0.5em;
-    border: 1px solid #d3d3d3;
-    outline: none;
+    & > .NumberInput_label_box {
+        font: normal 16px / 150% Arial, sans-serif;
+        min-height: $minBlockHeight;
+        padding: 4px 0 0 0;
+    }
+
+    & > .NumberInput_input_box {
+        position: relative;
+
+        & > .NumberInput_input_container {
+            position: relative;
+            /*border: 1px solid #f2f2f2;*/
+            border: none;
+            border-radius: 4px;
+            background-color: #ffffff;
+
+            & > .NumberInput_input {
+                width: 100%;
+                min-height: $minBlockHeight;
+                outline: none;
+                padding: 2px 8px 2px 8px;
+                border: none;
+                background-color: rgba(255,255,255,0);
+                font: normal 16px / 150% Arial, sans-serif;
+
+                &[ data-input_type="search" ] {
+                    padding: 2px 24px 2px 8px;
+                }
+            }
+        }
+    }
 }
