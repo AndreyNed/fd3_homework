@@ -9,6 +9,8 @@ import Calendar     from './Calendar';
 
 import Label from '../Label/Label';
 
+import { isExists } from "../../utils/utils";
+
 require('./DateInput.scss');
 
 class DateInput extends React.PureComponent {
@@ -18,6 +20,14 @@ class DateInput extends React.PureComponent {
         inlineBlock:        'dInlineBlock',
         hidden:             'dHidden',
         none:               'dNone',
+    };
+
+    static position = {
+        top:                    'top',
+        bottom:                 'bottom',
+        left:                   'left',
+        right:                  'right',
+        middle:                 'middle',
     };
 
     static propTypes = {
@@ -35,14 +45,29 @@ class DateInput extends React.PureComponent {
             DateInput.displayTypes.none,
         ]),
         isReadOnly:         PropTypes.bool,   // changing is not allowed
-        // isEdited:           PropTypes.bool,
         isUpdateByDefValue: PropTypes.bool,   // new defValue replaces old value / old state.value will not be replaced
         showYearsBox:       PropTypes.bool,
-        options:            PropTypes.object,
-        labelBoxWidth:      PropTypes.number,
-        inputBoxWidth:      PropTypes.number,
-        labelPosition:      PropTypes.string, // 'top', 'bottom', 'left', 'right'
-        labelVerticalAlign: PropTypes.string, // 'top', 'middle', 'bottom' - if labelPosition is 'left' || 'right'
+        options:                PropTypes.shape({
+            labelBoxWidth:      PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string,
+            ]),
+            inputBoxWidth:      PropTypes.oneOfType([
+                PropTypes.number,
+                PropTypes.string,
+            ]),
+            labelPosition:      PropTypes.oneOf([
+                DateInput.position.left,
+                DateInput.position.right,
+                DateInput.position.top,
+                DateInput.position.bottom,
+            ]),
+            labelVerticalAlign: PropTypes.oneOf([
+                DateInput.position.top,
+                DateInput.position.middle,
+                DateInput.position.bottom,
+            ]),
+        }),
         cbChanged:          PropTypes.func,
         callbacks:          PropTypes.object,
     };
@@ -51,10 +76,7 @@ class DateInput extends React.PureComponent {
         label:              '',
         withLabel:          true,
         isVisible:          true,
-        // isEnabled:          true,
         isReadOnly:         false,
-        // isEdited:           false,
-        // isInlineBlock:      true,
         isUpdateByDefValue: true,
         display:            DateInput.displayTypes.inlineBlock,
         showCalendar:       false,
@@ -578,13 +600,15 @@ class DateInput extends React.PureComponent {
 
     // == render functions ==
     renderLabel = () => {
+        const { labelBoxWidth } = this.props.options;
         return (
             ( this.state.withLabel ) &&
             <div className = { this.classCSS + "_label_box" }
                  key = { "label_box" }
                  style = {{
-                     width: ( this.isGTZero( this.state.options.labelBoxWidth ) ) ?
-                         this.state.options.labelBoxWidth : 'auto',
+                     width: ( isExists( labelBoxWidth ) && labelBoxWidth !== 0 )
+                         ? labelBoxWidth
+                         : 'auto',
                  }}
                  data-label_vertical_align = { this.state.options.labelVerticalAlign || 'middle' }>
                 {
@@ -621,14 +645,16 @@ class DateInput extends React.PureComponent {
     };
 
     renderInputBox = () => {
+        const { inputBoxWidth } = this.props.options;
         return (
             <div className = { this.classCSS + "_input_box" }
                  key = { "input_box" }
                  ref = { ( elm ) => { this.inputBox = elm } }
                  /*onClick = { this.inputBoxClick }*/
                  style = {{
-                     width: ( this.isGTZero( this.state.options.inputBoxWidth ) ) ?
-                         this.state.options.inputBoxWidth : 'auto',
+                     width: ( isExists( inputBoxWidth ) && inputBoxWidth !== 0 )
+                         ? inputBoxWidth
+                         : 'auto',
                  }}
                  data-label_vertical_align = { this.state.options.labelVerticalAlign || 'middle' }>
                 <div className = { this.classCSS + "_input_container" }

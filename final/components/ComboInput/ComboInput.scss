@@ -83,7 +83,9 @@ $minBlockHeight:             32px;
 
         & > .ComboInputR_input_container {
             position: relative;
-            border: 1px solid $inputContainerBorder;
+            border: none;
+            border-radius: 4px;
+            background-color: #ffffff;
 
             & > .ComboInputR_input {
                 width: 100%;
@@ -91,6 +93,7 @@ $minBlockHeight:             32px;
                 outline: none;
                 padding: 2px 24px 2px 8px;
                 border: none;
+                background-color: rgba(255,255,255,0);
                 font: normal 16px / 150% Arial, sans-serif;
 
                 &[ data-readonly="true" ] {

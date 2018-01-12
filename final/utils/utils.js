@@ -64,6 +64,8 @@ export const isNotEmptyAll = ( arr ) => {
 
 export const isNotEmpty = ( value ) => ( isExists( value ) && value.length > 0 );
 
+export const isNotNaN = ( value ) => ( isExists( value ) && !isNaN( value ) );
+
 // сравнивает хеши по массиву полей в fieldsArray [ поле1, поле2, поле3, ... }
 // поля считаются равными, даже если их нет в обоих хешах одновременно
 export const compareHashes = (first, second, fieldsArray ) => {

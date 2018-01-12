@@ -11,7 +11,7 @@ import ComboInput from '../ComboInput/ComboInput';
 import DateInput from '../DateInput/DateInput';
 
 import './OperationCard.scss';
-import {isExists} from "../../utils/utils";
+import {isExists, isNotNaN} from "../../utils/utils";
 
 class OperationCard extends React.PureComponent {
 
@@ -117,6 +117,7 @@ class OperationCard extends React.PureComponent {
 
     formProps = () => {
         const { accountId, categoryId, type, sum, date, comment } = this.state.operationValue;
+        const { operationCategoriesData, accountsData } = this.props;
         return {
             header: {
                 title:  '',
@@ -124,38 +125,57 @@ class OperationCard extends React.PureComponent {
             account: {
                 label:              'Счет',
                 defValue:           accountId + '',
+                listValue:          accountsData,
+                asText:             'name',
+                asValue:            'id',
                 withLabel:          true,
-                display:            TextInput.displayTypes.block,
+                display:            ComboInput.displayTypes.block,
+                inputType:          ComboInput.inputTypes.comboFilter,
+                isFirstIsEmpty:     true,
                 options: {
-                    labelPosition:  TextInput.position.left,
+                    labelPosition:  ComboInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
-                cbChanged: null,
+                cbChanged: this.account_cbChanged,
             },
             category: {
                 label:              'Категория',
                 defValue:           categoryId + '',
+                listValue:          operationCategoriesData,
+                asValue:            'id',
+                asText:             'name',
                 withLabel:          true,
-                display:            TextInput.displayTypes.block,
+                display:            ComboInput.displayTypes.block,
+                inputType:          ComboInput.inputTypes.comboFilter,
+                isFirstIsEmpty:     true,
                 options: {
                     labelPosition:  TextInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
-                cbChanged: null,
+                cbChanged: this.category_cbChanged,
             },
             type: {
                 label:              'Тип',
                 defValue:           type,
+                listValue:          [
+                    { id: "DEBIT", name: "приход" },
+                    { id: "CREDIT", name: "расход" },
+                ],
+                asText:             'name',
+                asValue:            'id',
                 withLabel:          true,
-                display:            TextInput.displayTypes.block,
+                display:            ComboInput.displayTypes.block,
+                inputType:          ComboInput.inputTypes.comboSimple,
+                isFirstIsEmpty:     false,
                 options: {
-                    labelPosition:  TextInput.position.left,
+                    labelPosition:  ComboInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
+                    listBoxHeight:  66,
                 },
-                cbChanged: null,
+                cbChanged: this.type_cbChanged,
             },
             sum: {
                 label:              'Сумма',
@@ -167,19 +187,19 @@ class OperationCard extends React.PureComponent {
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
-                cbChanged: null,
+                cbChanged: this.sum_cbChanged,
             },
             date: {
                 label:              'Дата',
-                defValue:           date + '',
+                defValue:           new Date( date ),
                 withLabel:          true,
-                display:            TextInput.displayTypes.block,
+                display:            DateInput.displayTypes.block,
                 options: {
-                    labelPosition:  TextInput.position.left,
+                    labelPosition:  DateInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
-                cbChanged: null,
+                cbChanged: this.date_cbChanged,
             },
             comment: {
                 label:              'Комментарий',
@@ -191,14 +211,72 @@ class OperationCard extends React.PureComponent {
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
-                cbChanged: null,
+                cbChanged: this.comment_cbChanged,
             },
         }
     };
 
+    /* == callbacks == */
+
+    account_cbChanged = ( value ) => {
+        let newOperationValue = { ...this.state.operationValue };
+        newOperationValue.accountId = parseInt( value );
+        newOperationValue.accountId = ( isNotNaN( newOperationValue.accountId ) )
+            ? newOperationValue.accountId
+            : 0;
+        // console.log('account: ', newOperationValue.accountId, ': ', typeof newOperationValue.accountId );
+        this.setState( { operationValue: newOperationValue } );
+    };
+
+    category_cbChanged = ( value ) => {
+        let newOperationValue = { ...this.state.operationValue };
+        newOperationValue.categoryId = parseInt( value );
+        newOperationValue.categoryId = ( isNotNaN( newOperationValue.categoryId ) )
+            ? newOperationValue.categoryId
+            : 0;
+        // console.log('category: ', newOperationValue.categoryId, ': ', typeof newOperationValue.categoryId );
+        this.setState( { operationValue: newOperationValue } );
+    };
+
+    type_cbChanged = ( value ) => {
+        let newOperationValue = { ...this.state.operationValue };
+        newOperationValue.type = value;
+        // console.log('type: ', newOperationValue.type, ': ', typeof newOperationValue.type );
+        this.setState( { operationValue: newOperationValue } );
+    };
+
+    sum_cbChanged = ( value ) => {
+        let newOperationValue = { ...this.state.operationValue };
+        newOperationValue.sum = parseFloat( value );
+        newOperationValue.sum = ( isNotNaN( newOperationValue.sum ) && newOperationValue.sum > 0 )
+            ? newOperationValue.sum
+            : 0;
+        console.log('type: ', newOperationValue.sum, ': ', typeof newOperationValue.sum );
+        this.setState( { operationValue: newOperationValue } );
+    };
+
+    date_cbChanged = ( value ) => {
+        // console.log( 'date: ', value, ': type: ', typeof value, ': ', value instanceof Date  );
+        let newOperationValue = { ...this.state.operationValue };
+        newOperationValue.date = value.getTime();
+        // console.log( 'date: ', newOperationValue.date );
+        this.setState( { operationValue: newOperationValue } );
+    };
+
+    comment_cbChanged = ( value ) => {
+        let newOperationValue = { ...this.state.operationValue };
+        newOperationValue.comment = value;
+        // console.log('comment: ', newOperationValue.comment, ': ', typeof newOperationValue.comment );
+        this.setState( { operationValue: newOperationValue } );
+    };
+
+    /* == controller == */
+
     formClick = ( e ) => {
         e.stopPropagation();
     };
+
+    /* == renders == */
 
     render() {
         const { modalContent, isNewOperationAdded } = this.props;
@@ -222,20 +300,20 @@ class OperationCard extends React.PureComponent {
                     <div className="rows"
                          key="account">
                         <div className="cols col_16">
-                            <TextInput { ...props.account } />
+                            <ComboInput { ...props.account } />
                         </div>
                     </div>
                     <div className="rows"
                          key="category">
                         <div className="cols col_16">
-                            <TextInput { ...props.category } />
+                            <ComboInput { ...props.category } />
                         </div>
                     </div>
                     <div className="rows"
                          key="typeSum">
                         <div className="cols col_16"
                              key="type">
-                            <TextInput { ...props.type } />
+                            <ComboInput { ...props.type } />
                         </div>
                     </div>
                     <div className="rows"
@@ -247,7 +325,7 @@ class OperationCard extends React.PureComponent {
                     <div className="rows"
                          key="date">
                         <div className="cols col_16">
-                            <TextInput { ...props.date } />
+                            <DateInput { ...props.date } />
                         </div>
                     </div>
                     <div className="rows"

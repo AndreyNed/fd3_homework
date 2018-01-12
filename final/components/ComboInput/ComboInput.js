@@ -4,6 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import { isExists } from "../../utils/utils";
+
 import Label from '../Label/Label';
 
 require('./ComboInput.scss');
@@ -54,6 +56,14 @@ class ComboInput extends React.PureComponent {
         none:          'dNone',
     };
 
+    static position = {
+        top:                    'top',
+        bottom:                 'bottom',
+        left:                   'left',
+        right:                  'right',
+        middle:                 'middle',
+    };
+
     static propTypes = {
         htmlID:             PropTypes.string,
         label:              PropTypes.string,
@@ -81,10 +91,22 @@ class ComboInput extends React.PureComponent {
         isFirstIsEmpty:     PropTypes.bool,
         isFiltered:         PropTypes.bool,
         options:            PropTypes.shape({
-            labelBoxWidth:       PropTypes.number,
-            inputBoxWidth:       PropTypes.number,
-            listBoxWidth:        PropTypes.number,
-            listBoxHeight:       PropTypes.number,
+            labelBoxWidth:       PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+            ]),
+            inputBoxWidth:       PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+            ]),
+            listBoxWidth:        PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+            ]),
+            listBoxHeight:       PropTypes.oneOfType([
+                PropTypes.string,
+                PropTypes.number,
+            ]),
             labelPosition:       PropTypes.string,
             labelVerticalAlign:  PropTypes.string,
             filterActiveColor:   PropTypes.string,
@@ -446,13 +468,15 @@ class ComboInput extends React.PureComponent {
 
     // == render functions ==
     renderLabel = () => {
+        const { labelBoxWidth } = this.props.options;
         return (
             ( this.state.withLabel ) &&
             <div className = { this.classCSS + "_label_box" }
                  key = { "label_box" }
                  style = {{
-                     width: ( this.isGTZero( this.state.options.labelBoxWidth ) ) ?
-                         this.state.options.labelBoxWidth : 'auto',
+                     width: ( isExists( labelBoxWidth ) && labelBoxWidth !== 0 )
+                         ? labelBoxWidth
+                         : 'auto',
                  }}
                  data-label_vertical_align = { this.state.options.labelVerticalAlign || 'middle' }>
                 {
@@ -495,14 +519,16 @@ class ComboInput extends React.PureComponent {
     };
 
     renderInputBox = () => {
+        const { inputBoxWidth } = this.props.options;
         return (
             <div className = { this.classCSS + "_input_box" }
                  key = { "input_box" }
                  ref = { ( elm ) => { this.inputBox = elm } }
                  onClick = { this.inputBoxClick }
                  style = {{
-                     width: ( this.isGTZero( this.state.options.inputBoxWidth ) ) ?
-                         this.state.options.inputBoxWidth : 'auto',
+                     width: ( isExists( inputBoxWidth ) && inputBoxWidth !== 0 )
+                         ? inputBoxWidth
+                         : 'auto',
                  }}
                  data-label_vertical_align = { this.state.options.labelVerticalAlign || 'middle' }>
                 <div className = { this.classCSS + "_input_container" }

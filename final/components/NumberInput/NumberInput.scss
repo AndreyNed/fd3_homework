@@ -1,0 +1,34 @@
+div.NumberInput {
+    display: table-cell;
+}
+
+div.NumberInput_label_box {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2em;
+}
+
+/*div.NumberInput_label_box[ data-label_position='left' ] {
+    display: inline-block;
+    float: left;
+}*/
+
+label.Label_NumberInput {
+    display: inline-block;
+    padding: 0.4em 0;
+}
+
+div.NumberInput_input_box {
+    display: inline-block;
+    vertical-align: middle;
+    height: 2em;
+}
+
+input.NumberInput_input {
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    padding: 0.5em;
+    border: 1px solid #d3d3d3;
+    outline: none;
+}
