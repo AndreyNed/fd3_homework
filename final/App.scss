@@ -97,6 +97,26 @@ html {
     width: 100%;
 }
 
-.App {
+.validation_failed {
+    & > .ComboInput_input_box > .ComboInput_input_container
+    {
+        border: 1px solid $validationHintColor;
+        background-color: $validationFieldColor;
+    }
+}
+
+
+label.Label_ComboInput,
+label.Label_TextInput,
+label.Label_NumberInput,
+label.Label_DateInput
+{
+    font-size: 14px;
+    color: #898989;
+}
+
+.ComboInput {
 
 }
+
+.App {}

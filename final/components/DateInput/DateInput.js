@@ -118,7 +118,7 @@ class DateInput extends React.PureComponent {
         }
     }
 
-    classCSS = 'DateInputR';   // name of the className of component
+    classCSS = 'DateInput';   // name of the className of component
 
     componentWillMount() {
         this.prepareProps( this.state );

@@ -176,7 +176,7 @@ class ComboInput extends React.PureComponent {
         }
     }
 
-    classCSS = 'ComboInputR';   // name of the className of component
+    classCSS = 'ComboInput';   // name of the className of component
     items = null;               // array for list items
     empty = 'empty';
 

@@ -8,7 +8,7 @@ $listItemSelectedBackground: #d8d8d8;
 /* size */
 $minBlockHeight:             32px;
 
-.ComboInputR {
+.ComboInput {
 
     // == display ==
     &[ data-display="dNone" ] {
@@ -26,16 +26,16 @@ $minBlockHeight:             32px;
 
     // == labelPosition and labelVerticalAlign ==
     &[ data-label_position="top" ] {
-        & > .ComboInputR_label_box {
+        & > .ComboInput_label_box {
             display: block;
         }
-        & > .ComboInputR_input_box {
+        & > .ComboInput_input_box {
             display: block;
         }
     }
     &[ data-label_position="left" ] {
-        & > .ComboInputR_label_box,
-        & > .ComboInputR_input_box {
+        & > .ComboInput_label_box,
+        & > .ComboInput_input_box {
             display: inline-block;
             &[ data-label_vertical_align="top" ] {
                 vertical-align: top;
@@ -49,16 +49,16 @@ $minBlockHeight:             32px;
         }
     }
     &[ data-label_position="bottom" ] {
-        & > .ComboInputR_label_box {
+        & > .ComboInput_label_box {
             display: block;
         }
-        & > .ComboInputR_input_box {
+        & > .ComboInput_input_box {
             display: block;
         }
     }
     &[ data-label_position="right" ] {
-        & > .ComboInputR_label_box,
-        & > .ComboInputR_input_box {
+        & > .ComboInput_label_box,
+        & > .ComboInput_input_box {
             display: inline-block;
             &[ data-label_vertical_align="top" ] {
                 vertical-align: top;
@@ -72,22 +72,22 @@ $minBlockHeight:             32px;
         }
     }
 
-    & > .ComboInputR_label_box {
+    & > .ComboInput_label_box {
         font: normal 16px / 150% Arial, sans-serif;
         min-height: $minBlockHeight;
         padding: 4px 0 0 0;
     }
 
-    & > .ComboInputR_input_box {
+    & > .ComboInput_input_box {
         position: relative;
 
-        & > .ComboInputR_input_container {
+        & > .ComboInput_input_container {
             position: relative;
             border: none;
             border-radius: 4px;
             background-color: #ffffff;
 
-            & > .ComboInputR_input {
+            & > .ComboInput_input {
                 width: 100%;
                 min-height: $minBlockHeight;
                 outline: none;
@@ -105,7 +105,7 @@ $minBlockHeight:             32px;
                 }
             }
 
-            & > .ComboInputR_icon_filter_container {
+            & > .ComboInput_icon_filter_container {
                 /*background: grey;*/
                 width: 16px;
                 height: 16px;
@@ -120,7 +120,7 @@ $minBlockHeight:             32px;
                 }
             }
 
-            & > .ComboInputR_icon_container {
+            & > .ComboInput_icon_container {
                 /*background: grey;*/
                 width: 16px;
                 height: 16px;
@@ -135,7 +135,7 @@ $minBlockHeight:             32px;
                 }
             }
         }
-        & > .ComboInputR_list_container {
+        & > .ComboInput_list_container {
             position: absolute;
             overflow: auto;
             background-color: $listBoxFill;
@@ -146,13 +146,13 @@ $minBlockHeight:             32px;
                 display: none;
             }
 
-            & > .ComboInputR_list {
+            & > .ComboInput_list {
                 position: relative;
                 list-style: none;
                 padding: 0;
                 margin: 0;
 
-                & > .ComboInputR_item {
+                & > .ComboInput_item {
                     position: relative;
                     min-height: $minBlockHeight;
                     padding: 6px 8px 2px  8px;

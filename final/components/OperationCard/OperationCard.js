@@ -15,7 +15,7 @@ import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 import ButtonClear from '../buttons/ButtonClear/ButtonClear';
 
 import './OperationCard.scss';
-import { isExists, isNotNaN } from "../../utils/utils";
+import {isExists, isNotEmpty, isNotNaN} from "../../utils/utils";
 
 class OperationCard extends React.PureComponent {
 
@@ -123,7 +123,7 @@ class OperationCard extends React.PureComponent {
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
             console.log( 'OperationCard: prepareData: new props: ', props );
-        let newState = {};
+        let newState = { operationValidationData: { ...OperationCard.defaultProps.operationValidationData } };
         const { isNewOperationAdded, operationSelectedIndex, operationsData } = props;
         console.log( 'OperationCard: prepareData: consts: ', isNewOperationAdded, operationSelectedIndex, operationsData );
         newState.operationValue = ( isNewOperationAdded )
@@ -138,10 +138,12 @@ class OperationCard extends React.PureComponent {
 
     formProps = () => {
         const { accountId, categoryId, type, sum, date, comment } = this.state.operationValue;
-        const { operationCategoriesData, accountsData } = this.props;
+        const { operationCategoriesData, accountsData, isNewOperationAdded } = this.props;
         return {
             header: {
-                title:  '',
+                title:  ( isNewOperationAdded )
+                    ? "Новая операция"
+                    : "Операция",
             },
             account: {
                 label:              'Счет',
@@ -154,6 +156,7 @@ class OperationCard extends React.PureComponent {
                 inputType:          ComboInput.inputTypes.comboFilter,
                 isFirstIsEmpty:     true,
                 options: {
+                    addedClass:     ( isNotEmpty( this.state.operationValidationData.accountId ) ) && 'validation_failed',
                     labelPosition:  ComboInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
@@ -171,6 +174,7 @@ class OperationCard extends React.PureComponent {
                 inputType:          ComboInput.inputTypes.comboFilter,
                 isFirstIsEmpty:     true,
                 options: {
+                    addedClass:     ( isNotEmpty( this.state.operationValidationData.categoryId ) ) && 'validation_failed',
                     labelPosition:  TextInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
@@ -191,6 +195,7 @@ class OperationCard extends React.PureComponent {
                 inputType:          ComboInput.inputTypes.comboSimple,
                 isFirstIsEmpty:     false,
                 options: {
+                    addedClass:     ( isNotEmpty( this.state.operationValidationData.type ) ) && 'validation_failed',
                     labelPosition:  ComboInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
@@ -204,6 +209,7 @@ class OperationCard extends React.PureComponent {
                 withLabel:          true,
                 display:            NumberInput.displayTypes.block,
                 options: {
+                    addedClass:     ( isNotEmpty( this.state.operationValidationData.sum ) ) && 'validation_failed',
                     labelPosition:  NumberInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
@@ -216,6 +222,7 @@ class OperationCard extends React.PureComponent {
                 withLabel:          true,
                 display:            DateInput.displayTypes.block,
                 options: {
+                    addedClass:     ( isNotEmpty( this.state.operationValidationData.date ) ) && 'validation_failed',
                     labelPosition:  DateInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
@@ -228,6 +235,7 @@ class OperationCard extends React.PureComponent {
                 withLabel:          true,
                 display:            TextInput.displayTypes.block,
                 options: {
+                    addedClass:     ( isNotEmpty( this.state.operationValidationData.comment ) ) && 'validation_failed',
                     labelPosition:  TextInput.position.left,
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
@@ -236,7 +244,7 @@ class OperationCard extends React.PureComponent {
             },
             btnSave: {
                 label: 'Сохранить',
-                cbChanged: null,
+                cbChanged: this.btnSave_cbChanged,
             },
             btnCancel: {
                 label: 'Отменить',
@@ -257,8 +265,13 @@ class OperationCard extends React.PureComponent {
         newOperationValue.accountId = ( isNotNaN( newOperationValue.accountId ) )
             ? newOperationValue.accountId
             : 0;
+        let validationHint = this.validate_accountId( newOperationValue.accountId );
+        let newOperationValidationData = { ...this.state.operationValidationData, accountId: validationHint };
         // console.log('account: ', newOperationValue.accountId, ': ', typeof newOperationValue.accountId );
-        this.setState( { operationValue: newOperationValue } );
+        this.setState( {
+            operationValue: newOperationValue,
+            operationValidationData: newOperationValidationData,
+        } );
     };
 
     category_cbChanged = ( value ) => {
@@ -303,16 +316,41 @@ class OperationCard extends React.PureComponent {
         this.setState( { operationValue: newOperationValue } );
     };
 
+    btnSave_cbChanged = () => {
+        this.validate_operation();
+    };
+
     /* == controller == */
 
     formClick = ( e ) => {
         e.stopPropagation();
     };
 
+    /* == validation == */
+
+    validate_operation = () => {
+        const { accountId } = this.state.operationValue;
+        let result = true;
+        let operationValidationData = { ...OperationCard.defaultProps.operationValidationData };
+
+        let validationHint = this.validate_accountId( accountId );
+        operationValidationData.accountId = validationHint;
+        result = ( isNotEmpty( validationHint ) ) ? false : result;
+        console.log( 'validate_operation: ', result );
+        return result;
+    };
+
+    validate_accountId = ( value ) => {
+        let validationHint = ( value > 0 ) ? '' : 'Поле не должно быть пустым';
+        console.log( 'validate_accountId: ', validationHint );
+        return validationHint;
+    };
+
     /* == renders == */
 
     render() {
         const { modalContent, isNewOperationAdded } = this.props;
+        const { accountId, categoryId, type, sum, date, comment } = this.state.operationValidationData;
         let props = this.formProps();
         return ( modalContent === MODAL_CONTENT.OPERATION_CARD ) &&
             <div className = { this.classCSS }
@@ -322,11 +360,7 @@ class OperationCard extends React.PureComponent {
                          key="header">
                         <div className="cols col_16 header">
                             <span className = { this.classCSS + '_header' }>
-                                {
-                                    ( isNewOperationAdded )
-                                        ? "Новая операция"
-                                        : "Операция"
-                                }
+                                { props.header.title }
                             </span>
                         </div>
                     </div>
@@ -336,7 +370,7 @@ class OperationCard extends React.PureComponent {
                             <ComboInput { ...props.account } />
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
-                                    Validation data
+                                    { accountId || '\xa0' }
                                 </label>
                             </div>
                         </div>
@@ -347,7 +381,7 @@ class OperationCard extends React.PureComponent {
                             <ComboInput { ...props.category } />
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
-                                    Validation data
+                                    { categoryId || '\xa0' }
                                 </label>
                             </div>
                         </div>
@@ -359,7 +393,7 @@ class OperationCard extends React.PureComponent {
                             <ComboInput { ...props.type } />
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
-                                    Validation data
+                                    { type || '\xa0' }
                                 </label>
                             </div>
                         </div>
@@ -370,7 +404,7 @@ class OperationCard extends React.PureComponent {
                             <NumberInput { ...props.sum } />
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
-                                    Validation data
+                                    { sum || '\xa0' }
                                 </label>
                             </div>
                         </div>
@@ -381,7 +415,7 @@ class OperationCard extends React.PureComponent {
                             <DateInput { ...props.date } />
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
-                                    Validation data
+                                    { date || '\xa0' }
                                 </label>
                             </div>
                         </div>
@@ -392,7 +426,7 @@ class OperationCard extends React.PureComponent {
                             <TextInput { ...props.comment } />
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
-                                    Validation data
+                                    { comment || '\xa0' }
                                 </label>
                             </div>
                         </div>
