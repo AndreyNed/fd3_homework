@@ -60,6 +60,15 @@ class OperationCard extends React.PureComponent {
             date:                   PropTypes.any,
             comment:                PropTypes.string,
         }),
+
+        operationValidationData:    PropTypes.shape({
+            accountId:              PropTypes.string,
+            categoryId:             PropTypes.string,
+            type:                   PropTypes.string,
+            sum:                    PropTypes.string,
+            date:                   PropTypes.string,
+            comment:                PropTypes.string,
+        }),
     };
 
     static defaultProps = {
@@ -71,6 +80,14 @@ class OperationCard extends React.PureComponent {
             type:                   OPERATION_TYPES.CREDIT,
             sum:                    0,
             date:                   new Date(),
+            comment:                '',
+        },
+        operationValidationData: {
+            accountId:              '',
+            categoryId:             '',
+            type:                   '',
+            sum:                    '',
+            date:                   '',
             comment:                '',
         },
     };
@@ -217,6 +234,18 @@ class OperationCard extends React.PureComponent {
                 },
                 cbChanged: this.comment_cbChanged,
             },
+            btnSave: {
+                label: 'Сохранить',
+                cbChanged: null,
+            },
+            btnCancel: {
+                label: 'Отменить',
+                cbChanged: null,
+            },
+            btnClear: {
+                label: 'Очистить',
+                cbChanged: null,
+            },
         }
     };
 
@@ -305,12 +334,22 @@ class OperationCard extends React.PureComponent {
                          key="account">
                         <div className="cols col_16">
                             <ComboInput { ...props.account } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    Validation data
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className="rows"
                          key="category">
                         <div className="cols col_16">
                             <ComboInput { ...props.category } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    Validation data
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className="rows"
@@ -318,38 +357,58 @@ class OperationCard extends React.PureComponent {
                         <div className="cols col_16"
                              key="type">
                             <ComboInput { ...props.type } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    Validation data
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className="rows"
                          key="sum">
                         <div className="cols col_16">
                             <NumberInput { ...props.sum } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    Validation data
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className="rows"
                          key="date">
                         <div className="cols col_16">
                             <DateInput { ...props.date } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    Validation data
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className="rows"
                          key="comment">
                         <div className="cols col_16">
                             <TextInput { ...props.comment } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    Validation data
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div className={ "rows " + this.classCSS + "_buttons_panel" }>
                         <div className="cols col_4"
                              key="Сохранить">
-                            <ButtonSave />
+                            <ButtonSave { ...props.btnSave }/>
                         </div>
                         <div className="cols col_4"
                              key="Отменить">
-                            <ButtonCancel />
+                            <ButtonCancel { ...props.btnCancel }/>
                         </div>
                         <div className="cols col_4"
                              key="Очистить">
-                            <ButtonClear />
+                            <ButtonClear { ...props.btnClear }/>
                         </div>
                     </div>
                 </div>
