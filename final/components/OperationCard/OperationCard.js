@@ -10,6 +10,9 @@ import TextInput from '../TextInput/TextInput';
 import ComboInput from '../ComboInput/ComboInput';
 import DateInput from '../DateInput/DateInput';
 import NumberInput from '../NumberInput/NumberInput';
+import ButtonSave from '../buttons/ButtonSave/ButtonSave';
+import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
+import ButtonClear from '../buttons/ButtonClear/ButtonClear';
 
 import './OperationCard.scss';
 import { isExists, isNotNaN } from "../../utils/utils";
@@ -333,6 +336,20 @@ class OperationCard extends React.PureComponent {
                          key="comment">
                         <div className="cols col_16">
                             <TextInput { ...props.comment } />
+                        </div>
+                    </div>
+                    <div className={ "rows " + this.classCSS + "_buttons_panel" }>
+                        <div className="cols col_4"
+                             key="Сохранить">
+                            <ButtonSave />
+                        </div>
+                        <div className="cols col_4"
+                             key="Отменить">
+                            <ButtonCancel />
+                        </div>
+                        <div className="cols col_4"
+                             key="Очистить">
+                            <ButtonClear />
                         </div>
                     </div>
                 </div>
