@@ -7,6 +7,8 @@ import {
     UI_HIDE_MAT_GLASS,
     UI_SHOW_OPERATION_CARD,
     UI_SHOW_DATA_LOADING_MESSAGE,
+    UI_SHOW_DATA_SAVING_MESSAGE,
+    UI_SHOW_DELETE_CONFIRMATION,
 } from "../actions/acUI";
 
 const initState = {
@@ -28,8 +30,9 @@ function rdUI ( state = initState, action ) {
         case UI_HIDE_MAT_GLASS:
             return {
                 ...state, ...{
-                    modalContent:       MODAL_CONTENT.NONE,
-                    matGlassIsVisible:  false,
+                    modalContent:        MODAL_CONTENT.NONE,
+                    matGlassIsVisible:   false,
+                    isNewOperationAdded: false,
                 }
             };
 
@@ -47,6 +50,22 @@ function rdUI ( state = initState, action ) {
                     modalContent:        MODAL_CONTENT.OPERATION_CARD,
                     matGlassIsVisible:   true,
                     isNewOperationAdded: action.isNewOperationAdded,
+                }
+            };
+
+        case UI_SHOW_DATA_SAVING_MESSAGE:
+            return {
+                ...state, ...{
+                    modalContent:       MODAL_CONTENT.DATA_SAVING,
+                    matGlassIsVisible:  true,
+                }
+            };
+
+        case UI_SHOW_DELETE_CONFIRMATION:
+            return {
+                ...state, ...{
+                    modalContent:       MODAL_CONTENT.DELETE_CONFIRMATION,
+                    matGlassIsVisible:  true,
                 }
             };
 

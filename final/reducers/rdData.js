@@ -13,21 +13,28 @@ import {
     DATA_OPERATIONS_LOAD_SUCCESS,
     DATA_OPERATIONS_LOAD_ERROR,
     DATA_OPERATIONS_SHOULD_BE_RELOADED,
+    DATA_OPERATION_SAVE_START,
+    DATA_OPERATION_SAVE_SUCCESS,
+    DATA_OPERATION_SAVE_ERROR,
     DATA_OPERATION_SELECT,
 } from "../actions/acData"
 
 const initState = {
-    accountsData:                   [],
+    accountsData:                   null,
     accountsLoadStatus:             0,
 
-    operationCategoriesData:        [],
+    operationCategoriesData:        null,
     operationCategoriesLoadStatus:  0,
 
-    operationsData:                 [],
+    operationsData:                 null,
     operationsLoadStatus:           0,
+    operationSaveStatus:            0,
+    operationCreateStatus:          0,
     operationSelectedIndex:         -1,
     operationValue:                 {},
 };
+
+import { MODAL_CONTENT } from "../data_const/data_const";
 
 function rdData ( state = initState, action ) {
     switch ( action.type ) {
@@ -122,6 +129,28 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationsLoadStatus: 0,
+                    operationSaveStatus:  0,
+                }
+            };
+
+        case DATA_OPERATION_SAVE_START:
+            return {
+                ...state, ...{
+                    operationSaveStatus:    1,
+                }
+            };
+
+        case DATA_OPERATION_SAVE_SUCCESS:
+            return {
+                ...state, ...{
+                    operationSaveStatus:    2,
+                }
+            };
+
+        case DATA_OPERATION_SAVE_ERROR:
+            return {
+                ...state, ...{
+                    operationSaveStatus:    3,
                 }
             };
 

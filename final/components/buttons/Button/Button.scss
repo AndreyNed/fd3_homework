@@ -3,6 +3,14 @@
 .Button {
     display: block;
 
+    &[ data-display="DISPLAY_INLINE_BLOCK" ] {
+        display: inline-block;
+    }
+
+    &[ data-display="DISPLAY_HIDDEN" ] {
+        visibility: hidden;
+    }
+
     & > .Button_icon_box {
         position: relative;
         margin: 0 auto;

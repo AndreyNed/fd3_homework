@@ -6,14 +6,18 @@ import { connect } from 'react-redux';
 
 import Table from '../components/Table/Table';
 import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
+import ButtonDelete from '../components/buttons/ButtonDelete/ButtonDelete';
 import OperationCard from '../components/OperationCard/OperationCard';
 
 import { isExists, isNotEmpty, findArrayItem, findArrayItemIndex } from "../utils/utils";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_OPERATIONS } from "../config/config";
+import { CONFIG_UI_MODE_TIMEOUT, } from "../config/config";
 
-import {acDataOperationSelect} from "../actions/acData";
-import { acUIShowOperationCard, acUIHideOperationCard } from "../actions/acUI";
+import {acDataOperationSelect, acDataOperationsShouldBeReloaded} from "../actions/acData";
+import { acUIShowOperationCard, acUIShowDataSavingMessage, acUIShowDeleteConfirmation } from "../actions/acUI";
 
 import './PageOperations.scss';
+import {DISPLAY_TYPES} from "../data_const/data_const";
 
 class PageOperations extends React.PureComponent {
 
@@ -44,13 +48,14 @@ class PageOperations extends React.PureComponent {
         ),
 
         operationCardIsVisible:         PropTypes.bool,
+        operationSaveStatus:            PropTypes.number,
     };
 
     static defaultProps = {
 
     };
 
-    debug_mode = true;
+    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_PAGE_OPERATIONS;
     classCSS = 'PageOperations';
 
     componentWillMount() {
@@ -62,8 +67,17 @@ class PageOperations extends React.PureComponent {
     }
 
     prepareData = ( props ) => {
+        const { dispatch, operationSaveStatus } = props;
         ( this.debug_mode ) &&
             console.log( 'PageOperations: prepareData: new props: ', props );
+        if ( operationSaveStatus == 1 ) {
+            dispatch( acUIShowDataSavingMessage() );
+        }
+        else if ( operationSaveStatus > 1 ) {
+            setTimeout( () => {
+                dispatch( acDataOperationsShouldBeReloaded() );
+            }, CONFIG_UI_MODE_TIMEOUT );
+        }
     };
 
     preparePropsTable = () => {
@@ -191,10 +205,24 @@ class PageOperations extends React.PureComponent {
     };
 
     preparePropsButtonPanel = () => {
+        const { operationSelectedIndex } = this.props;
+        let display = {
+            btnAdd: DISPLAY_TYPES.block,
+            btnDelete: ( operationSelectedIndex > -1 )
+                ? DISPLAY_TYPES.block
+                : DISPLAY_TYPES.none,
+        };
+
         return {
             btnAdd: {
                 label: 'Добавить',
+                display: display.btnAdd,
                 cbChanged: this.buttonPanel_btnAdd_cbChanged,
+            },
+            btnDelete: {
+                label: 'Удалить',
+                display: display.btnDelete,
+                cbChanged: this.buttonPanel_btnDelete_cbChanged,
             },
         }
     };
@@ -214,9 +242,16 @@ class PageOperations extends React.PureComponent {
     };
 
     buttonPanel_btnAdd_cbChanged = () => {
-        console.log( 'PageOperations: buttonPanel_btnAdd_cbChanged: click...' );
+        // console.log( 'PageOperations: buttonPanel_btnAdd_cbChanged: click...' );
         const { dispatch } = this.props;
         dispatch( acUIShowOperationCard( true ) );
+    };
+
+    buttonPanel_btnDelete_cbChanged = () => {
+        // console.log( 'PageOperations: buttonPanel_btnDelete_cbChanged: click...' );
+        const { dispatch, operationSelectedIndex } = this.props;
+        ( operationSelectedIndex > -1 ) &&
+            dispatch( acUIShowDeleteConfirmation() )
     };
 
     /* == renders == */
@@ -253,6 +288,9 @@ class PageOperations extends React.PureComponent {
                     <div className="cols col_2">
                         <ButtonAdd { ...this.preparePropsButtonPanel().btnAdd }/>
                     </div>
+                    <div className="cols col_2">
+                        <ButtonDelete { ...this.preparePropsButtonPanel().btnDelete }/>
+                    </div>
                 </div>
             </div>
         )
@@ -280,6 +318,7 @@ const mapStateToProps = function ( state ) {
         operationsData:                 state.data.operationsData,
 
         operationSelectedIndex:         state.data.operationSelectedIndex,
+        operationSaveStatus:            state.data.operationSaveStatus,
 
         //matGlassIsVisible:              state.ui.matGlassIsVisible,
     }

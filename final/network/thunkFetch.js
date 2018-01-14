@@ -1,6 +1,7 @@
 'use strict';
 
 import {default as isoFetch} from 'isomorphic-fetch';
+import {isExists, isNotEmpty} from "../utils/utils";
 
 const thunkFetch = function ( options ) {
     // console.log( 'thunkFetch: options: ', options.fetchOptions );
@@ -31,7 +32,7 @@ const thunkFetch = function ( options ) {
             .then(
                 function (response) {
                     if (response.status == 200) {
-                        return response.json();
+                        return ( response.json());
                     }
                     else {
                         console("Response status: ", response.status);

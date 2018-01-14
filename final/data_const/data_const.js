@@ -6,12 +6,22 @@ const OPERATION_TYPES = {
 };
 
 const MODAL_CONTENT = {
-    DATA_LOADING:   'DATA_LOADING',
-    OPERATION_CARD: 'OPERATION_CARD',
-    NONE:           'NONE'
+    DATA_LOADING:           'DATA_LOADING',
+    DATA_SAVING:            'DATA_SAVING',
+    OPERATION_CARD:         'OPERATION_CARD',
+    DELETE_CONFIRMATION:    'DELETE_CONFIRMATION',
+    NONE:                   'NONE'
+};
+
+const DISPLAY_TYPES = {
+    block:          'DISPLAY_BLOCK',
+    inlineBlock:    'DISPLAY_INLINE_BLOCK',
+    hidden:         'DISPLAY_HIDDEN',
+    none:           'DISPLAY_NONE',
 };
 
 export {
     OPERATION_TYPES,
     MODAL_CONTENT,
+    DISPLAY_TYPES,
 }

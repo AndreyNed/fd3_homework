@@ -14,6 +14,9 @@ const DATA_OPERATIONS_LOAD_START =                      'DATA_OPERATIONS_LOAD_ST
 const DATA_OPERATIONS_LOAD_SUCCESS =                    'DATA_OPERATIONS_LOAD_SUCCESS';
 const DATA_OPERATIONS_LOAD_ERROR =                      'DATA_OPERATIONS_LOAD_ERROR';
 const DATA_OPERATIONS_SHOULD_BE_RELOADED =              'DATA_OPERATIONS_SHOULD_BE_RELOADED';
+const DATA_OPERATION_SAVE_START =                       'DATA_OPERATION_SAVE_START';
+const DATA_OPERATION_SAVE_SUCCESS =                     'DATA_OPERATION_SAVE_SUCCESS';
+const DATA_OPERATION_SAVE_ERROR =                       'DATA_OPERATION_SAVE_ERROR';
 
 const DATA_OPERATION_SELECT =                           'DATA_OPERATION_SELECT';
 
@@ -92,6 +95,24 @@ const acDataOperationsShouldBeReloaded = function () {
     }
 };
 
+const acDataOperationSaveStart = function () {
+    return {
+        type:               DATA_OPERATION_SAVE_START,
+    }
+};
+
+const acDataOperationSaveSuccess = function () {
+    return {
+        type:              DATA_OPERATION_SAVE_SUCCESS,
+    }
+};
+
+const acDataOperationSaveError = function () {
+    return {
+        type:               DATA_OPERATION_SAVE_ERROR,
+    }
+};
+
 const acDataOperationSelect = function ( index ) {
     return {
         type:                   DATA_OPERATION_SELECT,
@@ -114,6 +135,9 @@ export {
     DATA_OPERATIONS_LOAD_SUCCESS,       acDataOperationsLoadSuccess,
     DATA_OPERATIONS_LOAD_ERROR,         acDataOperationsLoadError,
     DATA_OPERATIONS_SHOULD_BE_RELOADED, acDataOperationsShouldBeReloaded,
+    DATA_OPERATION_SAVE_START,          acDataOperationSaveStart,
+    DATA_OPERATION_SAVE_SUCCESS,        acDataOperationSaveSuccess,
+    DATA_OPERATION_SAVE_ERROR,          acDataOperationSaveError,
 
     DATA_OPERATION_SELECT,              acDataOperationSelect,
 }

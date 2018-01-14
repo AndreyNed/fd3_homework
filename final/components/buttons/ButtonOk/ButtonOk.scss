@@ -4,7 +4,7 @@
 .Button_icon_box {
     transition: transform 0.3s;
 
-    & > svg.ButtonSave_icon {
+    & > svg.ButtonOk_icon {
         position: absolute;
         top: 0;
         left: 0;
@@ -18,7 +18,7 @@
     &:hover {
         transform: scale(1.15);
 
-        & > svg.ButtonSave_icon {
+        & > svg.ButtonOk_icon {
 
             circle {
                 fill: rgba(255,255,255,1);
@@ -27,11 +27,7 @@
             }
 
             path {
-                stroke: rgba(0,102,153,1);
-            }
-
-            path#ButtonSave_icon_notice {
-                fill: rgba(0,102,153,1);
+                stroke: rgba(0,153,51,1);
             }
         }
     }
@@ -40,7 +36,7 @@
         transform: scale(0.85);
         transition: transform 0.15s;
 
-        & > svg.ButtonSave_icon {
+        & > svg.ButtonOk_icon {
 
             circle {
                 stroke-width: 1;

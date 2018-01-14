@@ -7,9 +7,9 @@ import { connect } from 'react-redux';
 import { MODAL_CONTENT } from "../../data_const/data_const";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_DATA_LOADING } from "../../config/config";
 
-import './DataLoading.scss';
+import './DataSaving.scss';
 
-class DataLoading extends React.PureComponent {
+class DataSaving extends React.PureComponent {
 
     static propTypes = {
         modalContent:       PropTypes.string,
@@ -24,20 +24,20 @@ class DataLoading extends React.PureComponent {
     static getHtmlID = ( data ) => {
         return ( data !== null && data !== undefined )
             ? data
-            : 'DataLoading_' + DataLoading.classID;
+            : 'DataSaving_' + DataSaving.classID;
     };
 
     constructor( props ) {
         super( props );
-        DataLoading.classID++;
+        DataSaving.classID++;
         this.state = {
-            htmlID: DataLoading.getHtmlID( props.htmlID ),
+            htmlID: DataSaving.getHtmlID( props.htmlID ),
         }
     }
 
     debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_DATA_LOADING;
 
-    classCSS = 'DataLoading';
+    classCSS = 'DataSaving';
 
     componentWillMount() {
         this.prepareData( this.props );
@@ -49,16 +49,16 @@ class DataLoading extends React.PureComponent {
 
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
-            console.log( 'DataLoading: prepareData: new props: ', props )
+            console.log( 'DataSaving: prepareData: new props: ', props )
 
         // todo
     };
 
     render() {
         const { modalContent } = this.props;
-        return ( modalContent === MODAL_CONTENT.DATA_LOADING ) &&
+        return ( modalContent === MODAL_CONTENT.DATA_SAVING ) &&
             <div className = { this.classCSS }>
-                Загрузка данных...
+                Сохранение данных...
             </div>
     }
 
@@ -70,4 +70,4 @@ const mapStateToProps = function ( state ) {
     }
 };
 
-export default connect( mapStateToProps )( DataLoading );
+export default connect( mapStateToProps )( DataSaving );

@@ -3,13 +3,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import './Button.scss';
 import {isNotEmpty} from "../../../utils/utils";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_BUTTON } from "../../../config/config";
+import { DISPLAY_TYPES } from "../../../data_const/data_const";
+
+import './Button.scss';
 
 class Button extends React.PureComponent {
 
     static propTypes = {
         label:      PropTypes.string,
+        display:    PropTypes.oneOf([
+            DISPLAY_TYPES.block,
+            DISPLAY_TYPES.inlineBlock,
+            DISPLAY_TYPES.hidden,
+            DISPLAY_TYPES.none,
+        ]),
         options:    PropTypes.shape({
             hoverClass: PropTypes.string,
             iconWidth: PropTypes.oneOfType([
@@ -28,6 +37,7 @@ class Button extends React.PureComponent {
 
     static defaultProps = {
         label:      '',
+        display:    DISPLAY_TYPES.block,
         options:    {
             iconWidth:  32,
             iconHeight: 32,
@@ -53,7 +63,7 @@ class Button extends React.PureComponent {
         }
     }
 
-    debug_mode = true;
+    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_BUTTON;
 
     classCSS = 'Button';
 
@@ -66,16 +76,16 @@ class Button extends React.PureComponent {
     }
 
     prepareData = ( props ) => {
-        ( this.debug_mode ) &&
-        console.log( 'Button: prepareData: new props: ', props )
+        ( this.debug_mode ) && console.log( 'Button: prepareData: new props: ', props );
         this.setState( { dataHover: false }, ()=>{} );
         // todo
     };
 
-    render( innerSVG, addedClass ) {
+    render( innerSVG, addedClass, display = DISPLAY_TYPES.block ) {
         const { iconWidth, iconHeight, preserveAspectRatio, viewBox } = this.props.options;
-        return (
-            <div className = { this.classCSS }>
+        return ( display !== DISPLAY_TYPES.none ) &&
+            <div className = { this.classCSS }
+                 data-display = { display }>
                 <div className = { this.classCSS + '_icon_box' }
                      key='icon'
                      onClick = { this.props.cbChanged }
@@ -103,7 +113,6 @@ class Button extends React.PureComponent {
                     </label>
                 </div>
             </div>
-        )
     }
 }
 

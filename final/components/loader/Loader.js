@@ -10,6 +10,8 @@ import PagesRouter from '../../pages/PagesRouter';
 import PagesLinks  from '../../pages/PagesLinks';
 
 import { MODAL_CONTENT } from "../../data_const/data_const";
+import { CONFIG_UI_MODE_TIMEOUT, } from "../../config/config";
+import { isExists } from "../../utils/utils";
 
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
 import {acUIHideMatGlass, acUIShowMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
@@ -43,6 +45,7 @@ class Loader extends React.PureComponent {
         ),
         accountsLoadStatus:             PropTypes.number,
         operationCategoriesLoadStatus:  PropTypes.number,
+        operationsLoadStatus:           PropTypes.number,
         matGlassIsVisible:              PropTypes.bool,
         modalContent:                   PropTypes.string,
     };
@@ -75,7 +78,8 @@ class Loader extends React.PureComponent {
         } = props;
 
         if ( !accountsLoadStatus ||
-             !operationCategoriesLoadStatus )
+             !operationCategoriesLoadStatus ||
+             !operationsLoadStatus )
             dispatch( acUIShowDataLoadingMessage() );
 
         if ( !accountsLoadStatus ) {
@@ -109,21 +113,35 @@ class Loader extends React.PureComponent {
              operationCategoriesLoadStatus == 2 &&
              operationsLoadStatus == 2 &&
              modalContent === MODAL_CONTENT.DATA_LOADING )
-            setTimeout( () => { dispatch( acUIHideMatGlass() ) }, 1000 );
+            setTimeout( () => { dispatch( acUIHideMatGlass() ) }, CONFIG_UI_MODE_TIMEOUT );
+    };
+
+    prepareOperationsData = () => {
+
+    };
+
+    prepareAccountsData = () => {
+
+    };
+
+    prepareOperationCategoriesData = () => {
+
     };
 
     render() {
         const {
-            accountsLoadStatus, operationCategoriesLoadStatus, operationsLoadStatus, matGlassIsVisible, modalContent
+            accountsLoadStatus, operationCategoriesLoadStatus, operationsLoadStatus,
+            accountsData, operationCategoriesData, operationsData,
+            modalContent
         } = this.props;
         return (
             <div className = { this.classCSS }>
                 <MatGlass />
                 {
-                    ( accountsLoadStatus == 2 &&
-                      operationCategoriesLoadStatus == 2 &&
-                      operationsLoadStatus == 2 &&
-                      modalContent !== MODAL_CONTENT.DATA_LOADING ) &&
+                    ( ( accountsLoadStatus == 2 || isExists( accountsData ) ) &&
+                      ( operationCategoriesLoadStatus == 2 || isExists( operationCategoriesData ) ) &&
+                      ( operationsLoadStatus == 2 || isExists( operationsData ) ) ) &&
+                      /*modalContent !== MODAL_CONTENT.DATA_LOADING ) &&*/
                     <BrowserRouter>
                         <div className = { this.classCSS + "_router" }>
                             <PagesLinks />

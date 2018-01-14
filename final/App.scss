@@ -98,7 +98,10 @@ html {
 }
 
 .validation_failed {
-    & > .ComboInput_input_box > .ComboInput_input_container
+    & > .ComboInput_input_box > .ComboInput_input_container,
+    & > .TextInput_input_box > .TextInput_input_container,
+    & > .DateInput_input_box > .DateInput_input_container,
+    & > .NumberInput_input_box > .NumberInput_input_container
     {
         border: 1px solid $validationHintColor;
         background-color: $validationFieldColor;

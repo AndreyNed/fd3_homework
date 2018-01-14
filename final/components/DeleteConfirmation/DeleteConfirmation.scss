@@ -1,0 +1,44 @@
+@import "../../data_const/style_const";
+
+.DeleteConfirmation {
+    position: absolute;
+    z-index: 1010;
+    width: 400px;
+    min-height: 200px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: $modalFormBackgroundColor;
+    border-radius: $borderRadiusDefault;
+
+    .DeleteConfirmation_form {
+        position: absolute;
+        width: 360px;
+        min-height: 160px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+
+        & > .rows > .cols {
+
+            &.header {
+                padding: 4px 0;
+
+                & > .DeleteConfirmation_header {
+                    display: block;
+                    text-align: center;
+                    font-size: $confirmationFont;
+                    font-weight: bold;
+                    color: #898989;
+                }
+            }
+        }
+
+        & > .DeleteConfirmation_buttons_panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+    }
+}

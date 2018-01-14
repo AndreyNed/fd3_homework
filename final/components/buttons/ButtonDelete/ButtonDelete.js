@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 import Button from '../Button/Button';
 //import { connect } from 'react-redux';
 
-import './ButtonClear.scss';
+import './ButtonDelete.scss';
 import {DISPLAY_TYPES} from "../../../data_const/data_const";
 
-class ButtonClear extends Button {
+class ButtonDelete extends Button {
 
     static propTypes = {
         /*label:      PropTypes.string,
@@ -26,7 +26,7 @@ class ButtonClear extends Button {
             iconHeight: 48,
             viewBox:    '0 0 64 64',
             preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'ButtonClear',
+            addedClass: 'ButtonDelete',
         },
         cbChanged:  null,
     };
@@ -36,14 +36,14 @@ class ButtonClear extends Button {
     static getHtmlID = ( data ) => {
         return ( data !== null && data !== undefined )
             ? data
-            : 'ButtonClear_' + ButtonClear.classID;
+            : 'ButtonDelete_' + ButtonDelete.classID;
     };
 
     constructor( props ) {
         super( props );
-        ButtonClear.classID++;
+        ButtonDelete.classID++;
         this.state = {
-            htmlID: ButtonClear.getHtmlID( props.htmlID ),
+            htmlID: ButtonDelete.getHtmlID( props.htmlID ),
         }
     }
 
@@ -55,14 +55,14 @@ class ButtonClear extends Button {
         const { display } = this.props;
         const { addedClass } = this.props.options;
         let innerSVG = (
-            <g className="ButtonClear_inner_svg">
+            <g className="ButtonDelete_inner_svg">
                 <circle cx="32" cy="32" r="31"
                         stroke="#d3d3d3"
                         strokeWidth="1"
                         fill="rgba(255,255,255,0)"
                 />
-                <path d="M 20 16 H 38 L 44 22 V 48 H20 Z M 38 16 V 22 H 44"
-                      strokeWidth="2"
+                <path d="M 24 16 H 40 M 17 22 H 47 M 20.5 44 H 44  M 22 22 V 44 M 28.75 22 V 44 M 35.75 22 V 44 M 42.5 22 V 44"
+                      strokeWidth="4"
                       stroke="#898989"
                       fill="none"
                 />
@@ -74,4 +74,4 @@ class ButtonClear extends Button {
     }
 }
 
-export default ButtonClear;
+export default ButtonDelete;

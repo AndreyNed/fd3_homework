@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import Label from '../Label/Label';
 import {isExists, isNotNaN, isNotEmpty} from "../../utils/utils";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_NUMBER_INPUT } from "../../config/config";
 
 import './NumberInput.scss';
 
@@ -108,6 +109,8 @@ class NumberInput extends React.PureComponent {
         }
     }
 
+    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_NUMBER_INPUT;
+
     classCSS = 'NumberInput';   // name of the className of component
 
     componentWillMount() {
@@ -127,7 +130,7 @@ class NumberInput extends React.PureComponent {
     }
 
     prepareProps = ( props ) => {
-        console.log( 'NumberInput: prepareProps: ', props );
+        ( this.debug_mode ) && console.log( 'NumberInput: prepareProps: ', props );
         let value = 0;
         if ( isExists( props ) ) {
 
@@ -145,7 +148,7 @@ class NumberInput extends React.PureComponent {
             value: value,
             currValue: this.formatInput( value ).string,
         }, () => {
-            console.log( '%c%s', 'color: blue', 'NumberInput: prepareProps: state: ', this.state );
+            ( this.debug_mode ) && console.log( '%c%s', 'color: blue', 'NumberInput: prepareProps: state: ', this.state );
         } );
     };
 

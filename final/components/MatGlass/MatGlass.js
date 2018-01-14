@@ -8,6 +8,8 @@ import { acUIHideMatGlass } from "../../actions/acUI";
 
 import OperationCard from "../OperationCard/OperationCard";
 import DataLoading from "../DataLoading/DataLoading";
+import DataSaving from '../DataSaving/DataSaving';
+import DeleteConfirmation from '../DeleteConfirmation/DeleteConfirmation';
 
 import './MatGlass.scss';
 
@@ -46,6 +48,8 @@ class MatGlass extends React.PureComponent {
             <div className = { this.classCSS }
                  onClick = { this.glassClick }>
                 <DataLoading />
+                <DataSaving />
+                <DeleteConfirmation />
                 <OperationCard />
             </div>
         )

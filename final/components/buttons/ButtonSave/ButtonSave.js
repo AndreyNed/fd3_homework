@@ -57,8 +57,38 @@ class ButtonSave extends Button {
                         strokeWidth="1"
                         fill="rgba(255,255,255,0)"
                 />
-                <path d="M 32 8 V 56 M 8 32 H 56"
-                      strokeWidth="6"
+                <path id="ButtonSave_icon_notice" d="M 16 16 H 40 L 48 24 V 48 H 16 Z"
+                      strokeWidth="1"
+                      stroke="#898989"
+                      fill="#898989"
+                />
+                <path d="M 20 46 V 30 H 44 V 46 Z"
+                      strokeWidth="1"
+                      stroke="#FFFFFF"
+                      fill="#FFFFFF"
+                />
+                <path d="M 24 34 H 42"
+                      strokeWidth="1"
+                      stroke="#898989"
+                      fill="none"
+                />
+                <path d="M 24 38 H 42"
+                      strokeWidth="1"
+                      stroke="#898989"
+                      fill="none"
+                />
+                <path d="M 24 42 H 42"
+                      strokeWidth="1"
+                      stroke="#898989"
+                      fill="none"
+                />
+                <path d="M 24 18 H 38 V 24 H 24 Z"
+                      strokeWidth="1"
+                      stroke="#FFFFFF"
+                      fill="#FFFFFF"
+                />
+                <path d="M 35 19 H 36 V 23 H 35 Z"
+                      strokeWidth="1"
                       stroke="#898989"
                       fill="none"
                 />

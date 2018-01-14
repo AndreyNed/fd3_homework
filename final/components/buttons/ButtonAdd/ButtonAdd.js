@@ -6,6 +6,7 @@ import Button from '../Button/Button';
 //import { connect } from 'react-redux';
 
 import './ButtonAdd.scss';
+import {DISPLAY_TYPES} from "../../../data_const/data_const";
 
 class ButtonAdd extends Button {
 
@@ -19,6 +20,7 @@ class ButtonAdd extends Button {
 
     static defaultProps = {
         label:      '',
+        display:    DISPLAY_TYPES.block,
         options:    {
             iconWidth: 48,
             iconHeight: 48,
@@ -50,6 +52,8 @@ class ButtonAdd extends Button {
     }*/
 
     render() {
+        const { display } = this.props;
+        const { addedClass } = this.props.options;
         let innerSVG = (
             <g className="ButtonAdd_inner_svg">
                 <circle cx="32" cy="32" r="31"
@@ -57,7 +61,7 @@ class ButtonAdd extends Button {
                         strokeWidth="1"
                         fill="rgba(255,255,255,0)"
                 />
-                <path d="M 32 8 V 56 M 8 32 H 56"
+                <path d="M 32 12 V 52 M 12 32 H 52"
                       strokeWidth="6"
                       stroke="#898989"
                       fill="none"
@@ -66,7 +70,7 @@ class ButtonAdd extends Button {
 
         );
 
-        return super.render( innerSVG, this.props.options.addedClass )
+        return super.render( innerSVG, addedClass, display )
     }
 }
 
