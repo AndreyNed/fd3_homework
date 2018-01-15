@@ -95,12 +95,14 @@ class PageOperations extends React.PureComponent {
 
     preparePropsTable = () => {
         const { operationsData, accountsData, operationCategoriesData, operationSelectedIndex } = this.props;
+        // let headers = null;
         let headers = [
             {
                 id:         'id',
                 text:       'id',
                 isSortable: true,
                 isSorted:   Table.SORT_TYPES.NONE,
+                isSearchable: true,
                 options: {
                     colWidth: '7%',
                 }
@@ -109,7 +111,8 @@ class PageOperations extends React.PureComponent {
                 id:         'accountId',
                 text:       'Счет',
                 isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
+                isSorted:   Table.SORT_TYPES.DESCENDED,
+                isSearchable: true,
                 options: {
                     colWidth: '15%',
                 }
@@ -119,6 +122,7 @@ class PageOperations extends React.PureComponent {
                 text:       'Категория',
                 isSortable: true,
                 isSorted:   Table.SORT_TYPES.NONE,
+                isSearchable: true,
                 options: {
                     colWidth: '15%',
                 }
@@ -126,8 +130,9 @@ class PageOperations extends React.PureComponent {
             {
                 id:         'type',
                 text:       'Тип',
-                isSortable: false,
+                isSortable: true,
                 isSorted:   Table.SORT_TYPES.NONE,
+                isSearchable: true,
                 options: {
                     colWidth: '10%',
                 }
@@ -137,6 +142,7 @@ class PageOperations extends React.PureComponent {
                 text:       'Сумма',
                 isSortable: true,
                 isSorted:   Table.SORT_TYPES.NONE,
+                isSearchable: true,
                 options: {
                     colWidth: '15%',
                 }
@@ -155,6 +161,7 @@ class PageOperations extends React.PureComponent {
                 text:       'Комментарий',
                 isSortable: false,
                 isSorted:   Table.SORT_TYPES.NONE,
+                isSearchable: true,
                 options: {
                     colWidth: 0,
                 }
@@ -310,7 +317,6 @@ class PageOperations extends React.PureComponent {
     };
 
     render() {
-        const { operationCardIsVisible } = this.props;
         return (
             <div className = { this.classCSS }>
                 <div className="wrapper">
@@ -318,7 +324,6 @@ class PageOperations extends React.PureComponent {
                     { this.renderMainSection() }
                     { this.renderButtonSection() }
                 </div>
-
             </div>
         )
     }

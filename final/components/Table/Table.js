@@ -3,7 +3,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
-import {findArrayItemIndex, isExists, isNotEmpty} from "../../utils/utils";
+import {findArrayItemIndex, isExists, isNotEmpty, isNotEmptyAll} from "../../utils/utils";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_TABLE } from "../../config/config";
 
 import './Table.scss';
 
@@ -28,6 +29,7 @@ class Table extends React.PureComponent {
                     Table.SORT_TYPES.ASCENDED,
                     Table.SORT_TYPES.DESCENDED,
                 ]),
+                isSearchable:           PropTypes.bool,
                 options:                PropTypes.shape({
                     colWidth:           PropTypes.oneOfType([
                         PropTypes.number,
@@ -84,7 +86,7 @@ class Table extends React.PureComponent {
         }
     }
 
-    debug_mode = false;
+    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_TABLE;
 
     classCSS = 'Table';
 
@@ -119,6 +121,13 @@ class Table extends React.PureComponent {
 
     /* == controller == */
 
+    thClick = ( e ) => {
+        ( this.debug_mode ) &&
+            console.log( 'Table: thClick: ', e.currentTarget.dataset.id );
+        let headerId = e.currentTarget.dataset.id;
+        this.sortChange( headerId );
+    };
+
     rowClick = ( e ) => {
         let rowIndex = e.currentTarget.dataset.row_index;
         this.rowSelect( rowIndex );
@@ -129,6 +138,26 @@ class Table extends React.PureComponent {
     };
 
     /* == action functions == */
+
+    sortChange = ( headerId ) => {
+        let headers = [ ...this.state.headers ];
+        const { NONE, ASCENDED, DESCENDED } = Table.SORT_TYPES;
+        let index = findArrayItemIndex( headers, { id: headerId } );
+        if ( headers[ index ].isSortable ) {
+            let sorting = headers[ index ].isSorted;
+            switch ( sorting ) {
+                case NONE:
+                    headers[ index ].isSorted = ASCENDED;
+                    break;
+                case ASCENDED:
+                    headers[ index ].isSorted = DESCENDED;
+                    break;
+                default:
+                    headers[ index ].isSorted = NONE;
+            }
+            this.setState( { headers } );
+        }
+    };
 
     rowSelect = ( rowIndex ) => {
         const { cbChanged } = this.props;
@@ -149,36 +178,64 @@ class Table extends React.PureComponent {
 
     renderHeader = () => {
         const { headers } = this.state;
-        return (
+        const { NONE, ASCENDED, DESCENDED } = Table.SORT_TYPES;
+
+        return ( isNotEmpty( headers ) ) &&
             <div className = { this.classCSS + '_header' }>
                 { headers.map( ( item, index ) => {
+                    const rotation = ( item.isSorted === ASCENDED )
+                        ? "rotate(0,16,16)"
+                        : ( item.isSorted === DESCENDED )
+                            ? "rotate(180,16,16)"
+                            : null;
                     return (
                         <div className = { this.classCSS + '_th' }
                              key = { index }
                              data-id = { item.id }
                              style = {{
                                  width: ( item.options.colWidth != 0 ) ? item.options.colWidth : 'auto',
-                             }}>
-                            { item.text }
+                             }}
+                             onClick = { this.thClick }>
+                            {
+                                ( item.isSorted !== NONE ) &&
+                                <span className = { this.classCSS + '_th_arrow_box' }>
+                                    <svg className = { this.classCSS + '_th_arrow' }
+                                         width =   "100%"
+                                         height =  "100%"
+                                         viewBox = "0 0 32 32"
+                                         preserveAspectRatio = "xMidYMid meet"
+                                         xmlns =   "http://www.w3.org/2000/svg">
+                                        <path d="M 16 1 V 31 M 10 25 L 16 31 L 22 25"
+                                              stroke="#898989"
+                                              strokeWidth="1.5"
+                                              fill="none"
+                                              transform ={ rotation } />
+                                    </svg>
+                                </span>
+                            }
+                            <span className = { this.classCSS + '_th_text_box' }>
+                                { item.text }
+                            </span>
                         </div>
                     )
                 } ) }
             </div>
-        )
     };
 
     renderBody = () => {
-        const { rows } = this.state;
-        return (
-            <div className = { this.classCSS + '_body' }>
-                {
-                    ( isNotEmpty( rows ) ) &&
-                        rows.map( ( item, index ) => {
-                            return this.renderRow( item, index );
-                        } )
-                }
-            </div>
-        )
+        const { rows, headers } = this.state;
+        return ( isNotEmptyAll( [ rows, headers ] ) )
+            ? <div className = { this.classCSS + '_body' }>
+                  {
+                      ( isNotEmpty( rows ) ) &&
+                          rows.map( ( item, index ) => {
+                              return this.renderRow( item, index );
+                          } )
+                  }
+              </div>
+            : <div className = { this.classCSS + '_no_data_box' }>
+                  Нет данных для отображения
+              </div>
     };
 
     renderRow = ( item, index ) => {
@@ -207,6 +264,14 @@ class Table extends React.PureComponent {
         )
     };
 
+    renderPaginator = () => {
+        const { headers, rows } = this.state;
+        return ( isNotEmptyAll( [ headers, rows ] ) ) &&
+            <div className = { this.classCSS + '_paginator' }>
+                Paginator
+            </div>
+    };
+
     render() {
         const { tableWidth } = this.props.options;
         return (
@@ -216,6 +281,7 @@ class Table extends React.PureComponent {
                  }}>
                 { this.renderHeader() }
                 { this.renderBody() }
+                { this.renderPaginator() }
             </div>
         )
     }

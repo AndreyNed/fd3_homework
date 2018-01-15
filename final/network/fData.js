@@ -28,7 +28,7 @@ import {acUIHideMatGlass} from "../actions/acUI";
 const debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_F_DATA;
 
 const fDataLoadAccounts = function ( dispatch, cbSuccess, cbError ) {
-    // console.log( 'fDataLoadAccounts...' );
+    ( debug_mode ) && console.log( 'fDataLoadAccounts...' );
     dispatch( acDataAccountsLoadStart() );
 
     let fetchError = function ( errorText ) {
@@ -66,7 +66,7 @@ const fDataLoadAccounts = function ( dispatch, cbSuccess, cbError ) {
 };
 
 const fDataLoadOperationCategories = function ( dispatch, cbSuccess, cbError ) {
-    // console.log( 'fDataLoadOperationCategories...' );
+    ( debug_mode ) && console.log( 'fDataLoadOperationCategories...' );
     dispatch( acDataOperationCategoriesLoadStart() );
 
     let fetchError = function ( errorText ) {
@@ -104,7 +104,7 @@ const fDataLoadOperationCategories = function ( dispatch, cbSuccess, cbError ) {
 };
 
 const fDataLoadOperations = function ( dispatch, cbSuccess, cbError ) {
-    // console.log( 'fDataLoadOperations...' );
+    ( debug_mode ) && console.log( 'fDataLoadOperations...' );
     dispatch( acDataOperationsLoadStart() );
 
     let fetchError = function ( errorText ) {
@@ -142,7 +142,7 @@ const fDataLoadOperations = function ( dispatch, cbSuccess, cbError ) {
 };
 
 const fDataSaveOperation = function ( dispatch, cbSuccess, cbError, operation ) {
-    // console.log( 'fDataLoadOperations...' );
+    ( debug_mode ) && console.log( 'fDataSaveOperations...' );
     dispatch( acDataOperationSaveStart() );
     const { id, accountId, categoryId, type, sum, date, comment } = operation;
 
@@ -197,7 +197,7 @@ const fDataSaveOperation = function ( dispatch, cbSuccess, cbError, operation ) 
 };
 
 const fDataCreateOperation = function ( dispatch, cbSuccess, cbError, newOperation ) {
-    // console.log( 'fDataLoadOperations...' );
+    ( debug_mode ) && console.log( 'fDataLoadOperations...' );
     dispatch( acDataOperationSaveStart() );
     const { accountId, categoryId, type, sum, date, comment } = newOperation;
 
@@ -242,7 +242,7 @@ const fDataCreateOperation = function ( dispatch, cbSuccess, cbError, newOperati
 
     dispatch(
         thunkFetch({
-            fetchURI: SERVER_URI,// + value,
+            fetchURI: SERVER_URI,
             fetchOptions: fetchOptions,
             cbError: fetchError,
             cbSuccess: fetchSuccess,
@@ -251,7 +251,7 @@ const fDataCreateOperation = function ( dispatch, cbSuccess, cbError, newOperati
 };
 
 const fDataDeleteOperation = function ( dispatch, cbSuccess, cbError, operationId ) {
-    // console.log( 'fDataDeleteOperation...' );
+    ( debug_mode ) && console.log( 'fDataDeleteOperation...' );
     dispatch( acDataOperationDeleteStart() );
 
     let fetchError = function ( errorText ) {
@@ -289,7 +289,7 @@ const fDataDeleteOperation = function ( dispatch, cbSuccess, cbError, operationI
 
     dispatch(
         thunkFetch({
-            fetchURI: SERVER_URI,// + value,
+            fetchURI: SERVER_URI,
             fetchOptions: fetchOptions,
             cbError: fetchError,
             cbSuccess: fetchSuccess,

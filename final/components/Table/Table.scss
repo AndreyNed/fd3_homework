@@ -15,6 +15,19 @@
             /*text-align: center;*/
             padding: 8px 8px;
             border-bottom: 1px solid #d3d3d3;
+
+            & > .Table_th_arrow_box {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                position: relative;
+
+                & > .Table_th_arrow {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+            }
         }
     }
 
@@ -41,5 +54,12 @@
             }
         }
 
+    }
+
+    & > .Table_no_data_box {
+        text-align: center;
+        color: $inactiveFontColor;
+        font-size: $confirmationFont;
+        padding: 3em 0;
     }
 }
