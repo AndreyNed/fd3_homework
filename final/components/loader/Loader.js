@@ -11,7 +11,7 @@ import PagesLinks  from '../../pages/PagesLinks';
 
 import { MODAL_CONTENT } from "../../data_const/data_const";
 import { CONFIG_UI_MODE_TIMEOUT, } from "../../config/config";
-import { isExists } from "../../utils/utils";
+import {isExists, isNotEmpty} from "../../utils/utils";
 
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
 import {acUIHideMatGlass, acUIShowMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
@@ -138,9 +138,9 @@ class Loader extends React.PureComponent {
             <div className = { this.classCSS }>
                 <MatGlass />
                 {
-                    ( ( accountsLoadStatus == 2 || isExists( accountsData ) ) &&
-                      ( operationCategoriesLoadStatus == 2 || isExists( operationCategoriesData ) ) &&
-                      ( operationsLoadStatus == 2 || isExists( operationsData ) ) ) &&
+                    ( ( accountsLoadStatus == 2 || isNotEmpty( accountsData ) ) &&
+                      ( operationCategoriesLoadStatus == 2 || isNotEmpty( operationCategoriesData ) ) &&
+                      ( operationsLoadStatus == 2 || isNotEmpty( operationsData ) ) ) &&
                       /*modalContent !== MODAL_CONTENT.DATA_LOADING ) &&*/
                     <BrowserRouter>
                         <div className = { this.classCSS + "_router" }>

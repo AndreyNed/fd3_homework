@@ -8,6 +8,7 @@ const OPERATION_TYPES = {
 const MODAL_CONTENT = {
     DATA_LOADING:           'DATA_LOADING',
     DATA_SAVING:            'DATA_SAVING',
+    DATA_DELETING:          'DATA_DELETING',
     OPERATION_CARD:         'OPERATION_CARD',
     DELETE_CONFIRMATION:    'DELETE_CONFIRMATION',
     NONE:                   'NONE'

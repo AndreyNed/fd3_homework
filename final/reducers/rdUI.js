@@ -8,6 +8,7 @@ import {
     UI_SHOW_OPERATION_CARD,
     UI_SHOW_DATA_LOADING_MESSAGE,
     UI_SHOW_DATA_SAVING_MESSAGE,
+    UI_SHOW_DATA_DELETING_MESSAGE,
     UI_SHOW_DELETE_CONFIRMATION,
 } from "../actions/acUI";
 
@@ -57,6 +58,14 @@ function rdUI ( state = initState, action ) {
             return {
                 ...state, ...{
                     modalContent:       MODAL_CONTENT.DATA_SAVING,
+                    matGlassIsVisible:  true,
+                }
+            };
+
+        case UI_SHOW_DATA_DELETING_MESSAGE:
+            return {
+                ...state, ...{
+                    modalContent:       MODAL_CONTENT.DATA_DELETING,
                     matGlassIsVisible:  true,
                 }
             };

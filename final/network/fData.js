@@ -15,6 +15,9 @@ import {
     acDataOperationSaveStart,
     acDataOperationSaveSuccess,
     acDataOperationSaveError,
+    acDataOperationDeleteStart,
+    acDataOperationDeleteSuccess,
+    acDataOperationDeleteError,
 } from "../actions/acData";
 
 import { SERVER_URI } from "./network_consts";
@@ -247,7 +250,54 @@ const fDataCreateOperation = function ( dispatch, cbSuccess, cbError, newOperati
     );
 };
 
+const fDataDeleteOperation = function ( dispatch, cbSuccess, cbError, operationId ) {
+    // console.log( 'fDataDeleteOperation...' );
+    dispatch( acDataOperationDeleteStart() );
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataSaveOperation: ' + errorText );
+        dispatch( acDataOperationDeleteError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataDeleteOperation: fetchSuccess: ', loadedData.responseText );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteOperation: fetchSuccess: ', loadedData.responseText );
+        }
+        dispatch( acDataOperationDeleteSuccess() );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: `command=delete_operation&operation_id=${ operationId }`
+    };
+
+    debug_mode && console.log( 'fDataDeleteOperation: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,// + value,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
 export {
     fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations,
-    fDataSaveOperation, fDataCreateOperation,
+    fDataSaveOperation, fDataCreateOperation, fDataDeleteOperation,
 }

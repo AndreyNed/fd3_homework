@@ -10,6 +10,8 @@ const UI_SHOW_DATA_LOADING_MESSAGE = 'UI_SHOW_DATA_LOADING_MESSAGE';
 
 const UI_SHOW_DATA_SAVING_MESSAGE = 'UI_SHOW_DATA_SAVING_MESSAGE';
 
+const UI_SHOW_DATA_DELETING_MESSAGE = 'UI_SHOW_DATA_DELETING_MESSAGE';
+
 const UI_SHOW_DELETE_CONFIRMATION = 'UI_SHOW_DELETE_CONFIRMATION';
 
 const acUIShowMatGlass = function() {
@@ -43,6 +45,12 @@ const acUIShowDataSavingMessage = function() {
     }
 };
 
+const acUIShowDataDeletingMessage = function() {
+    return {
+        type:               UI_SHOW_DATA_DELETING_MESSAGE,
+    }
+};
+
 const acUIShowDeleteConfirmation = function() {
     return {
         type:               UI_SHOW_DELETE_CONFIRMATION,
@@ -55,5 +63,6 @@ export {
     UI_SHOW_OPERATION_CARD, acUIShowOperationCard,
     UI_SHOW_DATA_LOADING_MESSAGE, acUIShowDataLoadingMessage,
     UI_SHOW_DATA_SAVING_MESSAGE, acUIShowDataSavingMessage,
+    UI_SHOW_DATA_DELETING_MESSAGE, acUIShowDataDeletingMessage,
     UI_SHOW_DELETE_CONFIRMATION, acUIShowDeleteConfirmation,
 }

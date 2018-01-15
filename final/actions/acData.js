@@ -17,6 +17,9 @@ const DATA_OPERATIONS_SHOULD_BE_RELOADED =              'DATA_OPERATIONS_SHOULD_
 const DATA_OPERATION_SAVE_START =                       'DATA_OPERATION_SAVE_START';
 const DATA_OPERATION_SAVE_SUCCESS =                     'DATA_OPERATION_SAVE_SUCCESS';
 const DATA_OPERATION_SAVE_ERROR =                       'DATA_OPERATION_SAVE_ERROR';
+const DATA_OPERATION_DELETE_START =                     'DATA_OPERATION_DELETE_START';
+const DATA_OPERATION_DELETE_SUCCESS =                   'DATA_OPERATION_DELETE_SUCCESS';
+const DATA_OPERATION_DELETE_ERROR =                     'DATA_OPERATION_DELETE_ERROR';
 
 const DATA_OPERATION_SELECT =                           'DATA_OPERATION_SELECT';
 
@@ -113,6 +116,24 @@ const acDataOperationSaveError = function () {
     }
 };
 
+const acDataOperationDeleteStart = function () {
+    return {
+        type:               DATA_OPERATION_DELETE_START,
+    }
+};
+
+const acDataOperationDeleteSuccess = function () {
+    return {
+        type:              DATA_OPERATION_DELETE_SUCCESS,
+    }
+};
+
+const acDataOperationDeleteError = function () {
+    return {
+        type:               DATA_OPERATION_DELETE_ERROR,
+    }
+};
+
 const acDataOperationSelect = function ( index ) {
     return {
         type:                   DATA_OPERATION_SELECT,
@@ -138,6 +159,9 @@ export {
     DATA_OPERATION_SAVE_START,          acDataOperationSaveStart,
     DATA_OPERATION_SAVE_SUCCESS,        acDataOperationSaveSuccess,
     DATA_OPERATION_SAVE_ERROR,          acDataOperationSaveError,
+    DATA_OPERATION_DELETE_START,        acDataOperationDeleteStart,
+    DATA_OPERATION_DELETE_SUCCESS,      acDataOperationDeleteSuccess,
+    DATA_OPERATION_DELETE_ERROR,        acDataOperationDeleteError,
 
     DATA_OPERATION_SELECT,              acDataOperationSelect,
 }

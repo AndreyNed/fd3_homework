@@ -7,17 +7,29 @@ import { connect } from 'react-redux';
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_DELETE_CONFIRMATION } from "../../config/config";
 import { MODAL_CONTENT } from "../../data_const/data_const";
 
-import ButtonSave from '../buttons/ButtonSave/ButtonSave';
 import ButtonOk from '../buttons/ButtonOk/ButtonOk';
 import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 
 import './DeleteConfirmation.scss';
 import {acUIHideMatGlass} from "../../actions/acUI";
+import {fDataDeleteOperation} from "../../network/fData";
 
 class DeleteConfirmation extends React.PureComponent {
 
     static propTypes = {
         modalContent:               PropTypes.string,
+        operationsData:             PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                accountId:              PropTypes.number,
+                categoryId:             PropTypes.number,
+                type:                   PropTypes.string,
+                sum:                    PropTypes.number,
+                date:                   PropTypes.any,
+                comment:                PropTypes.string,
+            })
+        ),
+        operationSelectedIndex:         PropTypes.number,
         cbChanged:                  PropTypes.func,
     };
 
@@ -59,7 +71,6 @@ class DeleteConfirmation extends React.PureComponent {
     };
 
     formProps = () => {
-        const { isNewOperationAdded } = this.props;
         return {
             header: {
                 title:  "Подтвердите удаление",
@@ -78,18 +89,10 @@ class DeleteConfirmation extends React.PureComponent {
     /* == callbacks == */
 
     btnOk_cbChanged = () => {
+        const { dispatch, operationSelectedIndex, operationsData } = this.props;
         console.log( "Удалить" );
-        /*const { operationValue } = this.state;
-        const { isNewOperationAdded } = this.props;
-        const validation = this.validate_operation( operationValue );
-        if ( validation.result ) {
-            ( isNewOperationAdded )
-                ? this.createOperation( operationValue )
-                : this.saveOperationChanges( operationValue );
-        }
-        else {
-            this.setState( { operationValidationData: validation.operationValidationData } );
-        }*/
+        let operationId = operationsData[ operationSelectedIndex ].id;
+        fDataDeleteOperation( dispatch, null, null, operationId );
     };
 
     btnCancel_cbChanged = () => {
@@ -139,6 +142,9 @@ class DeleteConfirmation extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         modalContent:                   state.ui.modalContent,
+
+        operationSelectedIndex:         state.data.operationSelectedIndex,
+        operationsData:                 state.data.operationsData,
     }
 };
 

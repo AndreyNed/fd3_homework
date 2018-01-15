@@ -16,6 +16,9 @@ import {
     DATA_OPERATION_SAVE_START,
     DATA_OPERATION_SAVE_SUCCESS,
     DATA_OPERATION_SAVE_ERROR,
+    DATA_OPERATION_DELETE_START,
+    DATA_OPERATION_DELETE_SUCCESS,
+    DATA_OPERATION_DELETE_ERROR,
     DATA_OPERATION_SELECT,
 } from "../actions/acData"
 
@@ -30,11 +33,10 @@ const initState = {
     operationsLoadStatus:           0,
     operationSaveStatus:            0,
     operationCreateStatus:          0,
+    operationDeleteStatus:          0,
     operationSelectedIndex:         -1,
     operationValue:                 {},
 };
-
-import { MODAL_CONTENT } from "../data_const/data_const";
 
 function rdData ( state = initState, action ) {
     switch ( action.type ) {
@@ -128,17 +130,18 @@ function rdData ( state = initState, action ) {
         case DATA_OPERATIONS_SHOULD_BE_RELOADED:
             return {
                 ...state, ...{
-                    operationsLoadStatus: 0,
-                    operationSaveStatus:  0,
+                    operationsLoadStatus:  0,
+                    operationSaveStatus:   0,
+                    operationDeleteStatus: 0,
                 }
             };
 
         case DATA_OPERATION_SAVE_START:
             return {
-                ...state, ...{
-                    operationSaveStatus:    1,
-                }
-            };
+            ...state, ...{
+                operationSaveStatus:    1,
+            }
+        };
 
         case DATA_OPERATION_SAVE_SUCCESS:
             return {
@@ -151,6 +154,29 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationSaveStatus:    3,
+                }
+            };
+
+        case DATA_OPERATION_DELETE_START:
+            return {
+                ...state, ...{
+                    operationDeleteStatus:  1,
+                }
+            };
+
+        case DATA_OPERATION_DELETE_SUCCESS:
+            return {
+                ...state, ...{
+                    operationDeleteStatus:  2,
+                    operationSelectedIndex: -1,
+                }
+            };
+
+        case DATA_OPERATION_DELETE_ERROR:
+            return {
+                ...state, ...{
+                    operationDeleteStatus:  3,
+                    operationSelectedIndex: -1,
                 }
             };
 

@@ -14,7 +14,7 @@ import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_OPERATIONS } from "../config/
 import { CONFIG_UI_MODE_TIMEOUT, } from "../config/config";
 
 import {acDataOperationSelect, acDataOperationsShouldBeReloaded} from "../actions/acData";
-import { acUIShowOperationCard, acUIShowDataSavingMessage, acUIShowDeleteConfirmation } from "../actions/acUI";
+import { acUIShowOperationCard, acUIShowDataSavingMessage, acUIShowDataDeletingMessage, acUIShowDeleteConfirmation } from "../actions/acUI";
 
 import './PageOperations.scss';
 import {DISPLAY_TYPES} from "../data_const/data_const";
@@ -49,6 +49,10 @@ class PageOperations extends React.PureComponent {
 
         operationCardIsVisible:         PropTypes.bool,
         operationSaveStatus:            PropTypes.number,
+        operationDeleteStatus:          PropTypes.number,
+        operationsLoadStatus:           PropTypes.number,
+
+        // matGlassIsVisible:              PropTypes.bool,
     };
 
     static defaultProps = {
@@ -67,13 +71,22 @@ class PageOperations extends React.PureComponent {
     }
 
     prepareData = ( props ) => {
-        const { dispatch, operationSaveStatus } = props;
+        const { dispatch, operationSaveStatus, operationDeleteStatus, operationsLoadStatus, matGlassIsVisible } = props;
         ( this.debug_mode ) &&
             console.log( 'PageOperations: prepareData: new props: ', props );
         if ( operationSaveStatus == 1 ) {
             dispatch( acUIShowDataSavingMessage() );
         }
         else if ( operationSaveStatus > 1 ) {
+            setTimeout( () => {
+                dispatch( acDataOperationsShouldBeReloaded() );
+            }, CONFIG_UI_MODE_TIMEOUT );
+        }
+
+        if ( operationDeleteStatus == 1 ) {
+            dispatch( acUIShowDataDeletingMessage() );
+        }
+        else if ( operationDeleteStatus > 1 ) {
             setTimeout( () => {
                 dispatch( acDataOperationsShouldBeReloaded() );
             }, CONFIG_UI_MODE_TIMEOUT );
@@ -319,8 +332,10 @@ const mapStateToProps = function ( state ) {
 
         operationSelectedIndex:         state.data.operationSelectedIndex,
         operationSaveStatus:            state.data.operationSaveStatus,
+        operationDeleteStatus:          state.data.operationDeleteStatus,
+        operationsLoadStatus:           state.data.operationsLoadStatus,
 
-        //matGlassIsVisible:              state.ui.matGlassIsVisible,
+        // matGlassIsVisible:              state.ui.matGlassIsVisible,
     }
 };
 
