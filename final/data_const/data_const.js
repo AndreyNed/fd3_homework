@@ -21,8 +21,24 @@ const DISPLAY_TYPES = {
     none:           'DISPLAY_NONE',
 };
 
+const SORTING = {
+    NONE:           'NONE',
+    ASCENDED:       'ASCENDED',
+    DESCENDED:      'DESCENDED',
+};
+
+const DATA_TYPES = {
+    NUMBER:         'NUMBER',
+    STRING:         'STRING',
+    DATE:           'DATE',
+    DATE_TIME:      'DATE_TIME',
+    DATE_MS_INT:    'DATE_MS_INT',
+};
+
 export {
     OPERATION_TYPES,
     MODAL_CONTENT,
     DISPLAY_TYPES,
+    SORTING,
+    DATA_TYPES,
 }

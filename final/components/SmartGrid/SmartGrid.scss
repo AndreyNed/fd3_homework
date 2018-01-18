@@ -1,0 +1,254 @@
+.SmartGrid {
+    position: relative;
+
+    & > .SmartGrid_caption {
+        padding: 16px 16px 16px 32px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #898989;
+    }
+
+    & > .SmartGrid_filter {
+        padding: 16px 16px 16px 32px;
+    }
+
+    & > .SmartGrid_table {
+        display: table;
+        margin: 0 auto;
+        background-color: #ffffff;
+
+        & > .SmartGrid_header {
+            display: table-header-group;
+
+            & > .SmartGrid_th {
+                position: relative;
+                display: table-cell;
+                padding: 8px;
+                font-weight: bold;
+                text-align: center;
+                background-color: #fdfdfd;
+                box-shadow: 0 1px 2px #898989;
+                color: #898989;
+                -ms-user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #f2f2f2;
+                    color: #000000;
+                }
+
+                &:active {
+                    background-color: #d3d3d3;
+                }
+
+                & > .SmartGrid_th_arrow_box {
+                    position: relative;
+                    display: inline-block;
+                    width: 14px;
+                    height: 14px;
+
+                    & > .SmartGrid_th_arrow {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                    }
+                }
+
+                & > .SmartGrid_th_title_box {
+                    display: inline-block;
+                    padding-right: 14px;
+                    cursor: pointer;
+                }
+
+                & > .SmartGrid_th_drag_field {
+                    background-color: rgba(255, 0, 0, 0);
+                    position: absolute;
+                    transform: translateY(100%);
+                    z-index: 1100;
+                    width: 100%;
+                    height: 100vh;
+                    bottom: 0;
+                    left: 0;
+
+                    & > .SmartGrid_th_drag_pointer {
+                        display: none;
+                        position: absolute;
+                        transform: translateX(-50%);
+                        left: 50%;
+                        top: 0;
+                    }
+                }
+
+                &[ data-visible_pointer="true" ] {
+                    cursor: pointer;
+                    /*cursor: -webkit-grab;*/
+
+                    & > .SmartGrid_th_drag_field {
+                        background-color: rgba(0, 0, 0, 0.15);
+                        cursor: pointer;
+
+                        & > .SmartGrid_th_drag_pointer {
+                            display: block;
+                        }
+                    }
+                }
+
+                & > .SmartGrid_resize_handler {
+                    position: absolute;
+                    z-index: 1110;
+                    top: 0;
+                    right: 0;
+                    transform: translateX(50%);
+                    width: 16px;
+                    height: 100%;
+                    background-color: rgba(0,0,0,0);
+                    cursor: col-resize;
+                    /*user-drag: none;*/
+
+                    & > .SmartGrid_resize_line {
+                        display: none;
+                    }
+
+                    &:hover {
+                        background-color: rgba(0,0,0,0);
+                    }
+
+                    &:active {
+                        background-color: rgba(0,0,0,0);
+                    }
+
+                    &[ data-active="true" ] {
+                        // background-color: #1A9F29;
+
+                        &:active {
+                            position: absolute;
+                            & > .SmartGrid_resize_line {
+                                position: absolute;
+                                z-index: 1110;
+                                display: block;
+                                width: 1px;
+                                height: 200%;
+                                border-left: 1px dashed #000000;
+                                top: 0;
+                                left: 50%;
+                                transform: translate(-50%,-25%);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        & > .SmartGrid_body {
+            display: table-row-group;
+
+            & > .SmartGrid_tr {
+                display: table-row;
+
+                & > .SmartGrid_td {
+                    display: table-cell;
+                    padding: 4px 8px;
+                    border-bottom: 1px dotted #d3d3d3;
+                    border-left: 1px dotted #fafafa;
+                    color: #898989;
+                    font-size: 14px;
+                    -ms-user-select: none;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+                }
+
+                &:hover {
+                    background-color: #f2f2f2;
+
+                    & > .SmartGrid_td {
+                        color: #000000;
+                    }
+                }
+
+                &:active {
+                    background-color: #d3d3d3;
+                }
+
+                &[ data-selected="true" ] {
+                    background-color: #898989;
+
+                    & > .SmartGrid_td {
+                        color: #ffffff;
+                    }
+                }
+
+                &:last-of-type {
+                    & > .SmartGrid_td {
+                        border-bottom-style: solid;
+                    }
+                }
+            }
+
+        }
+    }
+
+    & > .SmartGrid_footer {
+        display: table;
+        width: 100%;
+        padding: 16px;
+
+        & > .SmartGrid_paginator {
+            display: table-cell;
+            vertical-align: middle;
+            padding-right: 16px;
+
+            & > .SmartGrid_pages_box {
+                display: inline-block;
+
+                & > .SmartGrid_page {
+                    position: relative;
+                    display: inline-block;
+                    width: 32px;
+                    height: 32px;
+                    padding: 8px 0;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #898989;
+                    border: 1px solid #d3d3d3;
+                    border-radius: 4px;
+
+                    & > .SmartGrid_page_number {
+                        position: absolute;
+                        display: inline-block;
+                        left: 50%;
+                        top: 50%;
+                        transform: translate(-50%,-50%);
+                    }
+
+                    &:hover {
+                        background-color: #f2f2f2;
+                        color: #000000;
+                        border-width: 2px;
+                    }
+
+                    &:active {
+                        background-color: #d3d3d3;
+                    }
+
+                    &[ data-page_selected="true" ] {
+                        background-color: #898989;
+                        color: #ffffff;
+                    }
+                }
+            }
+        }
+
+        & > .SmartGrid_button_panel {
+            display: table-cell;
+            width: 150px;
+            text-align: right;
+            vertical-align: middle;
+            padding-left: 16px;
+        }
+
+    }
+}

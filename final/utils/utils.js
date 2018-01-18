@@ -64,7 +64,13 @@ export const isNotEmptyAll = ( arr ) => {
 
 export const isNotEmpty = ( value ) => ( isExists( value ) && value.length > 0 );
 
+// проверка, что число существует и не isNaN
 export const isNotNaN = ( value ) => ( isExists( value ) && !isNaN( value ) );
+
+// проверка для чисел на >0
+export const isGTZero = ( num ) => {
+    return ( num !== null && num !== undefined && !isNaN( num ) && num > 0 );
+};
 
 // сравнивает хеши по массиву полей в fieldsArray [ поле1, поле2, поле3, ... }
 // поля считаются равными, даже если их нет в обоих хешах одновременно
