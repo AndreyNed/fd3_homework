@@ -1,5 +1,21 @@
 'use strict';
 
+// дополняет строку Val слева нулями до длины Len
+export const str0l = (val, len) => {
+    let strVal = val.toString();
+    while (strVal.length < len)
+        strVal = '0' + strVal;
+    return strVal;
+};
+
+// форматирует переданную дату-время в формате дд.мм.гггг
+export const formatDate = (dt) => {
+    let year = dt.getFullYear();
+    let month = dt.getMonth() + 1;
+    let day = dt.getDate();
+    return str0l(day, 2) + '.' + str0l(month, 2) + '.' + year;
+};
+
 // ищет в массиве хэшей элемент, удовлетворяющую условиям из хэша filter (поле:значение)
 // возврашает индекс первой подходящей строки или -1
 export const findArrayItemIndex = (listData, filter) => {

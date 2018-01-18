@@ -1,4 +1,4 @@
-import { isExists, isExistsAll, isNotEmpty, isNotEmptyAll, findArrayItem, findArrayItemIndex, isNotNaN, isGTZero } from "../../utils/utils"
+import { isExists, isExistsAll, isNotEmpty, isNotEmptyAll, findArrayItem, findArrayItemIndex, isNotNaN, isGTZero, formatDate } from "../../utils/utils"
 import { DATA_TYPES, SORTING } from "../../data_const/data_const";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_SMART_GRID_UTILS } from "../../config/config";
 
@@ -60,7 +60,7 @@ export const textFromValue = ( value, dataType ) => {
 
         case DATE_MS_INT:
             let d = new Date( value );
-            return d.toDateString();
+            return formatDate( d ); // d.toDateString();
 
         default:
             return value;
