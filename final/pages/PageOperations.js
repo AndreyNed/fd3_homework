@@ -4,11 +4,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Table from '../components/Table/Table';
 import SmartGrid from '../components/SmartGrid/SmartGrid';
 import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
 import ButtonDelete from '../components/buttons/ButtonDelete/ButtonDelete';
-import OperationCard from '../components/OperationCard/OperationCard';
 
 import { isExists, isNotEmpty, findArrayItem, findArrayItemIndex } from "../utils/utils";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_OPERATIONS } from "../config/config";
@@ -493,12 +491,16 @@ class PageOperations extends React.PureComponent {
                 ],
             }
         } );
-        console.log( 'PageOperations: preparePropsTable: ', operationSelectedIndex );
+        console.log( 'PageOperations: preparePropsTable: ', operationSelectedIndex, ': props: ', this.props );
 
         return {
+            userLogin:             'Andrei',
+            tableName:             'operations',
+
             withCaption:            true,
             withFilter:             true,
             withFooter:             true,
+            withButtonExport:       true,
 
             caption:                'Таблица операций',
             textFilterValue:        '',
@@ -521,7 +523,7 @@ class PageOperations extends React.PureComponent {
                 tableWidth: '100%',
             },*/
             cbChanged:  this.operationsTable_cbChanged,
-            // cbSelected: this.operationTable_cbSelected,
+            cbSelected: this.operationsTable_cbSelected,
         }
     };
 
@@ -562,6 +564,12 @@ class PageOperations extends React.PureComponent {
         const { dispatch } = this.props;
         dispatch( acUIShowOperationCard( false ) );
     };*/
+
+    operationsTable_cbSelected = ( newOperationSelectedIndex ) => {
+        // console.log( 'operationsTable_cbSelected: ', newOperationSelectedIndex );
+        const { dispatch } = this.props;
+        dispatch( acDataOperationSelect( newOperationSelectedIndex ) );
+    };
 
     operationsTable_cbChanged = ( operationId ) => {
         console.log( 'operationsTable_cbChanged: ', operationId );

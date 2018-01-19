@@ -1,0 +1,63 @@
+@import "../../../data_const/style_const";
+@import "../../../data_const/style_animations";
+
+.Button_icon_box {
+    transition: transform 0.3s;
+
+    & > svg.ButtonExcel_icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: pointer;
+
+        circle {
+            fill: $wrapperFieldColor;
+        }
+    }
+
+    &:hover {
+        transform: scale(1.15);
+
+        & > svg.ButtonExcel_icon {
+
+            circle {
+                fill: rgba(255,255,255,1);
+                stroke: #d3d3d3;
+                stroke-width: 2;
+            }
+
+            path.ButtonExcel_outer {
+                stroke: rgba(0,102,51,1);
+                fill: rgba(0,102,51,1);
+            }
+
+            path.ButtonExcel_fields {
+                stroke: rgba(0,102,51,1);
+                fill: rgba(0,102,51,1);
+            }
+
+            path.ButtonExcel_logo {
+                stroke: rgba(255,255,255,1);
+                fill: rgba(255,255,255,1)
+            }
+
+            path.ButtonExcel_grids {
+                stroke: rgba(255,255,255,1);
+            }
+        }
+    }
+
+    &:active {
+        transform: scale(0.85);
+        transition: transform 0.15s;
+
+        & > svg.ButtonExcel_icon {
+
+            circle {
+                stroke-width: 1;
+            }
+        }
+    }
+}
+
+

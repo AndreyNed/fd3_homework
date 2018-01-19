@@ -140,7 +140,7 @@ class Loader extends React.PureComponent {
                 {
                     ( ( accountsLoadStatus == 2 || isNotEmpty( accountsData ) ) &&
                       ( operationCategoriesLoadStatus == 2 || isNotEmpty( operationCategoriesData ) ) &&
-                      ( operationsLoadStatus == 2 || isNotEmpty( operationsData ) ) ) &&
+                      ( operationsLoadStatus == 2 && isNotEmpty( operationsData ) ) ) &&
                       /*modalContent !== MODAL_CONTENT.DATA_LOADING ) &&*/
                     <BrowserRouter>
                         <div className = { this.classCSS + "_router" }>

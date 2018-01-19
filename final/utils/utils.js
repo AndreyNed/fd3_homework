@@ -16,6 +16,14 @@ export const formatDate = (dt) => {
     return str0l(day, 2) + '.' + str0l(month, 2) + '.' + year;
 };
 
+// форматирует переданную дату-время в формате дд.мм.гггг чч:мм:сс
+export const formatDateTime = (dt) => {
+    let hours = dt.getHours();
+    let minutes = dt.getMinutes();
+    let seconds = dt.getSeconds();
+    return formatDate(dt) + ' ' + str0l(hours, 2) + ':' + str0l(minutes, 2) + ':' + str0l(seconds, 2);
+};
+
 // ищет в массиве хэшей элемент, удовлетворяющую условиям из хэша filter (поле:значение)
 // возврашает индекс первой подходящей строки или -1
 export const findArrayItemIndex = (listData, filter) => {

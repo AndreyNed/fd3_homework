@@ -1,5 +1,6 @@
 .SmartGrid {
     position: relative;
+    margin: 0 16px;
 
     & > .SmartGrid_caption {
         padding: 16px 16px 16px 32px;
@@ -94,6 +95,14 @@
                             display: block;
                         }
                     }
+                }
+
+                &[ data-pointer_position="left" ] > .SmartGrid_th_drag_field > .SmartGrid_th_drag_pointer {
+                    left: 0;
+                }
+
+                &[ data-pointer_position="right" ] > .SmartGrid_th_drag_field > .SmartGrid_th_drag_pointer {
+                    left: 100%;
                 }
 
                 & > .SmartGrid_resize_handler {
@@ -222,6 +231,10 @@
                         left: 50%;
                         top: 50%;
                         transform: translate(-50%,-50%);
+                        -ms-user-select: none;
+                        -moz-user-select: none;
+                        -webkit-user-select: none;
+                        user-select: none;
                     }
 
                     &:hover {
@@ -248,6 +261,29 @@
             text-align: right;
             vertical-align: middle;
             padding-left: 16px;
+
+            & > .Button {
+
+               /* & > .Button_title {
+                    font-size: 14px;
+                    color: #898989;
+                }
+
+                &:hover {
+                    & > .Button_title {
+                        color: #000000;
+                    }
+                }
+
+                &:active {
+                    background-color: #898989;
+                    border: 2px solid #d3d3d3;
+                    & > .Button_title {
+                        font-size: 13px;
+                        color: #ffffff;
+                    }
+                }*/
+            }
         }
 
     }

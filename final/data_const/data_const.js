@@ -35,10 +35,17 @@ const DATA_TYPES = {
     DATE_MS_INT:    'DATE_MS_INT',
 };
 
+const POINTER_POSITION = {
+    POINTER_LEFT:   'left',
+    POINTER_RIGHT:  'right',
+    POINTER_CENTER: 'center',
+};
+
 export {
     OPERATION_TYPES,
     MODAL_CONTENT,
     DISPLAY_TYPES,
     SORTING,
     DATA_TYPES,
+    POINTER_POSITION,
 }

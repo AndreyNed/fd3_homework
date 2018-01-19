@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import ReactDom from 'react-dom';
 
 import TextInput from '../TextInput/TextInput';
+import ExcelConverter from '../ExcelConverter/ExcelConverter';
+import ButtonExcel from '../buttons/ButtonExcel/ButtonExcel';
 
-import { SORTING, DATA_TYPES } from "../../data_const/data_const";
+import {SORTING, DATA_TYPES, POINTER_POSITION, DISPLAY_TYPES} from "../../data_const/data_const";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_SMART_GRID } from "../../config/config";
 
 import { isExists, isNotEmpty, isExistsAll, isNotEmptyAll, isNotNaN, isGTZero, findArrayItemIndex, findArrayItem } from "../../utils/utils";
-import { buildOrderedRows, filterValue, addTextField, sortingRows, getRowSelectedIndex, getPagesInfo, changeThOrder, getIndexesInPage } from "./smart_grid_utils";
+import { buildOrderedRows, filterValue, addTextField, sortingRows, getRowSelectedIndex, getPagesInfo, changeThOrder, getIndexesInPage, getPointerPosition } from "./smart_grid_utils";
 
 import './SmartGrid.scss';
 
@@ -16,11 +18,15 @@ class SmartGrid extends React.PureComponent {
 
     static propTypes = {
 
+        userLogin:                      PropTypes.string,
+        tableName:                      PropTypes.string,
+
         htmlID:                         PropTypes.string,
 
         withCaption:                    PropTypes.bool,
         withFilter:                     PropTypes.bool,
         withFooter:                     PropTypes.bool,
+        withButtonExport:               PropTypes.bool,
 
         caption:                        PropTypes.string,
         textFilterValue:                PropTypes.string,
@@ -124,18 +130,27 @@ class SmartGrid extends React.PureComponent {
             PropTypes.string,
         ]),
 
-        dragMode:                   PropTypes.bool,
+        tableHeight:                    PropTypes.number, // вычисляется в процессе, задавать не нужно
+        headerHeight:                   PropTypes.number, // вычисляется в процессе, задавать не нужно
+
+        exportToExcelStatus:            PropTypes.number,
+
+        dragMode:                       PropTypes.bool,
         // dragX:                          PropTypes.number,
         // dragY:                          PropTypes.number,
 
         cbChanged:                      PropTypes.func,
+        cbSelected:                     PropTypes.func,
         cbFiltered:                     PropTypes.func,
     };
 
     static defaultProps = {
+        userLogin:                      '',
+
         wwithCaption:                   true,
         withFilter:                     true,
         withFooter:                     true,
+        withButtonExport:               true,
 
         textFilterValue:                '',
 
@@ -155,6 +170,7 @@ class SmartGrid extends React.PureComponent {
         tableWidth:                     '100%',
 
         cbChanged:                      null,
+        cbSelected:                     null,
         cbFiltered:                     null,
     };
 
@@ -179,9 +195,13 @@ class SmartGrid extends React.PureComponent {
         ( this.debug_mode ) &&
             console.log( '%c%s', 'color: blue; font-weight: bold',
                          'SmartGrid: constructor: props: ', props, '; state: ', this.state );
+
+        /* == fields == */
+
         this.classCSS = 'SmartGrid';
 
-        // array of headers divs
+        this.tableHeight = null;
+
         this.tHs = null;
 
         // for dragging
@@ -205,6 +225,16 @@ class SmartGrid extends React.PureComponent {
         this.prepareData( newProps );
     }
 
+    componentDidMount() {
+        this.headerWidth = this.header.offsetWidth;
+        // this.saveData();
+        // this.restoreColumnsWidth();
+    }
+
+    componentDidUpdate() {
+        this.saveData();
+    }
+
     prepareData = ( newProps ) => {
         ( this.debug_mode ) &&
             console.log( '%c%s', 'color: blue; font-weight: bold',
@@ -213,6 +243,20 @@ class SmartGrid extends React.PureComponent {
         let newState = { ...this.state };
         let value = null;
         let draggingMode = false;
+        let exportToExcelStatus = 0;
+        let headersData = this.loadHeadersData();
+
+        headers = ( isNotEmptyAll( [ headers, headersData ] ) )
+            ? headersData.map( ( hd, hdIndex ) => {
+                let thIndex = findArrayItemIndex( headers, { id: hd.id } );
+                return {
+                    ...headers[ thIndex ],
+                    ...hd
+                }
+            } )
+            : headers;
+
+        ( this.debug_mode ) && console.log( "SmartGrid: prepareData: restored headers: ", headers );
 
         if ( isNotEmptyAll( [ headers, body ] ) ) {
             // 1. Построить ячейки в строке в том же порядке, что и в заголовке ( по id )
@@ -251,7 +295,15 @@ class SmartGrid extends React.PureComponent {
                 : null;
         }
 
-        newState = { ...newState, headers, body, textFilterValue, value, dragMode: draggingMode };
+        newState = {
+            ...newState,
+            headers,
+            body,
+            textFilterValue,
+            value,
+            dragMode: draggingMode,
+            exportToExcelStatus,
+        };
 
         this.setState( { ...newState }, () => {
             ( this.debug_mode ) &&
@@ -270,11 +322,169 @@ class SmartGrid extends React.PureComponent {
         }
     };
 
+    exportExcelProps = () => {
+        const { exportToExcelStatus, headers, body } = this.state;
+        let exportedData = [];
+        exportedData.push( headers.map( ( th ) => th.title ) );
+        if ( isNotEmpty( body ) ) {
+            body.forEach( ( row ) => {
+                exportedData.push( row.cells.map( ( cell ) => {
+                    return isExists( cell.text ) ? cell.text : cell.value;
+                } ) );
+            } )
+        }
+
+        ( this.debug_mode ) && console.log( '*** SmartGrid: exportExcelProps: exportedData: ', exportedData );
+        return {
+            exportedData,
+            exportToExcelStatus,
+            cbChanged:           this.exportExcel_cbChanged,
+        }
+    };
+
+    buttonExportProps = () => {
+        return {
+            label: 'Экспорт (.xls)',
+            display: DISPLAY_TYPES.block,
+            cbChanged: this.buttonExport_cbChanged,
+        }
+    };
+
+    /* == save the data == */
+
+    saveData = () => {
+        const { headers } = this.state;
+        const { userLogin, tableName } = this.props;
+        ( this.debug_mode ) && console.log( 'The DATA is going to be saved for current user...' );
+
+        // 1. Создаем массив данных элементов заголовка таблицы -- headersData
+        let headersData = this.getHeadersData();
+
+        // 2. Объявляем переменную для объекта с данными localStorage
+        let smartGridData = null;
+
+        /*let smartGridData = [
+            {
+                userLogin,
+                tables: [
+                    {
+                        tableName,
+                        headers: headersData,
+                    },
+                ],
+            },
+        ];*/
+
+        // 3. Загружаем строку JSON из localStorage по ключу smartGridData
+        let savedData = localStorage.getItem( "smartGridData" );
+
+        // 4. Парсим строку в объект
+        try {
+            smartGridData = JSON.parse( savedData );
+            // удачно, продолжаем
+            // ищем пользователя в массиве:
+            let uIndex = findArrayItemIndex( smartGridData, { userLogin: userLogin } );
+            if ( uIndex > -1 ) {
+                //ищем таблицу в массиве таблиц для данного пользователя
+                let tIndex = findArrayItemIndex( smartGridData[ uIndex ].tables, { tableName: tableName } );
+                if ( tIndex > -1 ) {
+                    // сохраняем данные заголовка
+                    smartGridData[ uIndex ].tables[ tIndex ].headers = [ ...headersData ];
+                }
+                else {
+                    // создаем новый элемент массива таблиц данного пользователя
+                    smartGridData[ uIndex ].tables.push( {
+                        tableName, headers: [ ...headersData ]
+                    } );
+                }
+            }
+            else {
+                // создаем новый хеш в массиве пользователей
+                smartGridData.push( {
+                    userLogin,
+                    tables: [
+                        {
+                            tableName,
+                            headers: headersData,
+                        }
+                    ]
+                } );
+            }
+        }
+        catch ( e ) {
+            // ошибка, создаем заново весь ключ хранилища
+            smartGridData = this.getNewSmartGridData( headersData );
+        }
+
+        // 5. Сериализуем и сохраняем его в localStorage
+        localStorage.removeItem( "smartGridData" );
+        localStorage.setItem( "smartGridData", JSON.stringify( smartGridData ) );
+        console.log( 'SmartGrid: saveData: smartGridData: ', smartGridData );
+    };
+
+    getNewSmartGridData = ( headersData ) => {
+        const { userLogin, tableName } = this.props;
+        return [
+            {
+                userLogin,
+                tables: [
+                    {
+                        tableName,
+                        headers: headersData
+                    }
+                ]
+            }
+        ]
+    };
+
+    getHeadersData = () => {
+        const { headers } = this.state;
+        return ( isNotEmpty( headers ) )
+            ? headers.map( ( thItem, thIndex ) => {
+                const { id, sorting, isVisible } = thItem;
+                let width = ( this.tHs[ thIndex ].offsetWidth / this.headerWidth * 100 ) + '%';
+                return { id, sorting, isVisible, width }
+            } )
+            : null;
+    };
+
+    /* == load the data == */
+
+    /*restoreColumnsWidth = () => {
+        let headersData = this.loadHeadersData();
+        ( this.debug_mode ) && console.log( "SmartGrid: restoreColumnsWidth: headersData: ", headersData );
+    };*/
+
+    loadHeadersData = () => {
+        const { userLogin, tableName } = this.props;
+        let savedData = localStorage.getItem( "smartGridData" );
+        let smartGridData = null;
+        let headersData = null;
+        if ( isNotEmpty( savedData ) ) {
+            try {
+                smartGridData = JSON.parse( savedData );
+                let uIndex = findArrayItemIndex( smartGridData, { userLogin: userLogin } );
+                if ( uIndex > -1 ) {
+                    let tIndex = findArrayItemIndex( smartGridData[ uIndex ].tables, { tableName: tableName } );
+                    if ( tIndex > -1 ) {
+                        headersData = smartGridData[ uIndex ].tables[ tIndex ].headers;
+                        if ( isNotEmpty( headersData ) ) {
+                            return headersData;
+                        }
+                    }
+                }
+            }
+            catch ( e ) {
+                console.log( "%c%s", "color:red;", "Восстановление ширины столбцов из прошлого сеанса: Ошибка парсинга строки JSON" );
+            }
+        }
+    };
+
     /* == callbacks == */
 
     filter_cbChanged = ( text ) => {
         const { headers, value, rowSelectedIndex } = this.state;
-        const { body, withFilter, cbFiltered, withFooter, rowsPerPage } = this.props;
+        const { body, withFilter, cbFiltered, withFooter, rowsPerPage, userLogin, tableName } = this.props;
 
         // 1. Привести порядок столбцов в теле к таковому в заголовке
         let newBody = buildOrderedRows( headers, body );
@@ -309,7 +519,17 @@ class SmartGrid extends React.PureComponent {
             ...getPagesInfo( options ),
         }, () => {
             ( this.debug_mode ) && console.log( '-- SmartGrid: filter_cbChanged: 6) state: ', this.state );
+            ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
         } );
+    };
+
+    buttonExport_cbChanged = () => {
+        this.setState( { exportToExcelStatus: 1 } );
+    };
+
+    exportExcel_cbChanged = ( value ) => {
+        const { exportToExcelStatus } = value;
+        this.setState( { exportToExcelStatus } );
     };
 
     /* == controller == */
@@ -345,6 +565,7 @@ class SmartGrid extends React.PureComponent {
         window.addEventListener( 'mouseup', this.windowMouseUpStopColumnDragging, false );
 
         this.thStartColumn = elm.dataset.th_id;
+        this.thEndColumn = elm.dataset.th_id;
         ( this.debug_mode ) &&
             console.log( 'thMouseDown: timer: ', this.thTimer );
     };
@@ -372,15 +593,14 @@ class SmartGrid extends React.PureComponent {
         }
     };
 
-    thClick = ( e ) => {
-
-    };
-
-    thMouseOver = (e ) => {
+    thMouseOver = ( e ) => {
+        const { headers } = this.state;
         e.currentTarget.dataset.visible_pointer = "true";
+        this.thEndColumn = e.currentTarget.dataset.th_id;
+        e.currentTarget.dataset.pointer_position = getPointerPosition( this.thStartColumn, this.thEndColumn, headers );
     };
 
-    thMouseOut = (e ) => {
+    thMouseOut = ( e ) => {
         e.currentTarget.dataset.visible_pointer = "false";
     };
 
@@ -421,6 +641,7 @@ class SmartGrid extends React.PureComponent {
         e.preventDefault();
         ( isExists( this.thResizeHandler ) ) && ( this.thResizeHandler.dataset.active = "false" );
         e.currentTarget.dataset.active = "false";
+        this.saveData();
     };
 
     resizeHandlerMouseEnter = ( e ) => {
@@ -464,6 +685,7 @@ class SmartGrid extends React.PureComponent {
         this.resizeEndX = e.clientX;
         ( this.debug_mode ) &&
             console.log( 'SmartGrid: documentMouseUpStopColumnResize: ', this.thResizeHandler.parentElement, '; resizeEndX: ', this.resizeEndX );
+        this.saveData();
     };
 
     pageClick = ( e ) => {
@@ -475,7 +697,13 @@ class SmartGrid extends React.PureComponent {
 
     startDragging = () => {
         this.stopTimer();
-        this.setState( { dragMode: true }, () => {
+        this.tableHeight = this.table.offsetHeight;
+        this.headerHeight = this.tHs[ 0 ].offsetHeight;
+        this.setState( {
+            dragMode: true,
+            tableHeight: this.tableHeight,
+            headerHeight: this.headerHeight,
+        }, () => {
             ( this.debug_mode ) && console.log( 'Start dragging!!!' );
         })
     };
@@ -490,6 +718,7 @@ class SmartGrid extends React.PureComponent {
 
     changeColumns = () => {
         const { headers, body } = this.state;
+        const { userLogin, tableName } = this.props;
         let newHeaders = changeThOrder( headers, body, this.thStartColumn, this.thEndColumn );
         ( this.debug_mode ) &&
             console.log( 'SmartGrid: changeColumns: newHeader: ', newHeaders );
@@ -499,6 +728,8 @@ class SmartGrid extends React.PureComponent {
         this.setState( {
             headers: newHeaders,
             body: newBody,
+        }, () => {
+            ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
         } );
     };
 
@@ -506,6 +737,7 @@ class SmartGrid extends React.PureComponent {
         const { headers, body } = this.state;
         const defaultBody = this.props.body;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
+        const { userLogin, tableName } = this.props;
 
         let thIndex = findArrayItemIndex( headers, { id: thId } );
         const { isSortable } = headers[ thIndex ];
@@ -540,12 +772,20 @@ class SmartGrid extends React.PureComponent {
             this.setState( {
                 headers: newHeaders,
                 body: newBody,
+            }, () => {
+                ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
             } );
         }
     };
 
     selectRow = ( rowSelectedIndex ) => {
-        this.setState( { rowSelectedIndex } );
+        const { cbSelected } = this.props;
+        if ( cbSelected ) {
+            cbSelected( rowSelectedIndex );
+        }
+        else {
+            this.setState( { rowSelectedIndex } );
+        }
     };
 
     selectPage = ( pageId ) => {
@@ -588,6 +828,7 @@ class SmartGrid extends React.PureComponent {
         const { tableWidth } = this.props;
         return (
             <div className = { this.classCSS + '_table' }
+                 ref = { ( elm ) => { this.table = elm } }
                  style = {{
                      width: ( tableWidth !== 0 )
                         ? tableWidth
@@ -604,7 +845,8 @@ class SmartGrid extends React.PureComponent {
         this.tHs = [];
         const { headers } = this.state;
         return ( isNotEmpty( headers ) ) &&
-            <div className = { this.classCSS + '_header' }>
+            <div className = { this.classCSS + '_header' }
+                 ref = { ( elm ) => { this.header = elm } }>
                 { headers.map( ( th, index ) => this.renderTh( th, index ) ) }
             </div>
     };
@@ -612,13 +854,17 @@ class SmartGrid extends React.PureComponent {
     renderTh = ( th, index ) => {
         const { isVisible, isSortable, sorting, id } = th;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
-        const { dragMode, headers } = this.state;
+        const { dragMode, headers, tableHeight, headerHeight } = this.state;
+
+        const pointerPosition = getPointerPosition( this.thStartColumn, this.thEndColumn, headers );
+
         return ( isVisible ) &&
             <div className = { this.classCSS + '_th' }
                  key = { id }
                  ref = { ( elm ) => { this.tHs[ index ] = elm } }
                  data-th_id = { id }
                  data-visible_pointer = { false }
+                 data-pointer_position = { pointerPosition }
                  style = {{
                      width: ( th.width !== 0 )
                         ? th.width
@@ -626,7 +872,6 @@ class SmartGrid extends React.PureComponent {
                  }}
                  onMouseDown = { ( !dragMode ) ? this.thMouseDown : null }
                  onMouseUp = { this.thMouseUp }
-                 onClick = { this.thClick }
                  onMouseOver = { ( dragMode ) ? this.thMouseOver : null }
                  onMouseOut = { ( dragMode ) ? this.thMouseOut : null }>
                 {
@@ -665,7 +910,12 @@ class SmartGrid extends React.PureComponent {
                 {
                     ( dragMode ) &&
                         <div className = { this.classCSS + '_th_drag_field' }
-                             key="drag_pointer">
+                             key="drag_field"
+                             style = {{
+                                 height: ( isExists( tableHeight ) )
+                                    ? tableHeight - headerHeight
+                                    : '100vh',
+                             }}>
                             <svg className = { this.classCSS + '_th_drag_pointer' }
                                  width = "16px"
                                  height = "20px"
@@ -783,9 +1033,14 @@ class SmartGrid extends React.PureComponent {
     };
 
     renderButtonPanel = () => {
+        const { withButtonExport } = this.props;
+        let props = this.buttonExportProps();
         return (
             <div className = { this.classCSS + '_button_panel' }>
-                Button panel
+                {
+                    ( withButtonExport ) && <ButtonExcel { ...props }/>
+                }
+
             </div>
         )
     };
@@ -796,16 +1051,17 @@ class SmartGrid extends React.PureComponent {
             console.log( '%c%s', 'color: blue; font-weight: bold',
                 'SmartGrid: render: props: ', this.props, '; state: ', this.state );
         const { withCaption, withFilter, withFooter } = this.props;
+        let props = this.exportExcelProps();
         return (
             <div className = { this.classCSS }>
                 { ( withCaption ) && this.renderCaption() }
                 { ( withFilter ) && this.renderFilter() }
                 { this.renderTable() }
                 { ( withFooter ) && this.renderFooter() }
+                <ExcelConverter { ...props }/>
             </div>
         )
     }
-
 }
 
 export default SmartGrid;

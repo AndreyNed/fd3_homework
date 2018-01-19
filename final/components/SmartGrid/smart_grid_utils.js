@@ -1,11 +1,32 @@
-import { isExists, isExistsAll, isNotEmpty, isNotEmptyAll, findArrayItem, findArrayItemIndex, isNotNaN, isGTZero, formatDate } from "../../utils/utils"
-import { DATA_TYPES, SORTING } from "../../data_const/data_const";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_SMART_GRID_UTILS } from "../../config/config";
 
+import {
+    isExists,
+    isExistsAll,
+    isNotEmpty,
+    isNotEmptyAll,
+    findArrayItem,
+    findArrayItemIndex,
+    isNotNaN,
+    isGTZero,
+    formatDate,
+    formatDateTime,
+} from "../../utils/utils";
+
+import {
+    DATA_TYPES,
+    SORTING,
+    POINTER_POSITION,
+} from "../../data_const/data_const";
+
+
 const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
+
 const { NONE, ASCENDED, DESCENDED } = SORTING;
 
-const debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_SMART_GRID_UTILS;
+const { POINTER_CENTER, POINTER_LEFT, POINTER_RIGHT } = POINTER_POSITION;
+
+const debug_mode = ((( CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_SMART_GRID_UTILS )));
 
 // устанавливает порядок столбцов в строках таким же, как в заголовке
 export const buildOrderedRows = ( headers, body ) => {
@@ -21,7 +42,7 @@ export const buildOrderedRows = ( headers, body ) => {
             } );
             return { ...row, cells }
         } );
-        ( debug_mode ) && console.log( 'buildOrderedRows: result: ', result );
+        // console.log( 'result: ', result );
     }
     return result;
 };
@@ -51,16 +72,14 @@ export const textFromValue = ( value, dataType ) => {
             return value;
 
         case DATE:
-            // todo data formatting;
-            return value.toDateString();
+            return formatDate( value );
 
         case DATE_TIME:
-            // todo data and time formatting;
-            return value.toDateString() + '' + value.toTimeString();
+            return formatDateTime( value );
 
         case DATE_MS_INT:
             let d = new Date( value );
-            return formatDate( d ); // d.toDateString();
+            return formatDate( d );
 
         default:
             return value;
@@ -163,9 +182,8 @@ export const cancelSorting = ( body, defaultBody ) => {
     else return body;
 };
 
-
-
-
+// возаращает rowIndex строки, содержащей в массиве cells значение поля из primaryId, равное defValue
+// результат может отличаться от индекса строки в массиве body, т.к. rowIndex не привязан к порядку строк
 export const getRowSelectedIndex = ( body, primaryId, defValue ) => {
     let result = -1;
 
@@ -249,6 +267,23 @@ export const changeThOrder = ( headers, body, colStart, colEnd ) => {
         }
 
     result[ e ] = temp;
+
+    return result;
+};
+
+// startId, endId - id стартового и текущего столбцов
+export const getPointerPosition = ( startId, endId, headers ) => {
+    let result = '';
+
+    if ( isExistsAll( [ startId, endId ] ) ) {
+        let s = findArrayItemIndex( headers, { id: startId } );
+        let e = findArrayItemIndex( headers, { id: endId } );
+        result = ( s === e )
+            ? POINTER_CENTER
+            : ( s < e )
+                ? POINTER_RIGHT
+                : POINTER_LEFT;
+    }
 
     return result;
 };
