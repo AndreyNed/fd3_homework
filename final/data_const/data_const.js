@@ -41,6 +41,17 @@ const POINTER_POSITION = {
     POINTER_CENTER: 'center',
 };
 
+const ALIGN_TYPES = {
+    LEFT:           'left',
+    CENTER:         'center',
+    RIGHT:          'right',
+};
+
+const SETTINGS_MODES = {
+    ACCOUNTS:               'ACCOUNTS',
+    OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
+};
+
 export {
     OPERATION_TYPES,
     MODAL_CONTENT,
@@ -48,4 +59,6 @@ export {
     SORTING,
     DATA_TYPES,
     POINTER_POSITION,
+    ALIGN_TYPES,
+    SETTINGS_MODES,
 }

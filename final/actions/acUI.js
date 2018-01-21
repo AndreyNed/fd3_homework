@@ -14,6 +14,8 @@ const UI_SHOW_DATA_DELETING_MESSAGE = 'UI_SHOW_DATA_DELETING_MESSAGE';
 
 const UI_SHOW_DELETE_CONFIRMATION = 'UI_SHOW_DELETE_CONFIRMATION';
 
+const UI_SET_SETTINGS_MODE = 'UI_SET_SETTINGS_MODE';
+
 const acUIShowMatGlass = function() {
     return {
         type:               UI_SHOW_MAT_GLASS,
@@ -57,6 +59,13 @@ const acUIShowDeleteConfirmation = function() {
     }
 };
 
+const acUISetSettingsMode = function( settingsMode ) {
+    return {
+        type:               UI_SET_SETTINGS_MODE,
+        settingsMode:       settingsMode,
+    }
+};
+
 export {
     UI_SHOW_MAT_GLASS, acUIShowMatGlass,
     UI_HIDE_MAT_GLASS, acUIHideMatGlass,
@@ -65,4 +74,5 @@ export {
     UI_SHOW_DATA_SAVING_MESSAGE, acUIShowDataSavingMessage,
     UI_SHOW_DATA_DELETING_MESSAGE, acUIShowDataDeletingMessage,
     UI_SHOW_DELETE_CONFIRMATION, acUIShowDeleteConfirmation,
+    UI_SET_SETTINGS_MODE, acUISetSettingsMode,
 }

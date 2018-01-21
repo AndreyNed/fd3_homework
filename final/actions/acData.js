@@ -4,11 +4,25 @@ const DATA_ACCOUNTS_LOAD_START =                        'DATA_ACCOUNTS_LOAD_STAR
 const DATA_ACCOUNTS_LOAD_SUCCESS =                      'DATA_ACCOUNTS_LOAD_SUCCESS';
 const DATA_ACCOUNTS_LOAD_ERROR =                        'DATA_ACCOUNTS_LOAD_ERROR';
 const DATA_ACCOUNTS_SHOULD_BE_RELOADED =                'DATA_ACCOUNTS_SHOULD_BE_RELOADED';
+const DATA_ACCOUNT_SAVE_START =                         'DATA_ACCOUNT_SAVE_START';
+const DATA_ACCOUNT_SAVE_SUCCESS =                       'DATA_ACCOUNT_SAVE_SUCCESS';
+const DATA_ACCOUNT_SAVE_ERROR =                         'DATA_ACCOUNT_SAVE_ERROR';
+const DATA_ACCOUNT_DELETE_START =                       'DATA_ACCOUNT_DELETE_START';
+const DATA_ACCOUNT_DELETE_SUCCESS =                     'DATA_ACCOUNT_DELETE_SUCCESS';
+const DATA_ACCOUNT_DELETE_ERROR =                       'DATA_ACCOUNT_DELETE_ERROR';
+const DATA_ACCOUNT_SELECT =                             'DATA_ACCOUNT_SELECT';
 
 const DATA_OPERATION_CATEGORIES_LOAD_START =            'DATA_OPERATION_CATEGORIES_LOAD_START';
 const DATA_OPERATION_CATEGORIES_LOAD_SUCCESS =          'DATA_OPERATION_CATEGORIES_LOAD_SUCCESS';
 const DATA_OPERATION_CATEGORIES_LOAD_ERROR =            'DATA_OPERATION_CATEGORIES_LOAD_ERROR';
 const DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED =    'DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED';
+const DATA_OPERATION_CATEGORY_SAVE_START =              'DATA_OPERATION_CATEGORY_SAVE_START';
+const DATA_OPERATION_CATEGORY_SAVE_SUCCESS =            'DATA_OPERATION_CATEGORY_SAVE_SUCCESS';
+const DATA_OPERATION_CATEGORY_SAVE_ERROR =              'DATA_OPERATION_CATEGORY_SAVE_ERROR';
+const DATA_OPERATION_CATEGORY_DELETE_START =            'DATA_OPERATION_CATEGORY_DELETE_START';
+const DATA_OPERATION_CATEGORY_DELETE_SUCCESS =          'DATA_OPERATION_CATEGORY_DELETE_SUCCESS';
+const DATA_OPERATION_CATEGORY_DELETE_ERROR =            'DATA_OPERATION_CATEGORY_DELETE_ERROR';
+const DATA_OPERATION_CATEGORY_SELECT =                  'DATA_OPERATION_CATEGORY_SELECT';
 
 const DATA_OPERATIONS_LOAD_START =                      'DATA_OPERATIONS_LOAD_START';
 const DATA_OPERATIONS_LOAD_SUCCESS =                    'DATA_OPERATIONS_LOAD_SUCCESS';
@@ -20,7 +34,6 @@ const DATA_OPERATION_SAVE_ERROR =                       'DATA_OPERATION_SAVE_ERR
 const DATA_OPERATION_DELETE_START =                     'DATA_OPERATION_DELETE_START';
 const DATA_OPERATION_DELETE_SUCCESS =                   'DATA_OPERATION_DELETE_SUCCESS';
 const DATA_OPERATION_DELETE_ERROR =                     'DATA_OPERATION_DELETE_ERROR';
-
 const DATA_OPERATION_SELECT =                           'DATA_OPERATION_SELECT';
 
 const acDataAccountsLoadStart = function () {
@@ -48,6 +61,49 @@ const acDataAccountsShouldBeReloaded = function () {
     }
 };
 
+const acDataAccountSaveStart = function () {
+    return {
+        type:               DATA_ACCOUNT_SAVE_START,
+    }
+};
+
+const acDataAccountSaveSuccess = function () {
+    return {
+        type:               DATA_ACCOUNT_SAVE_SUCCESS,
+    }
+};
+
+const acDataAccountSaveError = function () {
+    return {
+        type:               DATA_ACCOUNT_SAVE_ERROR,
+    }
+};
+
+const acDataAccountDeleteStart = function () {
+    return {
+        type:               DATA_ACCOUNT_DELETE_START,
+    }
+};
+
+const acDataAccountDeleteSuccess = function () {
+    return {
+        type:              DATA_ACCOUNT_DELETE_SUCCESS,
+    }
+};
+
+const acDataAccountDeleteError = function () {
+    return {
+        type:               DATA_ACCOUNT_DELETE_ERROR,
+    }
+};
+
+const acDataAccountSelect = function ( index ) {
+    return {
+        type:               DATA_ACCOUNT_SELECT,
+        accountSelectedIndex: index,
+    }
+};
+
 const acDataOperationCategoriesLoadStart = function () {
     return {
         type:               DATA_OPERATION_CATEGORIES_LOAD_START,
@@ -70,6 +126,49 @@ const acDataOperationCategoriesLoadError = function () {
 const acDataOperationCategoriesShouldBeReloaded = function () {
     return {
         type:               DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED,
+    }
+};
+
+const acDataOperationCategorySaveStart = function () {
+    return {
+        type:               DATA_OPERATION_CATEGORY_SAVE_START,
+    }
+};
+
+const acDataOperationCategorySaveSuccess = function () {
+    return {
+        type:               DATA_OPERATION_CATEGORY_SAVE_SUCCESS,
+    }
+};
+
+const acDataOperationCategorySaveError = function () {
+    return {
+        type:               DATA_OPERATION_CATEGORY_SAVE_ERROR,
+    }
+};
+
+const acDataOperationCategoryDeleteStart = function () {
+    return {
+        type:               DATA_OPERATION_CATEGORY_DELETE_START,
+    }
+};
+
+const acDataOperationCategoryDeleteSuccess = function () {
+    return {
+        type:              DATA_OPERATION_CATEGORY_DELETE_SUCCESS,
+    }
+};
+
+const acDataOperationCategoryDeleteError = function () {
+    return {
+        type:               DATA_OPERATION_CATEGORY_DELETE_ERROR,
+    }
+};
+
+const acDataOperationCategorySelect = function ( index ) {
+    return {
+        type:                   DATA_OPERATION_CATEGORY_SELECT,
+        operationCategorySelectedIndex: index,
     }
 };
 
@@ -146,11 +245,25 @@ export {
     DATA_ACCOUNTS_LOAD_SUCCESS,         acDataAccountsLoadSuccess,
     DATA_ACCOUNTS_LOAD_ERROR,           acDataAccountsLoadError,
     DATA_ACCOUNTS_SHOULD_BE_RELOADED,   acDataAccountsShouldBeReloaded,
+    DATA_ACCOUNT_SAVE_START,            acDataAccountSaveStart,
+    DATA_ACCOUNT_SAVE_SUCCESS,          acDataAccountSaveSuccess,
+    DATA_ACCOUNT_SAVE_ERROR,            acDataAccountSaveError,
+    DATA_ACCOUNT_DELETE_START,          acDataAccountDeleteStart,
+    DATA_ACCOUNT_DELETE_SUCCESS,        acDataAccountDeleteSuccess,
+    DATA_ACCOUNT_DELETE_ERROR,          acDataAccountDeleteError,
+    DATA_ACCOUNT_SELECT,                acDataAccountSelect,
 
     DATA_OPERATION_CATEGORIES_LOAD_START,         acDataOperationCategoriesLoadStart,
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,       acDataOperationCategoriesLoadSuccess,
     DATA_OPERATION_CATEGORIES_LOAD_ERROR,         acDataOperationCategoriesLoadError,
     DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED, acDataOperationCategoriesShouldBeReloaded,
+    DATA_OPERATION_CATEGORY_SAVE_START,           acDataOperationCategorySaveStart,
+    DATA_OPERATION_CATEGORY_SAVE_SUCCESS,         acDataOperationCategorySaveSuccess,
+    DATA_OPERATION_CATEGORY_SAVE_ERROR,           acDataOperationCategorySaveError,
+    DATA_OPERATION_CATEGORY_DELETE_START,         acDataOperationCategoryDeleteStart,
+    DATA_OPERATION_CATEGORY_DELETE_SUCCESS,       acDataOperationCategoryDeleteSuccess,
+    DATA_OPERATION_CATEGORY_DELETE_ERROR,         acDataOperationCategoryDeleteError,
+    DATA_OPERATION_CATEGORY_SELECT,               acDataOperationCategorySelect,
 
     DATA_OPERATIONS_LOAD_START,         acDataOperationsLoadStart,
     DATA_OPERATIONS_LOAD_SUCCESS,       acDataOperationsLoadSuccess,

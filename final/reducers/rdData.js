@@ -5,10 +5,23 @@ import {
     DATA_ACCOUNTS_LOAD_SUCCESS,
     DATA_ACCOUNTS_LOAD_ERROR,
     DATA_ACCOUNTS_SHOULD_BE_RELOADED,
+    DATA_ACCOUNT_SAVE_START,
+    DATA_ACCOUNT_SAVE_SUCCESS,
+    DATA_ACCOUNT_SAVE_ERROR,
+    DATA_ACCOUNT_DELETE_START,
+    DATA_ACCOUNT_DELETE_SUCCESS,
+    DATA_ACCOUNT_DELETE_ERROR,
+    DATA_ACCOUNT_SELECT,
     DATA_OPERATION_CATEGORIES_LOAD_START,
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,
     DATA_OPERATION_CATEGORIES_LOAD_ERROR,
     DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED,
+    DATA_OPERATION_CATEGORY_SAVE_START,
+    DATA_OPERATION_CATEGORY_SAVE_SUCCESS,
+    DATA_OPERATION_CATEGORY_SAVE_ERROR,
+    DATA_OPERATION_CATEGORY_DELETE_START,
+    DATA_OPERATION_CATEGORY_DELETE_SUCCESS,
+    DATA_OPERATION_CATEGORY_DELETE_ERROR,
     DATA_OPERATIONS_LOAD_START,
     DATA_OPERATIONS_LOAD_SUCCESS,
     DATA_OPERATIONS_LOAD_ERROR,
@@ -20,14 +33,24 @@ import {
     DATA_OPERATION_DELETE_SUCCESS,
     DATA_OPERATION_DELETE_ERROR,
     DATA_OPERATION_SELECT,
-} from "../actions/acData"
+} from "../actions/acData";
 
 const initState = {
     accountsData:                   null,
     accountsLoadStatus:             0,
+    accountSaveStatus:              0,
+    accountCreateStatus:            0,
+    accountDeleteStatus:            0,
+    accountSelectedIndex:           -1,
+    accountValue:                   {},
 
     operationCategoriesData:        null,
     operationCategoriesLoadStatus:  0,
+    operationCategorySaveStatus:    0,
+    operationCategoryCreateStatus:  0,
+    operationCategoryDeleteStatus:  0,
+    operationCategorySelectedIndex: -1,
+    operationCategoryValue:         {},
 
     operationsData:                 null,
     operationsLoadStatus:           0,
@@ -69,6 +92,57 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     accountsLoadStatus: 0,
+                }
+            };
+
+        case DATA_ACCOUNT_SAVE_START:
+            return {
+                ...state, ...{
+                    accountSaveStatus:    1,
+                }
+            };
+
+        case DATA_ACCOUNT_SAVE_SUCCESS:
+            return {
+                ...state, ...{
+                    accountSaveStatus:    2,
+                }
+            };
+
+        case DATA_ACCOUNT_SAVE_ERROR:
+            return {
+                ...state, ...{
+                    accountSaveStatus:    3,
+                }
+            };
+
+        case DATA_ACCOUNT_DELETE_START:
+            return {
+                ...state, ...{
+                    accountDeleteStatus:  1,
+                }
+            };
+
+        case DATA_ACCOUNT_DELETE_SUCCESS:
+            return {
+                ...state, ...{
+                    accountDeleteStatus:  2,
+                    accountSelectedIndex: -1,
+                }
+            };
+
+        case DATA_ACCOUNT_DELETE_ERROR:
+            return {
+                ...state, ...{
+                    accountDeleteStatus:  3,
+                    accountSelectedIndex: -1,
+                }
+            };
+
+        case DATA_ACCOUNT_SELECT:
+            return {
+                ...state, ...{
+                    accountSelectedIndex: action.accountSelectedIndex,
                 }
             };
 

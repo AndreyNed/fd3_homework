@@ -226,13 +226,14 @@ class SmartGrid extends React.PureComponent {
     }
 
     componentDidMount() {
+        const { userLogin, tableName } = this.props;
         this.headerWidth = this.header.offsetWidth;
-        // this.saveData();
-        // this.restoreColumnsWidth();
+        ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
     }
 
     componentDidUpdate() {
-        this.saveData();
+        const { userLogin, tableName } = this.props;
+        ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
     }
 
     prepareData = ( newProps ) => {
@@ -419,7 +420,8 @@ class SmartGrid extends React.PureComponent {
         // 5. Сериализуем и сохраняем его в localStorage
         localStorage.removeItem( "smartGridData" );
         localStorage.setItem( "smartGridData", JSON.stringify( smartGridData ) );
-        console.log( 'SmartGrid: saveData: smartGridData: ', smartGridData );
+        ( this.debug_mode ) &&
+            console.log( 'SmartGrid: saveData: smartGridData: ', smartGridData );
     };
 
     getNewSmartGridData = ( headersData ) => {
@@ -637,11 +639,12 @@ class SmartGrid extends React.PureComponent {
     };
 
     resizeHandlerMouseUp = ( e ) => {
+        const { userLogin, tableName } = this.props;
         e.stopPropagation();
         e.preventDefault();
         ( isExists( this.thResizeHandler ) ) && ( this.thResizeHandler.dataset.active = "false" );
         e.currentTarget.dataset.active = "false";
-        this.saveData();
+        ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
     };
 
     resizeHandlerMouseEnter = ( e ) => {
@@ -679,13 +682,14 @@ class SmartGrid extends React.PureComponent {
     };
 
     documentMouseUpStopColumnResize = ( e ) => {
+        const { userLogin, tableName } = this.props;
         document.removeEventListener( 'mouseup', this.documentMouseUpStopColumnResize );
         document.removeEventListener( 'mousemove', this.documentMouseMoveColumnResize );
         ( isExists( this.thResizeHandler ) ) && ( this.thResizeHandler.dataset.active = 'false' );
         this.resizeEndX = e.clientX;
         ( this.debug_mode ) &&
             console.log( 'SmartGrid: documentMouseUpStopColumnResize: ', this.thResizeHandler.parentElement, '; resizeEndX: ', this.resizeEndX );
-        this.saveData();
+        ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
     };
 
     pageClick = ( e ) => {

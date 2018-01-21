@@ -54,12 +54,14 @@ class PageOperations extends React.PureComponent {
         // matGlassIsVisible:              PropTypes.bool,
     };
 
-    static defaultProps = {
+    static defaultProps = {};
 
-    };
+    constructor( props ) {
+        super( props );
 
-    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_PAGE_OPERATIONS;
-    classCSS = 'PageOperations';
+        this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_PAGE_OPERATIONS;
+        this.classCSS = 'PageOperations';
+    }
 
     componentWillMount() {
         this.prepareData( this.props );
@@ -491,7 +493,8 @@ class PageOperations extends React.PureComponent {
                 ],
             }
         } );
-        console.log( 'PageOperations: preparePropsTable: ', operationSelectedIndex, ': props: ', this.props );
+        ( this.debug_mode ) &&
+            console.log( 'PageOperations: preparePropsTable: ', operationSelectedIndex, ': props: ', this.props );
 
         return {
             userLogin:             'Andrei',
