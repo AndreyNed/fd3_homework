@@ -6,6 +6,8 @@ import {
     UI_SHOW_MAT_GLASS,
     UI_HIDE_MAT_GLASS,
     UI_SHOW_OPERATION_CARD,
+    UI_SHOW_ACCOUNT_CARD,
+    UI_SHOW_OPERATION_CATEGORY_CARD,
     UI_SHOW_DATA_LOADING_MESSAGE,
     UI_SHOW_DATA_SAVING_MESSAGE,
     UI_SHOW_DATA_DELETING_MESSAGE,
@@ -16,6 +18,7 @@ import {
 const initState = {
     matGlassIsVisible:      true,
     isNewOperationAdded:    false,
+    isNewAccountAdded:      false,
     modalContent:           MODAL_CONTENT.DATA_LOADING,
     settingsMode:           SETTINGS_MODES.ACCOUNTS,
 };
@@ -53,6 +56,24 @@ function rdUI ( state = initState, action ) {
                     modalContent:        MODAL_CONTENT.OPERATION_CARD,
                     matGlassIsVisible:   true,
                     isNewOperationAdded: action.isNewOperationAdded,
+                }
+            };
+
+        case UI_SHOW_ACCOUNT_CARD:
+            return {
+                ...state, ...{
+                    modalContent:        MODAL_CONTENT.ACCOUNT_CARD,
+                    matGlassIsVisible:   true,
+                    isNewAccountAdded:   action.isNewAccountAdded,
+                }
+            };
+
+        case UI_SHOW_OPERATION_CATEGORY_CARD:
+            return {
+                ...state, ...{
+                    modalContent:                   MODAL_CONTENT.OPERATION_CATEGORY_CARD,
+                    matGlassIsVisible:              true,
+                    isNewOperationCategoryAdded:    action.isNewOperationCategoryAdded,
                 }
             };
 

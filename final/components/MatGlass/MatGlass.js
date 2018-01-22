@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { acUIHideMatGlass } from "../../actions/acUI";
 
 import OperationCard from "../OperationCard/OperationCard";
+import AccountCard from '../AccountCard/AccountCard';
+import OperationCategoryCard from '../OperationCategoryCard/OperationCategoryCard';
 import DataLoading from "../DataLoading/DataLoading";
 import DataSaving from '../DataSaving/DataSaving';
 import DataDeleting from '../DataDeleting/DataDeleting';
@@ -53,6 +55,8 @@ class MatGlass extends React.PureComponent {
                 <DataDeleting />
                 <DeleteConfirmation />
                 <OperationCard />
+                <AccountCard />
+                <OperationCategoryCard />
             </div>
         )
     }

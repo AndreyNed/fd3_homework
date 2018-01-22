@@ -22,6 +22,7 @@ import {
     DATA_OPERATION_CATEGORY_DELETE_START,
     DATA_OPERATION_CATEGORY_DELETE_SUCCESS,
     DATA_OPERATION_CATEGORY_DELETE_ERROR,
+    DATA_OPERATION_CATEGORY_SELECT,
     DATA_OPERATIONS_LOAD_START,
     DATA_OPERATIONS_LOAD_SUCCESS,
     DATA_OPERATIONS_LOAD_ERROR,
@@ -207,6 +208,13 @@ function rdData ( state = initState, action ) {
                     operationsLoadStatus:  0,
                     operationSaveStatus:   0,
                     operationDeleteStatus: 0,
+                }
+            };
+
+        case DATA_OPERATION_CATEGORY_SELECT:
+            return {
+                ...state, ...{
+                    operationCategorySelectedIndex: action.operationCategorySelectedIndex,
                 }
             };
 

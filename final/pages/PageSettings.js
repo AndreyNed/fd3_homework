@@ -5,12 +5,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import ButtonLabel from '../components/buttons/ButtonLabel/ButtonLabel';
+import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
+import ButtonDelete from '../components/buttons/ButtonDelete/ButtonDelete';
 import SmartGrid from '../components/SmartGrid/SmartGrid';
 
 import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_SETTINGS } from "../config/config";
-import {ALIGN_TYPES, DATA_TYPES, SETTINGS_MODES, SORTING} from "../data_const/data_const";
+import {ALIGN_TYPES, DATA_TYPES, DISPLAY_TYPES, SETTINGS_MODES, SORTING} from "../data_const/data_const";
 
 import { acUISetSettingsMode } from "../actions/acUI";
+import { acDataAccountSelect, acDataOperationCategorySelect } from '../actions/acData';
+import { acUIShowAccountCard, acUIShowOperationCategoryCard } from "../actions/acUI";
+import { findArrayItemIndex } from "../utils/utils";
 
 import './PageSettings.scss';
 
@@ -83,7 +88,7 @@ class PageSettings extends React.PureComponent {
 
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
-            console.log( 'Page settings: prepareData: props: ', props );
+            console.log( 'PageSettings: prepareData: props: ', props );
 
     };
 
@@ -116,15 +121,21 @@ class PageSettings extends React.PureComponent {
 
     tableProps = () => {
         ( this.debug_mode ) && console.log( 'PageSettings: tableProps: props: ', this.props );
-        const { settingsMode, accountsData, operationCategoriesData } = this.props;
+        const { settingsMode, accountsData, operationCategoriesData, accountSelectedIndex, operationCategorySelectedIndex } = this.props;
         const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
         const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
         const { LEFT, CENTER, RIGHT } = ALIGN_TYPES;
+        let caption = '';
         let headers = [];
         let body = [];
+        let defValue = null;
         switch ( settingsMode ) {
             case ACCOUNTS:
+                caption = 'Счета';
+                defValue = ( accountSelectedIndex > -1 )
+                               ? accountsData[ accountSelectedIndex ].id
+                               : -1;
                 headers = [
                     {
                         id:           'id',
@@ -182,6 +193,10 @@ class PageSettings extends React.PureComponent {
                 break;
 
             case OPERATION_CATEGORIES:
+                caption = 'Категории операций';
+                defValue = ( operationCategorySelectedIndex > -1 )
+                               ? operationCategoriesData[ operationCategorySelectedIndex ].id
+                               : -1;
                 headers = [
                     {
                         id:           'id',
@@ -228,11 +243,42 @@ class PageSettings extends React.PureComponent {
                     console.log( '%c%s','color: orange;','Warning: Page settings: tableProps: unknown settingsMode: ', settingsMode );
         }
         return {
-            userLogin:  USER_LOGIN,
-            tableName:  settingsMode,
-            primaryId:  'id',
-            headers:    headers,
-            body:       body,
+            userLogin:      USER_LOGIN,
+            tableName:      settingsMode,
+
+            withCaption:        true,
+            withFilter:         true,
+            withFooter:         true,
+            withButtonExport:   true,
+
+            caption:        caption,
+            rowsPerPage:    10,
+            defValue:       defValue,
+
+            primaryId:      'id',
+            headers:        headers,
+            body:           body,
+
+            cbChanged:      this.table_cbChanged,
+            cbSelected:     this.table_cbSelected,
+        }
+    };
+
+    buttonPanelProps = () => {
+        const { block, inlineBlock, hidden, none } = DISPLAY_TYPES;
+        return {
+            btnAdd: {
+                label:      'Добавить',
+                isVisible:  true,
+                display:    block,
+                cbChanged:  null,
+            },
+            btnDelete: {
+                label:      'Удалить',
+                isVisible:  true,
+                display:    block,
+                cbChanged:  null,
+            },
         }
     };
 
@@ -246,6 +292,54 @@ class PageSettings extends React.PureComponent {
     btnOperationCategories_cbChanged = () => {
         const { dispatch } = this.props;
         dispatch( acUISetSettingsMode( SETTINGS_MODES.OPERATION_CATEGORIES ) );
+    };
+
+    table_cbChanged = ( newId ) => {
+        const { settingsMode } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        ( settingsMode === ACCOUNTS )
+            ? this.accountsChanged( newId )
+            : this.operationCategoriesChanged( newId );
+    };
+
+    table_cbSelected = ( newSelectedIndex ) => {
+        const { settingsMode } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        ( settingsMode === ACCOUNTS )
+            ? this.accountSelected( newSelectedIndex )
+            : this.operationCategoriesSelected( newSelectedIndex );
+    };
+
+    /* action functions */
+
+    accountsChanged = ( newAccountId ) => {
+        console.log( 'PageSettings: accountsChanged: ', newAccountId );
+        const { dispatch, accountsData } = this.props;
+        let newAccountSelectedIndex = findArrayItemIndex( accountsData, { id: newAccountId } );
+        // console.log( 'PageOperations: accountsChanged: newAccountSelectedIndex: ', newAccountSelectedIndex );
+        dispatch( acDataAccountSelect( newAccountSelectedIndex ) );
+        dispatch( acUIShowAccountCard( false ) );
+    };
+
+    operationCategoriesChanged = ( newOperationCategoryId ) => {
+        console.log( 'PageSettings: accountsChanged: ', newOperationCategoryId );
+        const { dispatch, operationCategoriesData } = this.props;
+        let newOperationCategorySelectedIndex = findArrayItemIndex( operationCategoriesData, { id: newOperationCategoryId } );
+        // console.log( 'PageOperations: accountsChanged: newAccountSelectedIndex: ', newAccountSelectedIndex );
+        dispatch( acDataOperationCategorySelect( newOperationCategorySelectedIndex ) );
+        dispatch( acUIShowOperationCategoryCard( false ) );
+    };
+
+    accountSelected = ( newAccountSelectedIndex ) => {
+        console.log( 'PageSettings: accountSelected: ', newAccountSelectedIndex );
+        const { dispatch } = this.props;
+        dispatch( acDataAccountSelect( newAccountSelectedIndex ) );
+    };
+
+    operationCategoriesSelected = ( newOperationCategorySelectedIndex ) => {
+        console.log( 'PageSettings: operationCategoriesSelected: ', newOperationCategorySelectedIndex );
+        const { dispatch } = this.props;
+        dispatch( acDataOperationCategorySelect( newOperationCategorySelectedIndex) );
     };
 
     /* == render functions == */
@@ -289,7 +383,25 @@ class PageSettings extends React.PureComponent {
                     <SmartGrid { ...props }/>
                 </div>
                 <div className = { this.classCSS + '_button_panel' }>
-                    BUTTONS
+                    { this.renderButtonPanel() }
+                </div>
+            </div>
+        )
+    };
+
+    renderButtonPanel = () => {
+        let props = this.buttonPanelProps();
+        return (
+            <div className = { this.classCSS + '_button_panel' }>
+                <div className="rows button_panel">
+                    <div className="cols col_2 btn_add"
+                         key="btn_add">
+                        <ButtonAdd { ...props.btnAdd }/>
+                    </div>
+                    <div className="cols col_2 btn_delete"
+                         key="btn_delete">
+                        <ButtonDelete { ...props.btnDelete }/>
+                    </div>
                 </div>
             </div>
         )

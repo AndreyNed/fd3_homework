@@ -730,7 +730,7 @@ class SmartGrid extends React.PureComponent {
     };
 
     stopTimer = () => {
-        console.log( 'stopTimer: timer: ', this.thTimer );
+        ( this.debug_mode ) && console.log( 'stopTimer: timer: ', this.thTimer );
         if ( isExists( this.thTimer ) ) {
             clearTimeout( this.thTimer );
             this.thTimer = null;
