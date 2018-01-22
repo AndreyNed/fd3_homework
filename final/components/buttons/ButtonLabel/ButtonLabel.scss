@@ -1,9 +1,29 @@
 .ButtonLabel {
     position: relative;
     padding: 16px 16px;
+    color: #898989;
+    cursor: pointer;
+
+
 
     & > .ButtonLabel_label {
         position: absolute;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+
+        &:after {
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            content: ' ';
+            display: block;
+            height: 2px;
+            border-bottom: 1px dotted #000000;
+            width: 0;
+            transition: width 300ms;
+        }
 
         &[ data-label_align="center" ] {
             top: 50%;
@@ -26,10 +46,20 @@
     }
 
     &:hover {
-
+        color: #000000;
+        & > .ButtonLabel_label {
+            &:after {
+                width: 100%;
+            }
+        }
     }
 
     &:active {
+        font-size: 13px;
 
+    }
+
+    &[ data-active="true" ] {
+        color: #000000;
     }
 }

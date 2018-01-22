@@ -63,6 +63,7 @@ class SmartGrid extends React.PureComponent {
                     PropTypes.number,
                     PropTypes.string,
                 ]),
+
                 childElement:           PropTypes.func,
                 cbChanged:              PropTypes.func,
             })
@@ -146,16 +147,18 @@ class SmartGrid extends React.PureComponent {
 
     static defaultProps = {
         userLogin:                      '',
+        tableName:                      '',
 
-        wwithCaption:                   true,
-        withFilter:                     true,
-        withFooter:                     true,
-        withButtonExport:               true,
+        wwithCaption:                   false,
+        withFilter:                     false,
+        withFooter:                     false,
+        withButtonExport:               false,
 
         textFilterValue:                '',
 
         primaryId:                      null,
 
+        caption:                        '',
         headers:                        null,
         body:                           null,
         pages:                          null,
@@ -188,7 +191,7 @@ class SmartGrid extends React.PureComponent {
         const { htmlID } = props;
         SmartGrid.classID++;
         this.state = {
-            htmlID: SmartGrid.getHtmlID( htmlID )
+            htmlID: SmartGrid.getHtmlID( htmlID ),
         };
 
         this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_SMART_GRID;
@@ -200,9 +203,9 @@ class SmartGrid extends React.PureComponent {
 
         this.classCSS = 'SmartGrid';
 
-        this.tableHeight = null;
-
         this.tHs = null;
+
+        this.tableHeight = null;
 
         // for dragging
         this.thTimer = null;
@@ -227,7 +230,7 @@ class SmartGrid extends React.PureComponent {
 
     componentDidMount() {
         const { userLogin, tableName } = this.props;
-        this.headerWidth = this.header.offsetWidth;
+        if ( isExists( this.headerWidth ) ) this.headerWidth = this.header.offsetWidth;
         ( isNotEmptyAll( [ userLogin, tableName ] ) ) && this.saveData();
     }
 
@@ -240,13 +243,23 @@ class SmartGrid extends React.PureComponent {
         ( this.debug_mode ) &&
             console.log( '%c%s', 'color: blue; font-weight: bold',
                          'SmartGrid: prepareData: newProps: ', newProps );
-        let { headers, body, withFilter, withFooter, cbFiltered, textFilterValue, primaryId, defValue, rowsPerPage } = newProps;
-        let newState = { ...this.state };
+        let { headers, body, withFilter, withFooter, cbFiltered, textFilterValue, primaryId, defValue, rowsPerPage, userLogin, tableName } = newProps;
+        let newState = { ...this.state, headers, body };
         let value = null;
         let draggingMode = false;
         let exportToExcelStatus = 0;
-        let headersData = this.loadHeadersData();
+        let headersData = this.loadHeadersData( userLogin, tableName );
 
+        // Гарантируем совпадение столбцов в загружаемых данных и в заголовке
+        if ( isNotEmptyAll( [ headers, headersData ] ) ) {
+            let newHeadersData = [];
+            headersData.forEach( ( th ) => {
+                if ( findArrayItemIndex( headers, { id: th.id } ) > -1 ) newHeadersData.push( { ...th } );
+            } );
+            headersData = newHeadersData;
+        }
+
+        // присваиваем загруженные данные в заголовок
         headers = ( isNotEmptyAll( [ headers, headersData ] ) )
             ? headersData.map( ( hd, hdIndex ) => {
                 let thIndex = findArrayItemIndex( headers, { id: hd.id } );
@@ -326,7 +339,8 @@ class SmartGrid extends React.PureComponent {
     exportExcelProps = () => {
         const { exportToExcelStatus, headers, body } = this.state;
         let exportedData = [];
-        exportedData.push( headers.map( ( th ) => th.title ) );
+        if ( isNotEmpty( headers ) )
+            exportedData.push( headers.map( ( th ) => th.title ) );
         if ( isNotEmpty( body ) ) {
             body.forEach( ( row ) => {
                 exportedData.push( row.cells.map( ( cell ) => {
@@ -457,8 +471,8 @@ class SmartGrid extends React.PureComponent {
         ( this.debug_mode ) && console.log( "SmartGrid: restoreColumnsWidth: headersData: ", headersData );
     };*/
 
-    loadHeadersData = () => {
-        const { userLogin, tableName } = this.props;
+    loadHeadersData = ( userLogin, tableName ) => {
+        // const { userLogin, tableName } = this.props;
         let savedData = localStorage.getItem( "smartGridData" );
         let smartGridData = null;
         let headersData = null;
@@ -609,6 +623,7 @@ class SmartGrid extends React.PureComponent {
     resizeHandlerMouseDown = ( e ) => {
         e.stopPropagation();
         e.preventDefault();
+        // если был активный элемент, то деактивировать его перед активацией текущего
         ( isExists( this.thResizeHandler ) ) && ( this.thResizeHandler.dataset.active = false );
         this.thResizeHandler = e.currentTarget;
         let parent = this.thResizeHandler.parentElement;
@@ -618,18 +633,20 @@ class SmartGrid extends React.PureComponent {
         let thId = parent.dataset.th_id;
         let thIndex = null;
 
+        console.log( "SmartGrid: resizeHandlerMouseDown: tHs: ", this.tHs );
+
         this.tHs.forEach( ( th, index ) => {
-            let width = ( th.offsetWidth / this.headerWidth * 100 ) + '%';
-            let id = th.dataset.th_id;
-            thIndex = ( id === thId )
-                ? index
-                : thIndex;
-            th.style.width = width;
-            console.log( 'th: ', index, ': id: ', id, ': width: ', width );
+            if ( isExists( th ) ) {
+                let width = ( th.offsetWidth / this.headerWidth * 100 ) + '%';
+                let id = th.dataset.th_id;
+                thIndex = ( id === thId )
+                    ? index
+                    : thIndex;
+                th.style.width = width;
+                console.log( 'th: ', index, ': id: ', id, ': width: ', width );
+                this.tHs[ thIndex + 1 ].style.width = 'auto';
+            }
         } );
-
-        this.tHs[ thIndex + 1 ].style.width = 'auto';
-
         this.thResizeHandler.dataset.active = "true";
         this.resizeStartX = e.clientX;
         ( this.debug_mode ) &&
@@ -850,6 +867,7 @@ class SmartGrid extends React.PureComponent {
         const { headers } = this.state;
         return ( isNotEmpty( headers ) ) &&
             <div className = { this.classCSS + '_header' }
+                 key = { 'header' }
                  ref = { ( elm ) => { this.header = elm } }>
                 { headers.map( ( th, index ) => this.renderTh( th, index ) ) }
             </div>
@@ -859,12 +877,13 @@ class SmartGrid extends React.PureComponent {
         const { isVisible, isSortable, sorting, id } = th;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
         const { dragMode, headers, tableHeight, headerHeight } = this.state;
+        const { tableName } = this.props;
 
         const pointerPosition = getPointerPosition( this.thStartColumn, this.thEndColumn, headers );
 
         return ( isVisible ) &&
             <div className = { this.classCSS + '_th' }
-                 key = { id }
+                 key = { id + '_' + tableName }
                  ref = { ( elm ) => { this.tHs[ index ] = elm } }
                  data-th_id = { id }
                  data-visible_pointer = { false }
@@ -1055,9 +1074,11 @@ class SmartGrid extends React.PureComponent {
             console.log( '%c%s', 'color: blue; font-weight: bold',
                 'SmartGrid: render: props: ', this.props, '; state: ', this.state );
         const { withCaption, withFilter, withFooter } = this.props;
+        const { htmlID } = this.state;
         let props = this.exportExcelProps();
         return (
-            <div className = { this.classCSS }>
+            <div className = { this.classCSS }
+                 key = { htmlID }>
                 { ( withCaption ) && this.renderCaption() }
                 { ( withFilter ) && this.renderFilter() }
                 { this.renderTable() }

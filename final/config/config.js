@@ -1,3 +1,5 @@
+const USER_LOGIN = ((( 'Andrei' )));
+
 const CONFIG_DEBUG_MODE = ((( true )));
 
 const CONFIG_DEBUG_MODE_PAGE_OPERATIONS = ((( false )));
@@ -18,7 +20,7 @@ const CONFIG_DEBUG_MODE_SMART_GRID_UTILS = ((( false )));
 
 const CONFIG_DEBUG_MODE_BUTTON = ((( false )));
 
-const CONFIG_DEBUG_MODE_BUTTON_LABEL = ((( true )));
+const CONFIG_DEBUG_MODE_BUTTON_LABEL = ((( false )));
 
 const CONFIG_DEBUG_MODE_NUMBER_INPUT = ((( false )));
 
@@ -31,6 +33,7 @@ const CONFIG_DEBUG_MODE_F_DATA = ((( false )));
 const CONFIG_UI_MODE_TIMEOUT = ((( 500 )));
 
 export {
+    USER_LOGIN,
     CONFIG_DEBUG_MODE,
     CONFIG_DEBUG_MODE_PAGE_OPERATIONS,
     CONFIG_DEBUG_MODE_PAGE_SETTINGS,

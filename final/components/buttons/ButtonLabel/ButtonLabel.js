@@ -7,7 +7,6 @@ import { DISPLAY_TYPES, ALIGN_TYPES } from "../../../data_const/data_const";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_BUTTON_LABEL } from "../../../config/config";
 
 import './ButtonLabel.scss';
-import {isNotEmpty} from "../../../utils/utils";
 
 class ButtonLabel extends React.PureComponent {
 
@@ -98,10 +97,11 @@ class ButtonLabel extends React.PureComponent {
     };
 
     render() {
-        const { label, display } = this.props;
+        const { label, display, isActive } = this.props;
         const { buttonWidth, labelAlign } = this.props.options;
         return ( display !== DISPLAY_TYPES.none ) &&
             <div className = { this.classCSS }
+                 data-active = { isActive }
                  style = {{
                      width: ( buttonWidth !== 0 )
                         ? buttonWidth
