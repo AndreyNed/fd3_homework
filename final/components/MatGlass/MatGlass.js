@@ -44,6 +44,10 @@ class MatGlass extends React.PureComponent {
         this.props.dispatch( acUIHideMatGlass() );
     };
 
+    /*
+
+    */
+
     render() {
         const { isVisible, modalContent } = this.props;
         return (

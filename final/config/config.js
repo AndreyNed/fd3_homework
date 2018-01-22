@@ -2,6 +2,8 @@ const USER_LOGIN = ((( 'Andrei' )));
 
 const CONFIG_DEBUG_MODE = ((( true )));
 
+const CONFIG_DEBUG_MODE_LOADER = ((( false )));
+
 const CONFIG_DEBUG_MODE_PAGE_OPERATIONS = ((( false )));
 
 const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( true )));
@@ -14,7 +16,7 @@ const CONFIG_DEBUG_MODE_OPERATION_CARD = ((( false )));
 
 const CONFIG_DEBUG_MODE_ACCOUNT_CARD = ((( true )));
 
-const CONFIG_DEBUG_MODE_OPERATION_CATEGORY_CARD = ((( true )));
+const CONFIG_DEBUG_MODE_OPERATION_CATEGORY_CARD = ((( false )));
 
 // const CONFIG_DEBUG_MODE_TABLE = ((( true )));
 
@@ -32,13 +34,14 @@ const CONFIG_DEBUG_MODE_EXCEL_TMPL = ((( false )));
 
 const CONFIG_DEBUG_MODE_EXCEL_CONVERTER = ((( false )));
 
-const CONFIG_DEBUG_MODE_F_DATA = ((( false )));
+const CONFIG_DEBUG_MODE_F_DATA = ((( true )));
 
 const CONFIG_UI_MODE_TIMEOUT = ((( 500 )));
 
 export {
     USER_LOGIN,
     CONFIG_DEBUG_MODE,
+    CONFIG_DEBUG_MODE_LOADER,
     CONFIG_DEBUG_MODE_PAGE_OPERATIONS,
     CONFIG_DEBUG_MODE_PAGE_SETTINGS,
     CONFIG_DEBUG_MODE_DATA_LOADING,

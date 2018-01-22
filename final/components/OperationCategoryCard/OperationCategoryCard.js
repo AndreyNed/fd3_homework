@@ -89,7 +89,7 @@ class OperationCategoryCard extends React.PureComponent {
         let newState = { operationCategoryValidationData: { ...OperationCategoryCard.defaultProps.operationCategoryValidationData } };
         const { isNewOperationCategoryAdded, operationCategorySelectedIndex, operationCategoriesData } = props;
         // console.log( 'OperationCategoryCard: prepareData: consts: ', isNewOperationCategoryAdded, operationCategorySelectedIndex, operationCategoriesData );
-        newState.operationCategoryValue = ( isNewOperationCategoryAdded )
+        newState.operationCategoryValue = ( isNewOperationCategoryAdded || operationCategorySelectedIndex < 0 )
             ? { ...OperationCategoryCard.defaultProps.operationCategoryValue }
             : { ...operationCategoriesData[ operationCategorySelectedIndex ] };
 
@@ -120,7 +120,7 @@ class OperationCategoryCard extends React.PureComponent {
                     labelBoxWidth:  '35%',
                     inputBoxWidth:  '65%',
                 },
-                cbChanged: null, // this.name_cbChanged,
+                cbChanged: this.name_cbChanged,
             },
             btnOk: {
                 label: 'Сохранить',
@@ -128,31 +128,31 @@ class OperationCategoryCard extends React.PureComponent {
             },
             btnCancel: {
                 label: 'Отменить',
-                cbChanged: null, // this.btnCancel_cbChanged,
+                cbChanged: this.btnCancel_cbChanged,
             },
             btnClear: {
                 label: 'Очистить',
-                cbChanged: null, // this.btnClear_cbChanged,
+                cbChanged: this.btnClear_cbChanged,
             },
         }
     };
 
     /* == callbacks == */
 
-    /*account_cbChanged = ( value ) => {
-        let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.accountId = parseInt( value );
-        newOperationValue.accountId = ( isNotNaN( newOperationValue.accountId ) )
-            ? newOperationValue.accountId
-            : 0;
-        let validationHint = this.validate_accountId( newOperationValue.accountId );
-        let newOperationValidationData = { ...this.state.operationValidationData, accountId: validationHint };
-        // console.log('account: ', newOperationValue.accountId, ': ', typeof newOperationValue.accountId );
+    name_cbChanged = ( value ) => {
+        const { operationCategoryValue, operationCategoryValidationData } = this.state;
+        let newOperationCategoryValue = { ...operationCategoryValue };
+        newOperationCategoryValue.name = ( isNotEmpty( value ) )
+            ? value
+            : '';
+        let validationHint = this.validate_name( newOperationCategoryValue.name );
+        let newOperationCategoryValidationData = { ...operationCategoryValidationData, name: validationHint };
+        // console.log('name: ', newOperationCategoryValue.name, ': ', typeof newOperationCategoryValue.name );
         this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: newOperationValidationData,
+            operationCategoryValue: newOperationCategoryValue,
+            operationCategoryValidationData: newOperationCategoryValidationData,
         } );
-    };*/
+    };
 
     /*category_cbChanged = ( value ) => {
         let newOperationValue = { ...this.state.operationValue };
@@ -236,21 +236,21 @@ class OperationCategoryCard extends React.PureComponent {
         }
     };*/
 
-    /*btnCancel_cbChanged = () => {
+    btnCancel_cbChanged = () => {
         const {dispatch} = this.props;
         dispatch( acUIHideMatGlass() );
-    };*/
+    };
 
-    /*btnClear_cbChanged = () => {
-        const { id } = this.state.operationValue;
-        const defaultOperationValue = OperationCategoryCard.defaultProps.operationValue;
-        let newOperationValue = { ...defaultOperationValue, id };
-        let validation = this.validate_operation( newOperationValue );
+    btnClear_cbChanged = () => {
+        const { id } = this.state.operationCategoryValue;
+        const defaultOperationCategoryValue = OperationCategoryCard.defaultProps.operationCategoryValue;
+        let newOperationCategoryValue = { ...defaultOperationCategoryValue, id };
+        let validation = this.validate_operationCategory( newOperationCategoryValue );
         this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: validation.operationValidationData,
+            operationCategoryValue: newOperationCategoryValue,
+            operationCategoryValidationData: validation.operationCategoryValidationData,
         } );
-    };*/
+    };
 
     /* == controller == */
 
@@ -281,7 +281,7 @@ class OperationCategoryCard extends React.PureComponent {
         operationCategoryValidationData.name = validationHint;
         result = ( isNotEmpty( validationHint ) ) ? false : result;
 
-        ( this.debug_mode ) && console.log( 'validate_account: ', result );
+        ( this.debug_mode ) && console.log( 'validate_operationCategory: ', result );
         return { result, operationCategoryValidationData };
     };
 

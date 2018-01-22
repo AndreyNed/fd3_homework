@@ -300,6 +300,7 @@ class NumberInput extends React.PureComponent {
                            className = { this.classCSS + "_input" }
                            id =        { htmlID }
                            ref =       { ( elm ) => { this.input = elm } }
+                           disabled =  { isReadOnly }
                            value =     { currValue || '0' }
                            onChange =  { ( !isReadOnly ) ? this.inputChange : ()=>{} }
                            onBlur =    { this.inputBlur }

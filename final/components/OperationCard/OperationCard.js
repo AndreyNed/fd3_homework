@@ -129,13 +129,13 @@ class OperationCard extends React.PureComponent {
         let newState = { operationValidationData: { ...OperationCard.defaultProps.operationValidationData } };
         const { isNewOperationAdded, operationSelectedIndex, operationsData } = props;
         // console.log( 'OperationCard: prepareData: consts: ', isNewOperationAdded, operationSelectedIndex, operationsData );
-        newState.operationValue = ( isNewOperationAdded )
+        newState.operationValue = ( isNewOperationAdded || operationSelectedIndex < 0 )
             ? { ...OperationCard.defaultProps.operationValue }
             : { ...operationsData[ operationSelectedIndex ] };
 
         this.setState( { ...newState }, () => {
             ( this.debug_mode ) &&
-            ( this.debug_mode ) && console.log( 'OperationCard: prepareData: new state: ', this.state );
+                console.log( 'OperationCard: prepareData: new state: ', this.state );
         } );
     };
 

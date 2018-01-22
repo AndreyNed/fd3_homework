@@ -9,11 +9,11 @@ import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
 import ButtonDelete from '../components/buttons/ButtonDelete/ButtonDelete';
 import SmartGrid from '../components/SmartGrid/SmartGrid';
 
-import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_SETTINGS } from "../config/config";
+import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_SETTINGS, CONFIG_UI_MODE_TIMEOUT } from "../config/config";
 import {ALIGN_TYPES, DATA_TYPES, DISPLAY_TYPES, SETTINGS_MODES, SORTING} from "../data_const/data_const";
 
-import { acUISetSettingsMode } from "../actions/acUI";
-import { acDataAccountSelect, acDataOperationCategorySelect } from '../actions/acData';
+import {acUISetSettingsMode, acUIShowDataSavingMessage} from "../actions/acUI";
+import { acDataAccountSelect, acDataOperationCategorySelect, acDataAccountsShouldBeReloaded } from '../actions/acData';
 import { acUIShowAccountCard, acUIShowOperationCategoryCard } from "../actions/acUI";
 import { findArrayItemIndex } from "../utils/utils";
 
@@ -89,6 +89,22 @@ class PageSettings extends React.PureComponent {
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
             console.log( 'PageSettings: prepareData: props: ', props );
+
+        const { dispatch, accountSaveStatus, accountDeleteStatus, settingsMode } = this.props;
+        const { ACCOUNTS } = SETTINGS_MODES;
+
+        if ( settingsMode === ACCOUNTS ) {
+            if ( accountSaveStatus === 1 ) {
+                dispatch( acUIShowDataSavingMessage() );
+            }
+            else if ( accountSaveStatus > 1 ) {
+                setTimeout( () => {
+                    dispatch( acDataAccountsShouldBeReloaded() );
+                }, CONFIG_UI_MODE_TIMEOUT );
+            }
+        }
+
+
 
     };
 
@@ -271,13 +287,13 @@ class PageSettings extends React.PureComponent {
                 label:      'Добавить',
                 isVisible:  true,
                 display:    block,
-                cbChanged:  null,
+                cbChanged:  this.buttonPanel_btnAdd_cbChanged,
             },
             btnDelete: {
                 label:      'Удалить',
                 isVisible:  true,
                 display:    block,
-                cbChanged:  null,
+                cbChanged:  this.buttonPanel_btnDelete_cbChanged,
             },
         }
     };
@@ -310,6 +326,18 @@ class PageSettings extends React.PureComponent {
             : this.operationCategoriesSelected( newSelectedIndex );
     };
 
+    buttonPanel_btnAdd_cbChanged = () => {
+        const { settingsMode } = this.props;
+        const { ACCOUNTS } = SETTINGS_MODES;
+        ( settingsMode === ACCOUNTS )
+            ? this.accountAdd()
+            : this.operationCategoryAdd();
+    };
+
+    buttonPanel_btnDelete_cbChanged = () => {
+
+    };
+
     /* action functions */
 
     accountsChanged = ( newAccountId ) => {
@@ -340,6 +368,16 @@ class PageSettings extends React.PureComponent {
         console.log( 'PageSettings: operationCategoriesSelected: ', newOperationCategorySelectedIndex );
         const { dispatch } = this.props;
         dispatch( acDataOperationCategorySelect( newOperationCategorySelectedIndex) );
+    };
+
+    accountAdd = () => {
+        const { dispatch } = this.props;
+        dispatch( acUIShowAccountCard( true ) );
+    };
+
+    operationCategoryAdd = () => {
+        const { dispatch } = this.props;
+        dispatch( acUIShowOperationCategoryCard( true ) );
     };
 
     /* == render functions == */

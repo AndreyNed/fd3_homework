@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Label from '../Label/Label';
-import {isExists} from "../../utils/utils";
+import {isExists, isNotEmpty} from "../../utils/utils";
 
 require('./TextInput.scss');
 
@@ -264,7 +264,10 @@ class TextInput extends React.PureComponent {
 
     // == render functions ==
     renderLabel = () => {
-        const { labelBoxWidth } = this.props.options;
+        const { labelBoxWidth, labelVerticalAlign } = this.props.options;
+        const { label } = this.props;
+        const { htmlID } = this.state;
+        const { middle, bottom, top, right, left } = TextInput.position;
         return (
             ( this.state.withLabel ) &&
             <div className = { this.classCSS + "_label_box" }
@@ -274,19 +277,23 @@ class TextInput extends React.PureComponent {
                          ? labelBoxWidth
                          : 'auto',
                  }}
-                 data-label_vertical_align = { this.state.options.labelVerticalAlign || 'middle' }>
+                 data-label_vertical_align = { labelVerticalAlign || middle }>
                 {
-                    ( this.isNotEmpty( this.state.label ) ) ?
+                    ( isNotEmpty( label ) ) ?
                         <Label postfixClassName = { this.classCSS }
-                               htmlFor = { this.state.htmlID }
-                               label =   { this.state.label }/> : null
+                               htmlFor = { htmlID }
+                               label =   { label }/> : null
                 }
             </div>
         )
     };
 
     renderInputBox = () => {
-        const { inputBoxWidth } = this.props.options;
+        const { inputBoxWidth, labelVerticalAlign } = this.props.options;
+        const { isReadOnly, inputType } = this.props;
+        const { htmlID, currValue } = this.state;
+        const { middle, bottom, top, right, left } = TextInput.position;
+        const { search, text } = TextInput.inputTypes;
         return (
             <div className = { this.classCSS + "_input_box" }
                  key = { "input_box" }
@@ -297,24 +304,25 @@ class TextInput extends React.PureComponent {
                          ? inputBoxWidth
                          : 'auto',
                  }}
-                 data-label_vertical_align = { this.state.options.labelVerticalAlign || TextInput.position.middle }>
+                 data-label_vertical_align = { labelVerticalAlign || middle }>
                 <div className = { this.classCSS + "_input_container" }
                      key = { "input_box_" + 1 }
-                     onClick = { ( !this.state.isReadOnly ) ? this.inputContainerClick : null }>
+                     onClick = { ( !isReadOnly ) ? this.inputContainerClick : null }>
                     <input type =      "text"
                            className = { this.classCSS + "_input" }
-                           id =        { this.state.htmlID }
+                           id =        { htmlID }
                            ref =       { ( elm ) => { this.input = elm } }
-                           value =     { this.state.currValue || '' }
-                           data-input_type = { this.state.inputType }
-                           onChange =  { ( !this.state.isReadOnly ) ? this.inputChange : ()=>{} }
+                           disabled =  { ( isReadOnly ) ? 'disabled' : null }
+                           value =     { currValue || '' }
+                           data-input_type = { inputType }
+                           onChange =  { ( !isReadOnly ) ? this.inputChange : null }
                            onBlur =    { this.inputBlur }
                            onKeyDown = { this.inputKeyDown }/>
                     {
-                        ( this.state.inputType === TextInput.inputTypes.search ) &&
+                        ( inputType === search ) &&
                         <div className = { this.classCSS + "_icon_container" }
-                             onClick =   { ( !this.state.isReadOnly ) ? this.iconSearchClick : ()=>{} }
-                             data-is_enable = { !this.state.isReadOnly }>
+                             onClick =   { ( !isReadOnly ) ? this.iconSearchClick : null }
+                             data-is_enable = { !isReadOnly }>
                             <svg width =   "16px"
                                  height =  "16px"
                                  viewBox = "0 0 16 16"
@@ -353,13 +361,17 @@ class TextInput extends React.PureComponent {
     };
 
     render() {
+        const { addedClass, labelPosition } = this.props.options;
+        const { display } = this.props;
+        const { block } = TextInput.displayTypes;
+        const { top, left } = TextInput.position;
         return (
-            <div className = { this.classCSS + ' ' + ( this.state.options.addedClass || '' ) }
-                 data-display = { this.state.display || TextInput.displayTypes.block }
-                 data-label_position = { this.state.options.labelPosition || TextInput.position.top }>
+            <div className = { this.classCSS + ' ' + ( addedClass || '' ) }
+                 data-display = { display || block }
+                 data-label_position = { labelPosition || top }>
                 {
-                    ( this.state.options.labelPosition === TextInput.position.top ||
-                      this.state.options.labelPosition === TextInput.position.left ) ?
+                    ( labelPosition === top ||
+                      labelPosition === left ) ?
                       this.renderIfLeftOrTop() : this.renderIfRightOrBottom()
                 }
 

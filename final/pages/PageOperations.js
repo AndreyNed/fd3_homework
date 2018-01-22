@@ -555,19 +555,6 @@ class PageOperations extends React.PureComponent {
 
     /* == callbacks == */
 
-    /*operationsTable_cbChanged = ( operationId ) => {
-        console.log( 'operationsTable_cbChanged: ', operationId );
-        const { dispatch, operationsData } = this.props;
-        let newOperationSelectedIndex = findArrayItemIndex( operationsData, { id: operationId } );
-        // console.log( 'PageOperations: operationsTable_cbChanged: newOperationSelectedIndex: ', newOperationSelectedIndex );
-        dispatch( acDataOperationSelect( newOperationSelectedIndex ) );
-    };
-
-    operationTable_cbSelected = () => {
-        const { dispatch } = this.props;
-        dispatch( acUIShowOperationCard( false ) );
-    };*/
-
     operationsTable_cbSelected = ( newOperationSelectedIndex ) => {
         // console.log( 'operationsTable_cbSelected: ', newOperationSelectedIndex );
         const { dispatch } = this.props;

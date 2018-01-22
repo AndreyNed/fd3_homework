@@ -5,6 +5,7 @@ import {
     DATA_ACCOUNTS_LOAD_SUCCESS,
     DATA_ACCOUNTS_LOAD_ERROR,
     DATA_ACCOUNTS_SHOULD_BE_RELOADED,
+    DATA_ACCOUNTS_SET_ACCOUNTS_DATA,
     DATA_ACCOUNT_SAVE_START,
     DATA_ACCOUNT_SAVE_SUCCESS,
     DATA_ACCOUNT_SAVE_ERROR,
@@ -16,6 +17,7 @@ import {
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,
     DATA_OPERATION_CATEGORIES_LOAD_ERROR,
     DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED,
+    DATA_SET_OPERATION_CATEGORIES_DATA,
     DATA_OPERATION_CATEGORY_SAVE_START,
     DATA_OPERATION_CATEGORY_SAVE_SUCCESS,
     DATA_OPERATION_CATEGORY_SAVE_ERROR,
@@ -27,6 +29,7 @@ import {
     DATA_OPERATIONS_LOAD_SUCCESS,
     DATA_OPERATIONS_LOAD_ERROR,
     DATA_OPERATIONS_SHOULD_BE_RELOADED,
+    DATA_OPERATIONS_SET_OPERATIONS_DATA,
     DATA_OPERATION_SAVE_START,
     DATA_OPERATION_SAVE_SUCCESS,
     DATA_OPERATION_SAVE_ERROR,
@@ -37,24 +40,30 @@ import {
 } from "../actions/acData";
 
 const initState = {
+    accountsSource:                  null,
     accountsData:                   null,
     accountsLoadStatus:             0,
+    accountsPrepareStatus:          0,
     accountSaveStatus:              0,
     accountCreateStatus:            0,
     accountDeleteStatus:            0,
     accountSelectedIndex:           -1,
     accountValue:                   {},
 
+    operationCategoriesSource:      null,
     operationCategoriesData:        null,
     operationCategoriesLoadStatus:  0,
+    operationCategoriesPrepareStatus: 0,
     operationCategorySaveStatus:    0,
     operationCategoryCreateStatus:  0,
     operationCategoryDeleteStatus:  0,
     operationCategorySelectedIndex: -1,
     operationCategoryValue:         {},
 
+    operationsSource:               null,
     operationsData:                 null,
     operationsLoadStatus:           0,
+    operationsPrepareStatus:        0,
     operationSaveStatus:            0,
     operationCreateStatus:          0,
     operationDeleteStatus:          0,
@@ -69,15 +78,17 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     accountsLoadStatus: 1,
-                    accountsData:       [],
+                    accountsSource:     [],
                 }
             };
 
         case DATA_ACCOUNTS_LOAD_SUCCESS:
             return {
                 ...state, ...{
-                    accountsLoadStatus: 2,
-                    accountsData:       action.accountsData,
+                    accountsLoadStatus:    2,
+                    accountsSource:        action.accountsSource,
+                    accountsPrepareStatus: 0,
+                    accountsData:          [],
                 }
             };
 
@@ -85,14 +96,24 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     accountsLoadStatus: 3,
-                    accountsData:       [],
+                    accountsSource:     [],
                 }
             };
 
         case DATA_ACCOUNTS_SHOULD_BE_RELOADED:
             return {
                 ...state, ...{
-                    accountsLoadStatus: 0,
+                    accountsLoadStatus:   0,
+                    accountSaveStatus:    0,
+                    accountsDeleteStatus: 0,
+                }
+            };
+
+        case DATA_ACCOUNTS_SET_ACCOUNTS_DATA:
+            return {
+                ...state, ...{
+                    accountsPrepareStatus: 2,
+                    accountsData:          action.accountsData,
                 }
             };
 
@@ -151,7 +172,7 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationCategoriesLoadStatus: 1,
-                    operationCategoriesData:       [],
+                    operationCategoriesSource:     [],
                 }
             };
 
@@ -159,7 +180,9 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationCategoriesLoadStatus: 2,
-                    operationCategoriesData:       action.operationCategoriesData,
+                    operationCategoriesSource:     action.operationCategoriesSource,
+                    operationCategoriesPrepareStatus: 0,
+                    operationCategoriesData:          [],
                 }
             };
 
@@ -167,7 +190,7 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationCategoriesLoadStatus: 3,
-                    operationCategoriesData:       [],
+                    operationCategoriesSource:     [],
                 }
             };
 
@@ -178,19 +201,29 @@ function rdData ( state = initState, action ) {
                 }
             };
 
+        case DATA_SET_OPERATION_CATEGORIES_DATA:
+            return {
+                ...state, ...{
+                    operationCategoriesPrepareStatus: 2,
+                    operationCategoriesData:          action.operationCategoriesData,
+                }
+            };
+
         case DATA_OPERATIONS_LOAD_START:
             return {
                 ...state, ...{
                     operationsLoadStatus: 1,
-                    operationsData:       [],
+                    operationsSource:     [],
                 }
             };
 
         case DATA_OPERATIONS_LOAD_SUCCESS:
             return {
                 ...state, ...{
-                    operationsLoadStatus: 2,
-                    operationsData:       action.operationsData,
+                    operationsLoadStatus:    2,
+                    operationsSource:        action.operationsSource,
+                    operationsPrepareStatus: 0,
+                    operationsData:          [],
                 }
             };
 
@@ -198,7 +231,7 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationsLoadStatus: 3,
-                    operationsData:       [],
+                    operationsSource:     [],
                 }
             };
 
@@ -208,6 +241,14 @@ function rdData ( state = initState, action ) {
                     operationsLoadStatus:  0,
                     operationSaveStatus:   0,
                     operationDeleteStatus: 0,
+                }
+            };
+
+        case DATA_OPERATIONS_SET_OPERATIONS_DATA:
+            return {
+                ...state, ...{
+                    operationsData:          action.operationsData,
+                    operationsPrepareStatus: 2,
                 }
             };
 

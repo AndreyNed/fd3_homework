@@ -11,14 +11,23 @@ import PagesLinks  from '../../pages/PagesLinks';
 
 import { MODAL_CONTENT } from "../../data_const/data_const";
 import { CONFIG_UI_MODE_TIMEOUT, } from "../../config/config";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_LOADER } from "../../config/config";
 import {isExists, isNotEmpty} from "../../utils/utils";
 
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
 import {acUIHideMatGlass, acUIShowMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
+import { acDataSetAccountsData, acDataSetOperationCategoriesData, acDataSetOperationsData } from "../../actions/acData";
 
 class Loader extends React.PureComponent {
 
     static propTypes = {
+        accountsSource:                 PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+                amount:                 PropTypes.number,
+            })
+        ),
         accountsData:                   PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
@@ -26,10 +35,27 @@ class Loader extends React.PureComponent {
                 amount:                 PropTypes.number,
             })
         ),
+        operationCategoriesSource:      PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+            })
+        ),
         operationCategoriesData:        PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
+            })
+        ),
+        operationsSource:               PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                accountId:              PropTypes.number,
+                categoryId:             PropTypes.number,
+                type:                   PropTypes.string,
+                sum:                    PropTypes.number,
+                date:                   PropTypes.any,
+                comment:                PropTypes.string,
             })
         ),
         operationsData:                 PropTypes.arrayOf(
@@ -44,8 +70,11 @@ class Loader extends React.PureComponent {
             })
         ),
         accountsLoadStatus:             PropTypes.number,
+        accountsPrepareStatus:          PropTypes.number,
         operationCategoriesLoadStatus:  PropTypes.number,
+        operationCategoriesPrepareStatus: PropTypes.number,
         operationsLoadStatus:           PropTypes.number,
+        operationsPrepareStatus:        PropTypes.number,
         matGlassIsVisible:              PropTypes.bool,
         modalContent:                   PropTypes.string,
     };
@@ -56,6 +85,8 @@ class Loader extends React.PureComponent {
 
     classCSS = 'Loader';
 
+    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_LOADER;
+
     componentWillMount() {
         this.prepareData( this.props );
     }
@@ -65,14 +96,22 @@ class Loader extends React.PureComponent {
     }
 
     prepareData = ( data ) => {
-        // console.log( 'Loader: prepareData: data: ', data );
+        ( this.debug_mode ) &&
+            console.log( 'Loader: prepareData: data: ', data );
+
         let props = { ...data };
 
         const {
             dispatch,
             accountsLoadStatus,
+            accountsSource,
+            accountsPrepareStatus,
             operationCategoriesLoadStatus,
+            operationCategoriesSource,
+            operationCategoriesPrepareStatus,
             operationsLoadStatus,
+            operationsSource,
+            operationsPrepareStatus,
             matGlassIsVisible,
             modalContent,
         } = props;
@@ -83,71 +122,102 @@ class Loader extends React.PureComponent {
             dispatch( acUIShowDataLoadingMessage() );
 
         if ( !accountsLoadStatus ) {
-            // console.log( 'Accounts need to be loaded...' );
+            ( this.debug_mode ) &&
+                console.log( 'Loader: Accounts need to be loaded...' );
+
             fDataLoadAccounts(
                 dispatch,
-                () => { /*console.log( 'Accounts are loaded: ', this.props.accountsData )*/ },
+                null,
                 () => { console.log( 'Error: ', text ) },
             )
         }
 
         if ( !operationCategoriesLoadStatus ) {
-            // console.log( 'Operation categories need to be loaded...' );
+            ( this.debug_mode ) &&
+                console.log( 'Loader: Operation categories need to be loaded...' );
+
             fDataLoadOperationCategories(
                 dispatch,
-                () => { /*console.log( 'Operation categories are loaded: ', this.props.operationCategoriesData )*/ },
+                null,
                 () => { console.log( 'Error: ', text ) },
             )
         }
 
         if ( !operationsLoadStatus ) {
-            // console.log( 'Operations need to be loaded...' );
+            ( this.debug_mode ) &&
+                console.log( 'Loader: Operations need to be loaded...' );
+
             fDataLoadOperations(
                 dispatch,
-                () => { /*console.log( 'Operations are loaded: ', this.props.operationsData )*/ },
+                null,
                 () => { console.log( 'Error: ', text ) },
             )
         }
 
-        if ( accountsLoadStatus == 2 &&
-             operationCategoriesLoadStatus == 2 &&
-             operationsLoadStatus == 2 &&
+        if ( accountsLoadStatus === 2 &&
+             operationCategoriesLoadStatus === 2 &&
+             operationsLoadStatus === 2 &&
              modalContent === MODAL_CONTENT.DATA_LOADING )
             setTimeout( () => { dispatch( acUIHideMatGlass() ) }, CONFIG_UI_MODE_TIMEOUT );
+
+        if ( !accountsPrepareStatus && accountsLoadStatus === 2 ) {
+            this.prepareAccountsData( accountsSource );
+        }
+
+        if ( !operationCategoriesPrepareStatus && operationCategoriesLoadStatus === 2 ) {
+            this.prepareOperationCategoriesData( operationCategoriesSource );
+        }
+
+        if ( !operationsPrepareStatus && operationsLoadStatus === 2 ) {
+            this.prepareOperationsData( operationsSource );
+        }
     };
 
-    prepareOperationsData = () => {
-
+    prepareAccountsData = ( accountsSource ) => {
+        const { dispatch } = this.props;
+        let accountsData = [ ...accountsSource ];
+        dispatch( acDataSetAccountsData( accountsData ) );
     };
 
-    prepareAccountsData = () => {
-
+    prepareOperationCategoriesData = ( operationCategoriesSource ) => {
+        const { dispatch } = this.props;
+        let operationCategoriesData = [ ...operationCategoriesSource ];
+        dispatch( acDataSetOperationCategoriesData( operationCategoriesData ) );
     };
 
-    prepareOperationCategoriesData = () => {
-
+    prepareOperationsData = ( operationsSource ) => {
+        const { dispatch } = this.props;
+        let operationsData = [ ...operationsSource ];
+        dispatch( acDataSetOperationsData( operationsData ) );
     };
 
     render() {
+        ( this.debug_mode ) &&
+            console.log( 'Loader: render: props: ', this.props );
         const {
-            accountsLoadStatus, operationCategoriesLoadStatus, operationsLoadStatus,
+            accountsPrepareStatus, operationCategoriesPrepareStatus, operationsPrepareStatus,
             accountsData, operationCategoriesData, operationsData,
             modalContent
         } = this.props;
+
+        /*
+
+
+                    */
+
         return (
             <div className = { this.classCSS }>
                 <MatGlass />
                 {
-                    ( ( accountsLoadStatus == 2 || isNotEmpty( accountsData ) ) &&
-                      ( operationCategoriesLoadStatus == 2 || isNotEmpty( operationCategoriesData ) ) &&
-                      ( operationsLoadStatus == 2 && isNotEmpty( operationsData ) ) ) &&
-                      /*modalContent !== MODAL_CONTENT.DATA_LOADING ) &&*/
-                    <BrowserRouter>
-                        <div className = { this.classCSS + "_router" }>
-                            <PagesLinks />
-                            <PagesRouter />
-                        </div>
-                    </BrowserRouter>
+                    ( ( accountsPrepareStatus === 2 && isNotEmpty( accountsData ) ) &&
+                      ( operationCategoriesPrepareStatus === 2 && isNotEmpty( operationCategoriesData ) ) &&
+                      ( operationsPrepareStatus === 2 && isNotEmpty( operationsData ) ) ) &&
+                          <BrowserRouter>
+                              <div className = { this.classCSS + "_router" }>
+                                  <PagesLinks />
+                                  <PagesRouter />
+                              </div>
+                          </BrowserRouter>
                 }
             </div>
         )
@@ -156,6 +226,10 @@ class Loader extends React.PureComponent {
 
 const mapStateToProps = function ( state ) {
     return {
+        accountsSource:                 state.data.accountsSource,
+        operationCategoriesSource:      state.data.operationCategoriesSource,
+        operationsSource:               state.data.operationsSource,
+
         accountsData:                   state.data.accountsData,
         operationCategoriesData:        state.data.operationCategoriesData,
         operationsData:                 state.data.operationsData,
@@ -163,6 +237,10 @@ const mapStateToProps = function ( state ) {
         accountsLoadStatus:             state.data.accountsLoadStatus,
         operationCategoriesLoadStatus:  state.data.operationCategoriesLoadStatus,
         operationsLoadStatus:           state.data.operationsLoadStatus,
+
+        accountsPrepareStatus:          state.data.accountsPrepareStatus,
+        operationCategoriesPrepareStatus: state.data.operationCategoriesPrepareStatus,
+        operationsPrepareStatus:         state.data.operationsPrepareStatus,
 
         matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,

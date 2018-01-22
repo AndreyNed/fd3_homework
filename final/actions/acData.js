@@ -4,6 +4,7 @@ const DATA_ACCOUNTS_LOAD_START =                        'DATA_ACCOUNTS_LOAD_STAR
 const DATA_ACCOUNTS_LOAD_SUCCESS =                      'DATA_ACCOUNTS_LOAD_SUCCESS';
 const DATA_ACCOUNTS_LOAD_ERROR =                        'DATA_ACCOUNTS_LOAD_ERROR';
 const DATA_ACCOUNTS_SHOULD_BE_RELOADED =                'DATA_ACCOUNTS_SHOULD_BE_RELOADED';
+const DATA_ACCOUNTS_SET_ACCOUNTS_DATA =                 'DATA_ACCOUNTS_SET_ACCOUNTS_DATA';
 const DATA_ACCOUNT_SAVE_START =                         'DATA_ACCOUNT_SAVE_START';
 const DATA_ACCOUNT_SAVE_SUCCESS =                       'DATA_ACCOUNT_SAVE_SUCCESS';
 const DATA_ACCOUNT_SAVE_ERROR =                         'DATA_ACCOUNT_SAVE_ERROR';
@@ -16,6 +17,7 @@ const DATA_OPERATION_CATEGORIES_LOAD_START =            'DATA_OPERATION_CATEGORI
 const DATA_OPERATION_CATEGORIES_LOAD_SUCCESS =          'DATA_OPERATION_CATEGORIES_LOAD_SUCCESS';
 const DATA_OPERATION_CATEGORIES_LOAD_ERROR =            'DATA_OPERATION_CATEGORIES_LOAD_ERROR';
 const DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED =    'DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED';
+const DATA_SET_OPERATION_CATEGORIES_DATA = 'DATA_SET_OPERATION_CATEGORIES_DATA';
 const DATA_OPERATION_CATEGORY_SAVE_START =              'DATA_OPERATION_CATEGORY_SAVE_START';
 const DATA_OPERATION_CATEGORY_SAVE_SUCCESS =            'DATA_OPERATION_CATEGORY_SAVE_SUCCESS';
 const DATA_OPERATION_CATEGORY_SAVE_ERROR =              'DATA_OPERATION_CATEGORY_SAVE_ERROR';
@@ -28,6 +30,7 @@ const DATA_OPERATIONS_LOAD_START =                      'DATA_OPERATIONS_LOAD_ST
 const DATA_OPERATIONS_LOAD_SUCCESS =                    'DATA_OPERATIONS_LOAD_SUCCESS';
 const DATA_OPERATIONS_LOAD_ERROR =                      'DATA_OPERATIONS_LOAD_ERROR';
 const DATA_OPERATIONS_SHOULD_BE_RELOADED =              'DATA_OPERATIONS_SHOULD_BE_RELOADED';
+const DATA_OPERATIONS_SET_OPERATIONS_DATA =             'DATA_OPERATIONS_SET_OPERATIONS_DATA';
 const DATA_OPERATION_SAVE_START =                       'DATA_OPERATION_SAVE_START';
 const DATA_OPERATION_SAVE_SUCCESS =                     'DATA_OPERATION_SAVE_SUCCESS';
 const DATA_OPERATION_SAVE_ERROR =                       'DATA_OPERATION_SAVE_ERROR';
@@ -45,7 +48,7 @@ const acDataAccountsLoadStart = function () {
 const acDataAccountsLoadSuccess = function ( loadedData ) {
     return {
         type:               DATA_ACCOUNTS_LOAD_SUCCESS,
-        accountsData:       loadedData,
+        accountsSource:     loadedData,
     }
 };
 
@@ -58,6 +61,13 @@ const acDataAccountsLoadError = function () {
 const acDataAccountsShouldBeReloaded = function () {
     return {
         type:               DATA_ACCOUNTS_SHOULD_BE_RELOADED,
+    }
+};
+
+const acDataSetAccountsData = function ( accountsData ) {
+    return {
+        type:                   DATA_ACCOUNTS_SET_ACCOUNTS_DATA,
+        accountsData:           accountsData,
     }
 };
 
@@ -113,7 +123,7 @@ const acDataOperationCategoriesLoadStart = function () {
 const acDataOperationCategoriesLoadSuccess = function ( loadedData ) {
     return {
         type:                       DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,
-        operationCategoriesData:    loadedData,
+        operationCategoriesSource:  loadedData,
     }
 };
 
@@ -126,6 +136,13 @@ const acDataOperationCategoriesLoadError = function () {
 const acDataOperationCategoriesShouldBeReloaded = function () {
     return {
         type:               DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED,
+    }
+};
+
+const acDataSetOperationCategoriesData = function ( operationCategoriesData ) {
+    return {
+        type:                DATA_SET_OPERATION_CATEGORIES_DATA,
+        operationCategoriesData: operationCategoriesData,
     }
 };
 
@@ -181,7 +198,7 @@ const acDataOperationsLoadStart = function () {
 const acDataOperationsLoadSuccess = function ( loadedData ) {
     return {
         type:              DATA_OPERATIONS_LOAD_SUCCESS,
-        operationsData:    loadedData,
+        operationsSource:  loadedData,
     }
 };
 
@@ -194,6 +211,13 @@ const acDataOperationsLoadError = function () {
 const acDataOperationsShouldBeReloaded = function () {
     return {
         type:               DATA_OPERATIONS_SHOULD_BE_RELOADED,
+    }
+};
+
+const acDataSetOperationsData = function ( operationsData ) {
+    return {
+        type:                   DATA_OPERATIONS_SET_OPERATIONS_DATA,
+        operationsData:         operationsData,
     }
 };
 
@@ -245,6 +269,7 @@ export {
     DATA_ACCOUNTS_LOAD_SUCCESS,         acDataAccountsLoadSuccess,
     DATA_ACCOUNTS_LOAD_ERROR,           acDataAccountsLoadError,
     DATA_ACCOUNTS_SHOULD_BE_RELOADED,   acDataAccountsShouldBeReloaded,
+    DATA_ACCOUNTS_SET_ACCOUNTS_DATA,   acDataSetAccountsData,
     DATA_ACCOUNT_SAVE_START,            acDataAccountSaveStart,
     DATA_ACCOUNT_SAVE_SUCCESS,          acDataAccountSaveSuccess,
     DATA_ACCOUNT_SAVE_ERROR,            acDataAccountSaveError,
@@ -257,6 +282,7 @@ export {
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,       acDataOperationCategoriesLoadSuccess,
     DATA_OPERATION_CATEGORIES_LOAD_ERROR,         acDataOperationCategoriesLoadError,
     DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED, acDataOperationCategoriesShouldBeReloaded,
+    DATA_SET_OPERATION_CATEGORIES_DATA, acDataSetOperationCategoriesData,
     DATA_OPERATION_CATEGORY_SAVE_START,           acDataOperationCategorySaveStart,
     DATA_OPERATION_CATEGORY_SAVE_SUCCESS,         acDataOperationCategorySaveSuccess,
     DATA_OPERATION_CATEGORY_SAVE_ERROR,           acDataOperationCategorySaveError,
@@ -269,6 +295,7 @@ export {
     DATA_OPERATIONS_LOAD_SUCCESS,       acDataOperationsLoadSuccess,
     DATA_OPERATIONS_LOAD_ERROR,         acDataOperationsLoadError,
     DATA_OPERATIONS_SHOULD_BE_RELOADED, acDataOperationsShouldBeReloaded,
+    DATA_OPERATIONS_SET_OPERATIONS_DATA, acDataSetOperationsData,
     DATA_OPERATION_SAVE_START,          acDataOperationSaveStart,
     DATA_OPERATION_SAVE_SUCCESS,        acDataOperationSaveSuccess,
     DATA_OPERATION_SAVE_ERROR,          acDataOperationSaveError,
