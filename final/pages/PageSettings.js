@@ -409,7 +409,9 @@ class PageSettings extends React.PureComponent {
     };
 
     operationCategoryDelete = () => {
-
+        const { dispatch } = this.props;
+        const { OPERATION_CATEGORIES } = DELETE_MODES;
+        dispatch( acUIShowDeleteConfirmation( OPERATION_CATEGORIES ) )
     };
 
     /* == render functions == */

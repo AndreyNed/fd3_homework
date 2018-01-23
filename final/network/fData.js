@@ -24,6 +24,9 @@ import {
     acDataOperationDeleteStart,
     acDataOperationDeleteSuccess,
     acDataOperationDeleteError,
+    acDataOperationCategorySaveStart,
+    acDataOperationCategorySaveSuccess,
+    acDataOperationCategorySaveError, acDataOperationCategoryDeleteStart,
 } from "../actions/acData";
 
 import { SERVER_URI } from "./network_consts";
@@ -247,6 +250,159 @@ const fDataLoadOperationCategories = function ( dispatch, cbSuccess, cbError ) {
         },
         body: 'command=get_categories',
     };
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataSaveOperationCategory = function ( dispatch, cbSuccess, cbError, category ) {
+    ( debug_mode ) && console.log( 'fDataSaveOperationCategory...' );
+    dispatch( acDataOperationCategorySaveStart() );
+    const { id, name } = category;
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataSaveOperationCategory: ' + errorText );
+        dispatch( acDataOperationCategorySaveError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataSaveOperationCategory: fetchSuccess: ', loadedData.responseText );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataSaveOperationCategory: fetchSuccess: ', loadedData.responseText );
+        }
+        dispatch( acDataOperationCategorySaveSuccess() );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=save_category' +
+        `&category_id=${ id }` +
+        `&category_name=${ name }`
+    };
+
+    debug_mode && console.log( 'fDataSaveOperationCategory: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataCreateOperationCategory = function ( dispatch, cbSuccess, cbError, newCategory ) {
+    ( debug_mode ) && console.log( 'fDataCreateOperationCategory...' );
+    dispatch( acDataOperationCategorySaveStart() );
+    const { name } = newCategory;
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataCreateOperationCategory: ' + errorText );
+        dispatch( acDataOperationCategorySaveError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataCreateOperationCategory: fetchSuccess: ', loadedData.responseText );
+            dispatch( acDataOperationCategorySaveSuccess() );
+            if ( cbSuccess )
+                cbSuccess( loadedData );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataCreateOperationCategory: fetchSuccess: ', loadedData.responseText );
+            dispatch( acDataOperationCategorySaveError() );
+            if (cbError)
+                cbError( loadedData.responseText );
+        }
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=add_category' +
+        `&category_name=${ name }`
+    };
+
+    debug_mode && console.log( 'fDataCreateOperationCategory: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataDeleteOperationCategory = function ( dispatch, cbSuccess, cbError, categoryId ) {
+    ( debug_mode ) && console.log( 'fDataDeleteOperationCategory...' );
+    dispatch( acDataOperationCategoryDeleteStart() );
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataDeleteOperationCategory: ' + errorText );
+        dispatch( acDataOperationCategoryDeleteError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataDeleteOperationCategory: fetchSuccess: ', loadedData.responseText );
+            dispatch( acDataOperationCategoryDeleteSuccess() );
+            if ( cbSuccess )
+                cbSuccess( loadedData );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteOperationCategory: fetchSuccess: ', loadedData.responseText );
+            dispatch( acDataOperationCategoryDeleteError() );
+            if (cbError)
+                cbError( loadedData.responseText );
+        }
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=delete_category' +
+        `&category_id=${ categoryId }`
+    };
+
+    debug_mode && console.log( 'fDataDeleteOperationCategory: fetchOptions: ', fetchOptions );
 
     dispatch(
         thunkFetch({
