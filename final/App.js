@@ -1,6 +1,6 @@
 'use strict';
-
-require('es6-promise').polyfill();
+import 'babel-polyfill';
+// require('es6-promise').polyfill();
 
 import React from 'react';
 import Loader from './components/loader/Loader';

@@ -54,6 +54,13 @@ const SETTINGS_MODES = {
     OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
 };
 
+const DELETE_MODES = {
+    OPERATIONS:             'OPERATIONS',
+    ACCOUNTS:               'ACCOUNTS',
+    OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
+    NONE:                   'NONE',
+};
+
 export {
     OPERATION_TYPES,
     MODAL_CONTENT,
@@ -63,4 +70,5 @@ export {
     POINTER_POSITION,
     ALIGN_TYPES,
     SETTINGS_MODES,
+    DELETE_MODES,
 }

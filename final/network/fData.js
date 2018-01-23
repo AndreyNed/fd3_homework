@@ -9,6 +9,9 @@ import {
     acDataAccountSaveStart,
     acDataAccountSaveSuccess,
     acDataAccountSaveError,
+    acDataAccountDeleteStart,
+    acDataAccountDeleteSuccess,
+    acDataAccountDeleteError,
     acDataOperationCategoriesLoadError,
     acDataOperationCategoriesLoadStart,
     acDataOperationCategoriesLoadSuccess,
@@ -125,7 +128,7 @@ const fDataCreateAccount = function ( dispatch, cbSuccess, cbError, newAccount )
     const { name, amount } = newAccount;
 
     let fetchError = function ( errorText ) {
-        console.error( 'fDataSaveAccount: ' + errorText );
+        console.error( 'fDataCreateAccount: ' + errorText );
         dispatch( acDataAccountSaveError() );
         if (cbError)
             cbError( errorText );
@@ -162,6 +165,54 @@ const fDataCreateAccount = function ( dispatch, cbSuccess, cbError, newAccount )
     dispatch(
         thunkFetch({
             fetchURI: SERVER_URI,// + value,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataDeleteAccount = function ( dispatch, cbSuccess, cbError, accountId ) {
+    ( debug_mode ) && console.log( 'fDataDeleteAccount...' );
+    dispatch( acDataAccountDeleteStart() );
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataDeleteAccount: ' + errorText );
+        dispatch( acDataAccountDeleteError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataDeleteAccount: fetchSuccess: ', loadedData.responseText );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteAccount: fetchSuccess: ', loadedData.responseText );
+        }
+        dispatch( acDataAccountDeleteSuccess() );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=delete_account' +
+        `&account_id=${ accountId }`
+    };
+
+    debug_mode && console.log( 'fDataDeleteAccount: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,
             fetchOptions: fetchOptions,
             cbError: fetchError,
             cbSuccess: fetchSuccess,
@@ -408,5 +459,6 @@ const fDataDeleteOperation = function ( dispatch, cbSuccess, cbError, operationI
 export {
     fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations,
     fDataSaveOperation, fDataCreateOperation, fDataDeleteOperation,
-    fDataSaveAccount, fDataCreateAccount,
+    fDataSaveAccount, fDataCreateAccount, fDataDeleteAccount,
+
 }

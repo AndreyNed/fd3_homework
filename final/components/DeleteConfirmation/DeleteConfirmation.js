@@ -5,19 +5,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_DELETE_CONFIRMATION } from "../../config/config";
-import { MODAL_CONTENT } from "../../data_const/data_const";
+import { MODAL_CONTENT, DELETE_MODES } from "../../data_const/data_const";
 
 import ButtonOk from '../buttons/ButtonOk/ButtonOk';
 import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 
 import './DeleteConfirmation.scss';
 import {acUIHideMatGlass} from "../../actions/acUI";
-import {fDataDeleteOperation} from "../../network/fData";
+import {fDataDeleteAccount, fDataDeleteOperation} from "../../network/fData";
 
 class DeleteConfirmation extends React.PureComponent {
 
     static propTypes = {
         modalContent:               PropTypes.string,
+        deleteMode:                 PropTypes.oneOf([
+            DELETE_MODES.OPERATIONS,
+            DELETE_MODES.ACCOUNTS,
+            DELETE_MODES.OPERATION_CATEGORIES,
+            DELETE_MODES.NONE,
+        ]),
         operationsData:             PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
@@ -30,6 +36,14 @@ class DeleteConfirmation extends React.PureComponent {
             })
         ),
         operationSelectedIndex:         PropTypes.number,
+        accountsData:                   PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+                amount:                 PropTypes.number,
+            })
+        ),
+        accountSelectedIndex:           PropTypes.number,
         cbChanged:                  PropTypes.func,
     };
 
@@ -89,10 +103,19 @@ class DeleteConfirmation extends React.PureComponent {
     /* == callbacks == */
 
     btnOk_cbChanged = () => {
-        const { dispatch, operationSelectedIndex, operationsData } = this.props;
-        console.log( "Удалить" );
-        let operationId = operationsData[ operationSelectedIndex ].id;
-        fDataDeleteOperation( dispatch, null, null, operationId );
+        const { dispatch, operationSelectedIndex, operationsData, accountSelectedIndex, accountsData, deleteMode } = this.props;
+        const { OPERATIONS, ACCOUNTS, OPERATION_CATEGORIES, NONE } = DELETE_MODES;
+        console.log( "Удалить: deleteMode: ", deleteMode );
+        switch ( deleteMode ) {
+            case OPERATIONS:
+                let operationId = operationsData[ operationSelectedIndex ].id;
+                fDataDeleteOperation( dispatch, null, null, operationId );
+                break;
+            case ACCOUNTS:
+                let accountId = accountsData[ accountSelectedIndex ].id;
+                fDataDeleteAccount( dispatch, null, null, accountId );
+                break;
+        }
     };
 
     btnCancel_cbChanged = () => {
@@ -142,9 +165,12 @@ class DeleteConfirmation extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         modalContent:                   state.ui.modalContent,
+        deleteMode:                     state.ui.deleteMode,
 
         operationSelectedIndex:         state.data.operationSelectedIndex,
         operationsData:                 state.data.operationsData,
+        accountSelectedIndex:           state.data.accountSelectedIndex,
+        accountsData:                   state.data.accountsData,
     }
 };
 

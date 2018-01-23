@@ -105,7 +105,7 @@ function rdData ( state = initState, action ) {
                 ...state, ...{
                     accountsLoadStatus:   0,
                     accountSaveStatus:    0,
-                    accountsDeleteStatus: 0,
+                    accountDeleteStatus:  0,
                 }
             };
 

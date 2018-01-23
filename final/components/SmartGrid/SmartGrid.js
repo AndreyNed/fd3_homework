@@ -249,6 +249,9 @@ class SmartGrid extends React.PureComponent {
         let draggingMode = false;
         let exportToExcelStatus = 0;
         let headersData = this.loadHeadersData( userLogin, tableName );
+        let newTextFilterValue = ( isNotEmpty( this.state.textFilterValue ) )
+            ? this.state.textFilterValue
+            : textFilterValue;
 
         // Гарантируем совпадение столбцов в загружаемых данных и в заголовке
         if ( isNotEmptyAll( [ headers, headersData ] ) ) {
@@ -279,8 +282,8 @@ class SmartGrid extends React.PureComponent {
             body = addTextField( headers, body );
             // 3. Выполнить фильтрацию строк
             if ( withFilter ) {
-                isNotEmpty( textFilterValue )
-                    ? body = filterValue( headers, body, textFilterValue )
+                isNotEmpty( newTextFilterValue )
+                    ? body = filterValue( headers, body, newTextFilterValue )
                     : body;
             }
             else if ( cbFiltered ) {
@@ -313,7 +316,7 @@ class SmartGrid extends React.PureComponent {
             ...newState,
             headers,
             body,
-            textFilterValue,
+            newTextFilterValue,
             value,
             dragMode: draggingMode,
             exportToExcelStatus,

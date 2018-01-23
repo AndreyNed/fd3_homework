@@ -9,14 +9,13 @@ import ButtonAdd from '../components/buttons/ButtonAdd/ButtonAdd';
 import ButtonDelete from '../components/buttons/ButtonDelete/ButtonDelete';
 
 import { isExists, isNotEmpty, findArrayItem, findArrayItemIndex } from "../utils/utils";
-import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_OPERATIONS } from "../config/config";
-import { CONFIG_UI_MODE_TIMEOUT, } from "../config/config";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_OPERATIONS, CONFIG_UI_MODE_TIMEOUT } from "../config/config";
 
 import {acDataOperationSelect, acDataOperationsShouldBeReloaded} from "../actions/acData";
 import { acUIShowOperationCard, acUIShowDataSavingMessage, acUIShowDataDeletingMessage, acUIShowDeleteConfirmation } from "../actions/acUI";
 
 import './PageOperations.scss';
-import {DATA_TYPES, DISPLAY_TYPES, SORTING} from "../data_const/data_const";
+import {DATA_TYPES, DISPLAY_TYPES, SORTING, SETTINGS_MODES, DELETE_MODES} from "../data_const/data_const";
 
 class PageOperations extends React.PureComponent {
 
@@ -51,6 +50,11 @@ class PageOperations extends React.PureComponent {
         operationDeleteStatus:          PropTypes.number,
         operationsLoadStatus:           PropTypes.number,
 
+        viewMode:                       PropTypes.oneOf([
+            SETTINGS_MODES.OPERATIONS,
+            SETTINGS_MODES.OPERATION_CATEGORIES,
+            SETTINGS_MODES.ACCOUNTS,
+        ]),
         // matGlassIsVisible:              PropTypes.bool,
     };
 
@@ -72,9 +76,11 @@ class PageOperations extends React.PureComponent {
     }
 
     prepareData = ( props ) => {
-        const { dispatch, operationSaveStatus, operationDeleteStatus, operationsLoadStatus, matGlassIsVisible } = props;
+        const { dispatch, operationSaveStatus, operationDeleteStatus, matGlassIsVisible } = props;
+
         ( this.debug_mode ) &&
             console.log( 'PageOperations: prepareData: new props: ', props );
+
         if ( operationSaveStatus == 1 ) {
             dispatch( acUIShowDataSavingMessage() );
         }
@@ -579,8 +585,9 @@ class PageOperations extends React.PureComponent {
     buttonPanel_btnDelete_cbChanged = () => {
         // console.log( 'PageOperations: buttonPanel_btnDelete_cbChanged: click...' );
         const { dispatch, operationSelectedIndex } = this.props;
+        const { OPERATIONS } = DELETE_MODES;
         ( operationSelectedIndex > -1 ) &&
-            dispatch( acUIShowDeleteConfirmation() )
+            dispatch( acUIShowDeleteConfirmation( OPERATIONS ) )
     };
 
     /* == renders == */

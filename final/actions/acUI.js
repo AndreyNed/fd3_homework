@@ -69,9 +69,10 @@ const acUIShowDataDeletingMessage = function() {
     }
 };
 
-const acUIShowDeleteConfirmation = function() {
+const acUIShowDeleteConfirmation = function( deleteMode ) {
     return {
         type:               UI_SHOW_DELETE_CONFIRMATION,
+        deleteMode:         deleteMode,
     }
 };
 
@@ -83,14 +84,14 @@ const acUISetSettingsMode = function( settingsMode ) {
 };
 
 export {
-    UI_SHOW_MAT_GLASS, acUIShowMatGlass,
-    UI_HIDE_MAT_GLASS, acUIHideMatGlass,
-    UI_SHOW_OPERATION_CARD, acUIShowOperationCard,
-    UI_SHOW_ACCOUNT_CARD, acUIShowAccountCard,
-    UI_SHOW_OPERATION_CATEGORY_CARD, acUIShowOperationCategoryCard,
-    UI_SHOW_DATA_LOADING_MESSAGE, acUIShowDataLoadingMessage,
-    UI_SHOW_DATA_SAVING_MESSAGE, acUIShowDataSavingMessage,
-    UI_SHOW_DATA_DELETING_MESSAGE, acUIShowDataDeletingMessage,
-    UI_SHOW_DELETE_CONFIRMATION, acUIShowDeleteConfirmation,
-    UI_SET_SETTINGS_MODE, acUISetSettingsMode,
+    UI_SHOW_MAT_GLASS,                  acUIShowMatGlass,
+    UI_HIDE_MAT_GLASS,                  acUIHideMatGlass,
+    UI_SHOW_OPERATION_CARD,             acUIShowOperationCard,
+    UI_SHOW_ACCOUNT_CARD,               acUIShowAccountCard,
+    UI_SHOW_OPERATION_CATEGORY_CARD,    acUIShowOperationCategoryCard,
+    UI_SHOW_DATA_LOADING_MESSAGE,       acUIShowDataLoadingMessage,
+    UI_SHOW_DATA_SAVING_MESSAGE,        acUIShowDataSavingMessage,
+    UI_SHOW_DATA_DELETING_MESSAGE,      acUIShowDataDeletingMessage,
+    UI_SHOW_DELETE_CONFIRMATION,        acUIShowDeleteConfirmation,
+    UI_SET_SETTINGS_MODE,               acUISetSettingsMode,
 }

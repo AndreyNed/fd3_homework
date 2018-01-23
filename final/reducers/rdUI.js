@@ -1,6 +1,6 @@
 'use strict';
 
-import { MODAL_CONTENT, SETTINGS_MODES } from "../data_const/data_const";
+import { MODAL_CONTENT, SETTINGS_MODES, DELETE_MODES } from "../data_const/data_const";
 
 import {
     UI_SHOW_MAT_GLASS,
@@ -21,6 +21,7 @@ const initState = {
     isNewAccountAdded:      false,
     modalContent:           MODAL_CONTENT.DATA_LOADING,
     settingsMode:           SETTINGS_MODES.ACCOUNTS,
+    deleteMode:             DELETE_MODES.NONE,
 };
 
 function rdUI ( state = initState, action ) {
@@ -37,6 +38,7 @@ function rdUI ( state = initState, action ) {
             return {
                 ...state, ...{
                     modalContent:        MODAL_CONTENT.NONE,
+                    deleteMode:          DELETE_MODES.NONE,
                     matGlassIsVisible:   false,
                     isNewOperationAdded: false,
                 }
@@ -96,6 +98,7 @@ function rdUI ( state = initState, action ) {
         case UI_SHOW_DELETE_CONFIRMATION:
             return {
                 ...state, ...{
+                    deleteMode:         action.deleteMode,
                     modalContent:       MODAL_CONTENT.DELETE_CONFIRMATION,
                     matGlassIsVisible:  true,
                 }

@@ -10,11 +10,13 @@ import ButtonDelete from '../components/buttons/ButtonDelete/ButtonDelete';
 import SmartGrid from '../components/SmartGrid/SmartGrid';
 
 import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_SETTINGS, CONFIG_UI_MODE_TIMEOUT } from "../config/config";
-import {ALIGN_TYPES, DATA_TYPES, DISPLAY_TYPES, SETTINGS_MODES, SORTING} from "../data_const/data_const";
+import {ALIGN_TYPES, DATA_TYPES, DELETE_MODES, DISPLAY_TYPES, SETTINGS_MODES, SORTING} from "../data_const/data_const";
 
-import {acUISetSettingsMode, acUIShowDataSavingMessage} from "../actions/acUI";
+import {
+    acUISetSettingsMode, acUIShowDataSavingMessage, acUIShowAccountCard, acUIShowOperationCategoryCard,
+    acUIShowDeleteConfirmation, acUIShowDataDeletingMessage
+} from "../actions/acUI";
 import { acDataAccountSelect, acDataOperationCategorySelect, acDataAccountsShouldBeReloaded } from '../actions/acData';
-import { acUIShowAccountCard, acUIShowOperationCategoryCard } from "../actions/acUI";
 import { findArrayItemIndex } from "../utils/utils";
 
 import './PageSettings.scss';
@@ -23,7 +25,7 @@ class PageSettings extends React.PureComponent {
 
     static propTypes = {
 
-        settingsMode:                   PropTypes.oneOf([
+        settingsMode:                       PropTypes.oneOf([
             SETTINGS_MODES.ACCOUNTS,
             SETTINGS_MODES.OPERATION_CATEGORIES,
         ]),
@@ -91,13 +93,21 @@ class PageSettings extends React.PureComponent {
             console.log( 'PageSettings: prepareData: props: ', props );
 
         const { dispatch, accountSaveStatus, accountDeleteStatus, settingsMode } = this.props;
-        const { ACCOUNTS } = SETTINGS_MODES;
+        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
 
         if ( settingsMode === ACCOUNTS ) {
             if ( accountSaveStatus === 1 ) {
                 dispatch( acUIShowDataSavingMessage() );
             }
             else if ( accountSaveStatus > 1 ) {
+                setTimeout( () => {
+                    dispatch( acDataAccountsShouldBeReloaded() );
+                }, CONFIG_UI_MODE_TIMEOUT );
+            }
+            if ( accountDeleteStatus === 1 ) {
+                dispatch( acUIShowDataDeletingMessage() );
+            }
+            else if ( accountDeleteStatus > 1 ) {
                 setTimeout( () => {
                     dispatch( acDataAccountsShouldBeReloaded() );
                 }, CONFIG_UI_MODE_TIMEOUT );
@@ -282,17 +292,25 @@ class PageSettings extends React.PureComponent {
 
     buttonPanelProps = () => {
         const { block, inlineBlock, hidden, none } = DISPLAY_TYPES;
+        const { settingsMode, accountSelectedIndex, operationCategorySelectedIndex } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        let display = {
+            btnAdd: block,
+            btnDelete: ( settingsMode === ACCOUNTS && accountSelectedIndex > -1 )
+                ? block
+                : ( settingsMode === OPERATION_CATEGORIES && operationCategorySelectedIndex > -1 )
+                    ? block
+                    : none,
+        };
         return {
             btnAdd: {
                 label:      'Добавить',
-                isVisible:  true,
-                display:    block,
+                display:    display.btnAdd,
                 cbChanged:  this.buttonPanel_btnAdd_cbChanged,
             },
             btnDelete: {
                 label:      'Удалить',
-                isVisible:  true,
-                display:    block,
+                display:    display.btnDelete,
                 cbChanged:  this.buttonPanel_btnDelete_cbChanged,
             },
         }
@@ -335,7 +353,11 @@ class PageSettings extends React.PureComponent {
     };
 
     buttonPanel_btnDelete_cbChanged = () => {
-
+        const { settingsMode } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        ( settingsMode === ACCOUNTS )
+            ? this.accountDelete()
+            : this.operationCategoryDelete();
     };
 
     /* action functions */
@@ -378,6 +400,16 @@ class PageSettings extends React.PureComponent {
     operationCategoryAdd = () => {
         const { dispatch } = this.props;
         dispatch( acUIShowOperationCategoryCard( true ) );
+    };
+
+    accountDelete = () => {
+        const { dispatch } = this.props;
+        const { ACCOUNTS } = DELETE_MODES;
+        dispatch( acUIShowDeleteConfirmation( ACCOUNTS ) )
+    };
+
+    operationCategoryDelete = () => {
+
     };
 
     /* == render functions == */
