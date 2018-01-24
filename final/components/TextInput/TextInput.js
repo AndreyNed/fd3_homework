@@ -124,10 +124,9 @@ class TextInput extends React.PureComponent {
         this.state = {
             ...props,
             htmlID: TextInput.getHtmlID( props ),
-        }
+        };
+        this.classCSS = 'TextInput';   // name of the className of component
     }
-
-    classCSS = 'TextInput';   // name of the className of component
 
     componentWillMount() {
         this.prepareProps( this.state );
@@ -292,8 +291,8 @@ class TextInput extends React.PureComponent {
         const { inputBoxWidth, labelVerticalAlign } = this.props.options;
         const { isReadOnly, inputType } = this.props;
         const { htmlID, currValue } = this.state;
-        const { middle, bottom, top, right, left } = TextInput.position;
-        const { search, text } = TextInput.inputTypes;
+        const { middle } = TextInput.position;
+        const { search } = TextInput.inputTypes;
         return (
             <div className = { this.classCSS + "_input_box" }
                  key = { "input_box" }
@@ -318,6 +317,29 @@ class TextInput extends React.PureComponent {
                            onChange =  { ( !isReadOnly ) ? this.inputChange : null }
                            onBlur =    { this.inputBlur }
                            onKeyDown = { this.inputKeyDown }/>
+                    {
+                        ( inputType === search && isNotEmpty( currValue ) ) &&
+                        <div className = { this.classCSS + "_cross_container" }
+                             onClick = { ( !isReadOnly ) ? this.crossClick : null }
+                             data-is_enable = { !isReadOnly }>
+                            <svg width =   "16px"
+                                 height =  "16px"
+                                 viewBox = "0 0 16 16"
+                                 preserveAspectRatio = "xMidYMid meet"
+                                 xmlns = "http://www.w3.org/2000/svg">
+                                <g>
+                                    <circle cx="8" cy="8" r="8"
+                                            stroke = "#ffffff"
+                                            strokeWidth = "1"
+                                            fill = "#ffffff"/>
+                                    <path d = "M 4 4 L 12 12 M 4 12 L 12 4"
+                                          stroke = "#6E6E6E"
+                                          strokeWidth = "1"
+                                          fill = "none"/>
+                                </g>
+                            </svg>
+                        </div>
+                    }
                     {
                         ( inputType === search ) &&
                         <div className = { this.classCSS + "_icon_container" }

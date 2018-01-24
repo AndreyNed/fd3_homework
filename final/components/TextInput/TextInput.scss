@@ -96,6 +96,10 @@ $minBlockHeight:             32px;
                 &[ data-input_type="search" ] {
                     padding: 2px 24px 2px 8px;
                 }
+
+                &[ data-cross="true" ] {
+                    padding-right: 36px;
+                }
             }
 
             & > .TextInput_icon_container {
@@ -104,6 +108,21 @@ $minBlockHeight:             32px;
                 height: 16px;
                 position: absolute;
                 right: 4px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+
+                &[ data-is_enable="false" ] {
+                    cursor: default;
+                }
+            }
+
+            & > .TextInputR_cross_container {
+                /*background: grey;*/
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                right: 20px;
                 top: 50%;
                 transform: translateY(-50%);
                 cursor: pointer;
