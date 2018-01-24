@@ -28,6 +28,7 @@ class OperationCategoryCard extends React.PureComponent {
             PropTypes.shape({
                 id:                         PropTypes.number,
                 name:                       PropTypes.string,
+                comment:                    PropTypes.string,
             })
         ),
 
@@ -36,11 +37,13 @@ class OperationCategoryCard extends React.PureComponent {
         operationCategoryValue:             PropTypes.shape({
             id:                             PropTypes.number,
             name:                           PropTypes.string,
+            comment:                        PropTypes.string,
         }),
 
         operationCategoryValidationData:    PropTypes.shape({
             id:                             PropTypes.string,
             name:                           PropTypes.string,
+            comment:                        PropTypes.string,
         }),
     };
 
@@ -49,10 +52,12 @@ class OperationCategoryCard extends React.PureComponent {
         operationCategoryValue: {
             id:                     0,
             name:                   '',
+            comment:                '',
         },
         operationCategoryValidationData: {
             id:                     '',
             name:                   '',
+            comment:                '',
         },
     };
 
@@ -99,7 +104,7 @@ class OperationCategoryCard extends React.PureComponent {
     };
 
     formProps = () => {
-        const { name } = this.state.operationCategoryValue;
+        const { name, comment } = this.state.operationCategoryValue;
         const { operationCategoriesData, isNewOperationCategoryAdded } = this.props;
         return {
             header: {
@@ -120,6 +125,20 @@ class OperationCategoryCard extends React.PureComponent {
                     inputBoxWidth:  '65%',
                 },
                 cbChanged: this.name_cbChanged,
+            },
+            comment: {
+                label:              'Комментарий',
+                defValue:           comment,
+                withLabel:          true,
+                display:            TextInput.displayTypes.block,
+                inputType:          TextInput.inputTypes.text,
+                options: {
+                    addedClass:     ( isNotEmpty( this.state.operationCategoryValidationData.comment ) ) && 'validation_failed',
+                    labelPosition:  TextInput.position.left,
+                    labelBoxWidth:  '35%',
+                    inputBoxWidth:  '65%',
+                },
+                cbChanged: this.comment_cbChanged,
             },
             btnOk: {
                 label: 'Сохранить',
@@ -147,6 +166,21 @@ class OperationCategoryCard extends React.PureComponent {
         let validationHint = this.validate_name( newOperationCategoryValue.name );
         let newOperationCategoryValidationData = { ...operationCategoryValidationData, name: validationHint };
         // console.log('name: ', newOperationCategoryValue.name, ': ', typeof newOperationCategoryValue.name );
+        this.setState( {
+            operationCategoryValue: newOperationCategoryValue,
+            operationCategoryValidationData: newOperationCategoryValidationData,
+        } );
+    };
+
+    comment_cbChanged = ( value ) => {
+        const { operationCategoryValue, operationCategoryValidationData } = this.state;
+        let newOperationCategoryValue = { ...operationCategoryValue };
+        newOperationCategoryValue.comment = ( isNotEmpty( value ) )
+            ? value
+            : '';
+        let validationHint = this.validate_comment( newOperationCategoryValue.comment );
+        let newOperationCategoryValidationData = { ...operationCategoryValidationData, comment: validationHint };
+        // console.log('comment: ', newOperationCategoryValue.comment, ': ', typeof newOperationCategoryValue.comment );
         this.setState( {
             operationCategoryValue: newOperationCategoryValue,
             operationCategoryValidationData: newOperationCategoryValidationData,
@@ -204,12 +238,16 @@ class OperationCategoryCard extends React.PureComponent {
     /* == validation == */
 
     validate_operationCategory = ( data ) => {
-        const { name } = data;
+        const { name, comment } = data;
         let result = true;
         let operationCategoryValidationData = { ...OperationCategoryCard.defaultProps.operationCategoryValidationData };
 
         let validationHint = this.validate_name( name );
         operationCategoryValidationData.name = validationHint;
+        result = ( isNotEmpty( validationHint ) ) ? false : result;
+
+        validationHint = this.validate_comment( comment );
+        operationCategoryValidationData.comment = validationHint;
         result = ( isNotEmpty( validationHint ) ) ? false : result;
 
         ( this.debug_mode ) && console.log( 'validate_operationCategory: ', result );
@@ -222,11 +260,18 @@ class OperationCategoryCard extends React.PureComponent {
         return validationHint;
     };
 
+    validate_comment = ( value ) => {
+        // let validationHint = ( isNotEmpty( value ) ) ? '' : 'Поле не должно быть пустым';
+        let validationHint = '';
+        ( this.debug_mode ) && console.log( 'validate_comment: ', validationHint );
+        return validationHint;
+    };
+
     /* == renders == */
 
     render() {
         const { modalContent, isNewOperationCategoryAdded } = this.props;
-        const { name } = this.state.operationCategoryValidationData;
+        const { name, comment } = this.state.operationCategoryValidationData;
         let props = this.formProps();
         return ( modalContent === MODAL_CONTENT.OPERATION_CATEGORY_CARD ) &&
             <div className = { this.classCSS }
@@ -247,6 +292,17 @@ class OperationCategoryCard extends React.PureComponent {
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
                                     { name || '\xa0' }
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rows"
+                         key="comment">
+                        <div className="cols col_16">
+                            <TextInput { ...props.comment } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    { comment || '\xa0' }
                                 </label>
                             </div>
                         </div>

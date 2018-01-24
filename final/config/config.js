@@ -6,7 +6,7 @@ const CONFIG_DEBUG_MODE_LOADER = ((( false )));
 
 const CONFIG_DEBUG_MODE_PAGE_OPERATIONS = ((( false )));
 
-const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( true )));
+const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( false )));
 
 const CONFIG_DEBUG_MODE_DATA_LOADING = ((( false )));
 
@@ -14,7 +14,7 @@ const CONFIG_DEBUG_MODE_DELETE_CONFIRMATION = ((( false )));
 
 const CONFIG_DEBUG_MODE_OPERATION_CARD = ((( false )));
 
-const CONFIG_DEBUG_MODE_ACCOUNT_CARD = ((( true )));
+const CONFIG_DEBUG_MODE_ACCOUNT_CARD = ((( false )));
 
 const CONFIG_DEBUG_MODE_OPERATION_CATEGORY_CARD = ((( false )));
 
@@ -34,7 +34,7 @@ const CONFIG_DEBUG_MODE_EXCEL_TMPL = ((( false )));
 
 const CONFIG_DEBUG_MODE_EXCEL_CONVERTER = ((( false )));
 
-const CONFIG_DEBUG_MODE_F_DATA = ((( true )));
+const CONFIG_DEBUG_MODE_F_DATA = ((( false )));
 
 const CONFIG_UI_MODE_TIMEOUT = ((( 500 )));
 

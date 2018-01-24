@@ -37,7 +37,7 @@ class PageSettings extends React.PureComponent {
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
-                amount:                 PropTypes.number,
+                comment:                PropTypes.string,
             })
         ),
 
@@ -48,7 +48,7 @@ class PageSettings extends React.PureComponent {
         accountValue:                   PropTypes.shape({
             id:                         PropTypes.number,
             name:                       PropTypes.string,
-            amount:                     PropTypes.number,
+            comment:                    PropTypes.string,
         }),
 
         accountSelectedIndex:           PropTypes.number,
@@ -57,12 +57,14 @@ class PageSettings extends React.PureComponent {
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
+                comment:                PropTypes.string,
             })
         ),
 
         operationCategoryValue:         PropTypes.shape({
             id:                         PropTypes.number,
             name:                       PropTypes.string,
+            comment:                    PropTypes.string,
         }),
 
         operationCategorySelectedIndex: PropTypes.number,
@@ -148,7 +150,7 @@ class PageSettings extends React.PureComponent {
 
     leftPanelProps = () => {
         const { settingsMode } = this.props;
-        const { LEFT, RIGHT, CENTER } = ALIGN_TYPES;
+        const { LEFT } = ALIGN_TYPES;
         const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
 
         return {
@@ -172,7 +174,9 @@ class PageSettings extends React.PureComponent {
     };
 
     tableProps = () => {
-        ( this.debug_mode ) && console.log( 'PageSettings: tableProps: props: ', this.props );
+        ( this.debug_mode ) &&
+            console.log( 'PageSettings: tableProps: props: ', this.props );
+
         const { settingsMode, accountsData, operationCategoriesData, accountSelectedIndex, operationCategorySelectedIndex } = this.props;
         const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
         const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
@@ -209,14 +213,14 @@ class PageSettings extends React.PureComponent {
                         sorting:      NONE,
                         isSearchable: true,
                         isVisible:    true,
-                        width:        '40%',
+                        width:        '30%',
                     },
                     {
-                        id:           'amount',
-                        title:        'Сумма',
-                        dataType:     NUMBER,
-                        align:        RIGHT,
-                        isSortable:   true,
+                        id:           'comment',
+                        title:        'Комментарий',
+                        dataType:     STRING,
+                        align:        LEFT,
+                        isSortable:   false,
                         sorting:      NONE,
                         isSearchable: true,
                         isVisible:    true,
@@ -236,8 +240,8 @@ class PageSettings extends React.PureComponent {
                                 value: row.name,
                             },
                             {
-                                id: 'amount',
-                                value: row.amount
+                                id: 'comment',
+                                value: row.comment,
                             }
                         ]
                     }
@@ -270,6 +274,17 @@ class PageSettings extends React.PureComponent {
                         sorting:      NONE,
                         isSearchable: true,
                         isVisible:    true,
+                        width:        '30%',
+                    },
+                    {
+                        id:           'comment',
+                        title:        'Комментарий',
+                        dataType:     STRING,
+                        align:        LEFT,
+                        isSortable:   false,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
                         width:        'auto',
                     },
                 ];
@@ -284,6 +299,10 @@ class PageSettings extends React.PureComponent {
                             {
                                 id: 'name',
                                 value: row.name,
+                            },
+                            {
+                                id: 'comment',
+                                value: row.comment,
                             },
                         ]
                     }
@@ -389,7 +408,7 @@ class PageSettings extends React.PureComponent {
     /* action functions */
 
     accountsChanged = ( newAccountId ) => {
-        console.log( 'PageSettings: accountsChanged: ', newAccountId );
+        // console.log( 'PageSettings: accountsChanged: ', newAccountId );
         const { dispatch, accountsData } = this.props;
         let newAccountSelectedIndex = findArrayItemIndex( accountsData, { id: newAccountId } );
         // console.log( 'PageOperations: accountsChanged: newAccountSelectedIndex: ', newAccountSelectedIndex );
@@ -398,7 +417,7 @@ class PageSettings extends React.PureComponent {
     };
 
     operationCategoriesChanged = ( newOperationCategoryId ) => {
-        console.log( 'PageSettings: accountsChanged: ', newOperationCategoryId );
+        // console.log( 'PageSettings: accountsChanged: ', newOperationCategoryId );
         const { dispatch, operationCategoriesData } = this.props;
         let newOperationCategorySelectedIndex = findArrayItemIndex( operationCategoriesData, { id: newOperationCategoryId } );
         // console.log( 'PageOperations: accountsChanged: newAccountSelectedIndex: ', newAccountSelectedIndex );
@@ -407,13 +426,13 @@ class PageSettings extends React.PureComponent {
     };
 
     accountSelected = ( newAccountSelectedIndex ) => {
-        console.log( 'PageSettings: accountSelected: ', newAccountSelectedIndex );
+        // console.log( 'PageSettings: accountSelected: ', newAccountSelectedIndex );
         const { dispatch } = this.props;
         dispatch( acDataAccountSelect( newAccountSelectedIndex ) );
     };
 
     operationCategoriesSelected = ( newOperationCategorySelectedIndex ) => {
-        console.log( 'PageSettings: operationCategoriesSelected: ', newOperationCategorySelectedIndex );
+        // console.log( 'PageSettings: operationCategoriesSelected: ', newOperationCategorySelectedIndex );
         const { dispatch } = this.props;
         dispatch( acDataOperationCategorySelect( newOperationCategorySelectedIndex) );
     };

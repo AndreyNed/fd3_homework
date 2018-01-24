@@ -28,7 +28,7 @@ class AccountCard extends React.PureComponent {
             PropTypes.shape({
                 id:                 PropTypes.number,
                 name:               PropTypes.string,
-                amount:             PropTypes.number,
+                comment:            PropTypes.string,
             })
         ),
 
@@ -37,13 +37,13 @@ class AccountCard extends React.PureComponent {
         accountValue:               PropTypes.shape({
             id:                     PropTypes.number,
             name:                   PropTypes.string,
-            amount:                 PropTypes.number,
+            comment:                PropTypes.string,
         }),
 
         accountValidationData:      PropTypes.shape({
             id:                     PropTypes.string,
             name:                   PropTypes.string,
-            amount:                 PropTypes.string,
+            comment:                PropTypes.string,
         }),
     };
 
@@ -52,12 +52,12 @@ class AccountCard extends React.PureComponent {
         accountValue: {
             id:                     0,
             name:                   '',
-            amount:                 0,
+            comment:                '',
         },
         accountValidationData: {
             id:                     '',
             name:                   '',
-            amount:                 '',
+            comment:                '',
         },
     };
 
@@ -108,7 +108,7 @@ class AccountCard extends React.PureComponent {
     };
 
     formProps = () => {
-        const { name } = this.state.accountValue;
+        const { name, comment } = this.state.accountValue;
         const { accountsData, isNewAccountAdded } = this.props;
         return {
             header: {
@@ -129,6 +129,20 @@ class AccountCard extends React.PureComponent {
                     inputBoxWidth:  '65%',
                 },
                 cbChanged: this.name_cbChanged,
+            },
+            comment: {
+                label:              'Комментарий',
+                defValue:           comment,
+                withLabel:          true,
+                display:            TextInput.displayTypes.block,
+                inputType:          TextInput.inputTypes.text,
+                options: {
+                    addedClass:     ( isNotEmpty( this.state.accountValidationData.comment ) ) && 'validation_failed',
+                    labelPosition:  TextInput.position.left,
+                    labelBoxWidth:  '35%',
+                    inputBoxWidth:  '65%',
+                },
+                cbChanged: this.comment_cbChanged,
             },
             btnOk: {
                 label: 'Сохранить',
@@ -155,6 +169,21 @@ class AccountCard extends React.PureComponent {
             : '';
         let validationHint = this.validate_name( newAccountValue.name );
         let newAccountValidationData = { ...accountValidationData, name: validationHint };
+        // console.log('name: ', newAccountValue.name, ': ', typeof newAccountValue.name );
+        this.setState( {
+            accountValue:           newAccountValue,
+            accountValidationData:  newAccountValidationData,
+        } );
+    };
+
+    comment_cbChanged = ( value ) => {
+        const { accountValue, accountValidationData } = this.state;
+        let newAccountValue = { ...accountValue };
+        newAccountValue.comment = ( isNotEmpty( value ) )
+            ? value
+            : '';
+        let validationHint = this.validate_comment( newAccountValue.comment );
+        let newAccountValidationData = { ...accountValidationData, comment: validationHint };
         // console.log('name: ', newAccountValue.name, ': ', typeof newAccountValue.name );
         this.setState( {
             accountValue:           newAccountValue,
@@ -215,12 +244,16 @@ class AccountCard extends React.PureComponent {
     /* == validation == */
 
     validate_account = ( data ) => {
-        const { name, amount } = data;
+        const { name, comment } = data;
         let result = true;
         let accountValidationData = { ...AccountCard.defaultProps.accountValidationData };
 
         let validationHint = this.validate_name( name );
         accountValidationData.name = validationHint;
+        result = ( isNotEmpty( validationHint ) ) ? false : result;
+
+        validationHint = this.validate_comment( comment );
+        accountValidationData.comment = validationHint;
         result = ( isNotEmpty( validationHint ) ) ? false : result;
 
         ( this.debug_mode ) && console.log( 'validate_account: ', result );
@@ -233,11 +266,18 @@ class AccountCard extends React.PureComponent {
         return validationHint;
     };
 
+    validate_comment = ( value ) => {
+        // let validationHint = ( isNotEmpty( value ) ) ? '' : 'Поле не должно быть пустым';
+        let validationHint = '';
+        ( this.debug_mode ) && console.log( 'validate_comment: ', validationHint );
+        return validationHint;
+    };
+
     /* == renders == */
 
     render() {
         const { modalContent, isNewAccountAdded } = this.props;
-        const { name, amount } = this.state.accountValidationData;
+        const { name, comment } = this.state.accountValidationData;
         let props = this.formProps();
         return ( modalContent === MODAL_CONTENT.ACCOUNT_CARD ) &&
             <div className = { this.classCSS }
@@ -258,6 +298,17 @@ class AccountCard extends React.PureComponent {
                             <div className="validation_hint_box">
                                 <label className="validation_hint">
                                     { name || '\xa0' }
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="rows"
+                         key="comment">
+                        <div className="cols col_16">
+                            <TextInput { ...props.comment } />
+                            <div className="validation_hint_box">
+                                <label className="validation_hint">
+                                    { comment || '\xa0' }
                                 </label>
                             </div>
                         </div>

@@ -80,7 +80,7 @@ const fDataLoadAccounts = function ( dispatch, cbSuccess, cbError ) {
 const fDataSaveAccount = function ( dispatch, cbSuccess, cbError, account ) {
     ( debug_mode ) && console.log( 'fDataSaveAccount...' );
     dispatch( acDataAccountSaveStart() );
-    const { id, name, amount } = account;
+    const { id, name, comment } = account;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataSaveAccount: ' + errorText );
@@ -113,7 +113,7 @@ const fDataSaveAccount = function ( dispatch, cbSuccess, cbError, account ) {
         body: 'command=save_account' +
         `&account_id=${ id }` +
         `&account_name=${ name }` +
-        `&account_amount=${ amount }`
+        `&account_comment=${ comment }`
     };
 
     debug_mode && console.log( 'fDataSaveAccount: fetchOptions: ', fetchOptions );
@@ -131,7 +131,7 @@ const fDataSaveAccount = function ( dispatch, cbSuccess, cbError, account ) {
 const fDataCreateAccount = function ( dispatch, cbSuccess, cbError, newAccount ) {
     ( debug_mode ) && console.log( 'fDataCreateAccount...' );
     dispatch( acDataAccountSaveStart() );
-    const { name, amount } = newAccount;
+    const { name, comment } = newAccount;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataCreateAccount: ' + errorText );
@@ -163,7 +163,7 @@ const fDataCreateAccount = function ( dispatch, cbSuccess, cbError, newAccount )
         },
         body: 'command=add_account' +
         `&account_name=${ name }` +
-        `&account_amount=${ amount }`
+        `&account_comment=${ comment }`
     };
 
     debug_mode && console.log( 'fDataCreateAccount: fetchOptions: ', fetchOptions );
@@ -267,7 +267,7 @@ const fDataLoadOperationCategories = function ( dispatch, cbSuccess, cbError ) {
 const fDataSaveOperationCategory = function ( dispatch, cbSuccess, cbError, category ) {
     ( debug_mode ) && console.log( 'fDataSaveOperationCategory...' );
     dispatch( acDataOperationCategorySaveStart() );
-    const { id, name } = category;
+    const { id, name, comment } = category;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataSaveOperationCategory: ' + errorText );
@@ -299,7 +299,8 @@ const fDataSaveOperationCategory = function ( dispatch, cbSuccess, cbError, cate
         },
         body: 'command=save_category' +
         `&category_id=${ id }` +
-        `&category_name=${ name }`
+        `&category_name=${ name }` +
+        `&category_comment=${ comment }`
     };
 
     debug_mode && console.log( 'fDataSaveOperationCategory: fetchOptions: ', fetchOptions );
@@ -317,7 +318,7 @@ const fDataSaveOperationCategory = function ( dispatch, cbSuccess, cbError, cate
 const fDataCreateOperationCategory = function ( dispatch, cbSuccess, cbError, newCategory ) {
     ( debug_mode ) && console.log( 'fDataCreateOperationCategory...' );
     dispatch( acDataOperationCategorySaveStart() );
-    const { name } = newCategory;
+    const { name, comment } = newCategory;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataCreateOperationCategory: ' + errorText );
@@ -351,7 +352,8 @@ const fDataCreateOperationCategory = function ( dispatch, cbSuccess, cbError, ne
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
         },
         body: 'command=add_category' +
-        `&category_name=${ name }`
+        `&category_name=${ name }` +
+        `&category_comment=${ comment }`
     };
 
     debug_mode && console.log( 'fDataCreateOperationCategory: fetchOptions: ', fetchOptions );

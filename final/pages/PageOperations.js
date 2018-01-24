@@ -388,7 +388,7 @@ class PageOperations extends React.PureComponent {
             },
             {
                 id:             'comment',
-                title:          'Коментарий',
+                title:          'Комментарий',
                 dataType:       STRING,
                 isSortable:     false,
                 sorting:        NONE,

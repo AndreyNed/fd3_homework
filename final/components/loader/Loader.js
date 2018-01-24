@@ -25,26 +25,28 @@ class Loader extends React.PureComponent {
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
-                amount:                 PropTypes.number,
+                comment:                PropTypes.string,
             })
         ),
         accountsData:                   PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
-                amount:                 PropTypes.number,
+                comment:                PropTypes.string,
             })
         ),
         operationCategoriesSource:      PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
+                comment:                PropTypes.string,
             })
         ),
         operationCategoriesData:        PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
+                comment:                PropTypes.string,
             })
         ),
         operationsSource:               PropTypes.arrayOf(
