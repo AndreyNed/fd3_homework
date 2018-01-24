@@ -332,9 +332,13 @@ class SmartGrid extends React.PureComponent {
     filterProps = () => {
         const { textFilterValue } = this.state;
         return {
-            defValue: textFilterValue,
+            defValue:  textFilterValue,
+            display:   TextInput.displayTypes.inlineBlock,
             withLabel: false,
             inputType: TextInput.inputTypes.search,
+            options: {
+                inputBoxWidth: 240,
+            },
             cbChanged: this.filter_cbChanged,
         }
     };

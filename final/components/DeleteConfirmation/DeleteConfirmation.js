@@ -11,20 +11,20 @@ import ButtonOk from '../buttons/ButtonOk/ButtonOk';
 import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 
 import './DeleteConfirmation.scss';
-import {acUIHideMatGlass} from "../../actions/acUI";
-import {fDataDeleteAccount, fDataDeleteOperation} from "../../network/fData";
+import { acUIHideMatGlass } from "../../actions/acUI";
+import { fDataDeleteAccount, fDataDeleteOperation, fDataDeleteOperationCategory } from "../../network/fData";
 
 class DeleteConfirmation extends React.PureComponent {
 
     static propTypes = {
-        modalContent:               PropTypes.string,
-        deleteMode:                 PropTypes.oneOf([
+        modalContent:                   PropTypes.string,
+        deleteMode:                     PropTypes.oneOf([
             DELETE_MODES.OPERATIONS,
             DELETE_MODES.ACCOUNTS,
             DELETE_MODES.OPERATION_CATEGORIES,
             DELETE_MODES.NONE,
         ]),
-        operationsData:             PropTypes.arrayOf(
+        operationsData:                 PropTypes.arrayOf(
             PropTypes.shape({
                 id:                     PropTypes.number,
                 accountId:              PropTypes.number,
@@ -44,7 +44,14 @@ class DeleteConfirmation extends React.PureComponent {
             })
         ),
         accountSelectedIndex:           PropTypes.number,
-        cbChanged:                  PropTypes.func,
+        operationCategoriesData:        PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                name:                   PropTypes.string,
+            })
+        ),
+        operationCategorySelectedIndex: PropTypes.number,
+        cbChanged:                      PropTypes.func,
     };
 
     static defaultProps = {
@@ -103,7 +110,16 @@ class DeleteConfirmation extends React.PureComponent {
     /* == callbacks == */
 
     btnOk_cbChanged = () => {
-        const { dispatch, operationSelectedIndex, operationsData, accountSelectedIndex, accountsData, deleteMode } = this.props;
+        const {
+            dispatch,
+            operationSelectedIndex,
+            operationsData,
+            accountSelectedIndex,
+            accountsData,
+            operationCategorySelectedIndex,
+            operationCategoriesData,
+            deleteMode
+        } = this.props;
         const { OPERATIONS, ACCOUNTS, OPERATION_CATEGORIES, NONE } = DELETE_MODES;
         console.log( "Удалить: deleteMode: ", deleteMode );
         switch ( deleteMode ) {
@@ -114,6 +130,10 @@ class DeleteConfirmation extends React.PureComponent {
             case ACCOUNTS:
                 let accountId = accountsData[ accountSelectedIndex ].id;
                 fDataDeleteAccount( dispatch, null, null, accountId );
+                break;
+            case OPERATION_CATEGORIES:
+                let categoryId = operationCategoriesData[ operationCategorySelectedIndex ].id;
+                fDataDeleteOperationCategory( dispatch, null, null, categoryId );
                 break;
         }
     };
@@ -171,6 +191,8 @@ const mapStateToProps = function ( state ) {
         operationsData:                 state.data.operationsData,
         accountSelectedIndex:           state.data.accountSelectedIndex,
         accountsData:                   state.data.accountsData,
+        operationCategorySelectedIndex: state.data.operationCategorySelectedIndex,
+        operationCategoriesData:        state.data.operationCategoriesData,
     }
 };
 

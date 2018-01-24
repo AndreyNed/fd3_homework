@@ -198,6 +198,47 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     operationCategoriesLoadStatus: 0,
+                    operationCategorySaveStatus:   0,
+                    operationCategoryDeleteStatus: 0,
+                }
+            };
+
+        case DATA_OPERATION_CATEGORY_SAVE_START:
+            return {
+                ...state, ...{
+                    operationCategorySaveStatus: 1,
+                }
+            };
+        case DATA_OPERATION_CATEGORY_SAVE_SUCCESS:
+            return {
+                ...state, ...{
+                    operationCategorySaveStatus: 2,
+                }
+            };
+        case DATA_OPERATION_CATEGORY_SAVE_ERROR:
+            return {
+                ...state, ...{
+                    operationCategorySaveStatus: 3,
+                }
+            };
+        case DATA_OPERATION_CATEGORY_DELETE_START:
+            return {
+                ...state, ...{
+                    operationCategoryDeleteStatus: 1,
+                }
+            };
+        case DATA_OPERATION_CATEGORY_DELETE_SUCCESS:
+            return {
+                ...state, ...{
+                    operationCategoryDeleteStatus:  2,
+                    operationCategorySelectedIndex: -1,
+                }
+            };
+        case DATA_OPERATION_CATEGORY_DELETE_ERROR:
+            return {
+                ...state, ...{
+                    operationCategoryDeleteStatus:  3,
+                    operationCategorySelectedIndex: -1,
                 }
             };
 
@@ -206,6 +247,13 @@ function rdData ( state = initState, action ) {
                 ...state, ...{
                     operationCategoriesPrepareStatus: 2,
                     operationCategoriesData:          action.operationCategoriesData,
+                }
+            };
+
+        case DATA_OPERATION_CATEGORY_SELECT:
+            return {
+                ...state, ...{
+                    operationCategorySelectedIndex: action.operationCategorySelectedIndex,
                 }
             };
 
@@ -249,13 +297,6 @@ function rdData ( state = initState, action ) {
                 ...state, ...{
                     operationsData:          action.operationsData,
                     operationsPrepareStatus: 2,
-                }
-            };
-
-        case DATA_OPERATION_CATEGORY_SELECT:
-            return {
-                ...state, ...{
-                    operationCategorySelectedIndex: action.operationCategorySelectedIndex,
                 }
             };
 

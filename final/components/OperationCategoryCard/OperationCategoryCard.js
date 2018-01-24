@@ -8,15 +8,14 @@ import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_OPERATION_CATEGORY_CARD } from "..
 import { MODAL_CONTENT } from "../../data_const/data_const";
 
 import TextInput from '../TextInput/TextInput';
-import NumberInput from '../NumberInput/NumberInput';
 import ButtonSave from '../buttons/ButtonSave/ButtonSave';
 import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 import ButtonClear from '../buttons/ButtonClear/ButtonClear';
 
 import './OperationCategoryCard.scss';
 import {isExists, isNotEmpty, isNotNaN} from "../../utils/utils";
-import { fDataSaveOperation, fDataCreateOperation } from "../../network/fData";
-import {acUIHideMatGlass} from "../../actions/acUI";
+import { fDataSaveOperationCategory, fDataCreateOperationCategory } from "../../network/fData";
+import { acUIHideMatGlass } from "../../actions/acUI";
 
 class OperationCategoryCard extends React.PureComponent {
 
@@ -124,7 +123,7 @@ class OperationCategoryCard extends React.PureComponent {
             },
             btnOk: {
                 label: 'Сохранить',
-                cbChanged: null, // this.btnSave_cbChanged,
+                cbChanged: this.btnSave_cbChanged,
             },
             btnCancel: {
                 label: 'Отменить',
@@ -154,87 +153,19 @@ class OperationCategoryCard extends React.PureComponent {
         } );
     };
 
-    /*category_cbChanged = ( value ) => {
-        let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.categoryId = parseInt( value );
-        newOperationValue.categoryId = ( isNotNaN( newOperationValue.categoryId ) )
-            ? newOperationValue.categoryId
-            : 0;
-        let validationHint = this.validate_categoryId( newOperationValue.categoryId );
-        let newOperationValidationData = { ...this.state.operationValidationData, categoryId: validationHint };
-        // console.log('category: ', newOperationValue.categoryId, ': ', typeof newOperationValue.categoryId );
-        this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: newOperationValidationData,
-        } );
-    };*/
-
-    /*type_cbChanged = ( value ) => {
-        let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.type = value;
-        let validationHint = this.validate_type( newOperationValue.type );
-        let newOperationValidationData = { ...this.state.operationValidationData, type: validationHint };
-        // console.log('type: ', newOperationValue.type, ': ', typeof newOperationValue.type );
-        this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: newOperationValidationData,
-        } );
-    };*/
-
-    /*sum_cbChanged = ( value ) => {
-        let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.sum = value;
-        newOperationValue.sum = ( isNotNaN( newOperationValue.sum ) && newOperationValue.sum > 0 )
-            ? newOperationValue.sum
-            : 0;
-        let validationHint = this.validate_sum( newOperationValue.sum );
-        let newOperationValidationData = { ...this.state.operationValidationData, sum: validationHint };
-        // console.log('type: ', newOperationValue.sum, ': ', typeof newOperationValue.sum );
-        this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: newOperationValidationData,
-        } );
-    };*/
-
-    /*date_cbChanged = ( value ) => {
-        // console.log( 'date: ', value, ': type: ', typeof value, ': is Date: ', value instanceof Date  );
-        let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.date = ( isExists( value ) ) ? value.getTime() : value;
-        // console.log( 'newOperationValue.date: ', newOperationValue.date, ': type: ', typeof newOperationValue.date );
-        let validationHint = this.validate_date( newOperationValue.date );
-        let newOperationValidationData = { ...this.state.operationValidationData, date: validationHint };
-        // console.log( 'date: ', newOperationValue.date );
-        this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: newOperationValidationData,
-        } );
-    };*/
-
-    /*comment_cbChanged = ( value ) => {
-        let newOperationValue = { ...this.state.operationValue };
-        newOperationValue.comment = value;
-        let validationHint = this.validate_comment( newOperationValue.comment );
-        let newOperationValidationData = { ...this.state.operationValidationData, comment: validationHint };
-        // console.log('comment: ', newOperationValue.comment, ': ', typeof newOperationValue.comment );
-        this.setState( {
-            operationValue: newOperationValue,
-            operationValidationData: newOperationValidationData,
-        } );
-    };*/
-
-    /*btnSave_cbChanged = () => {
-        const { operationValue } = this.state;
-        const { isNewOperationAdded } = this.props;
-        const validation = this.validate_operation( operationValue );
+    btnSave_cbChanged = () => {
+        const { operationCategoryValue } = this.state;
+        const { isNewOperationCategoryAdded } = this.props;
+        const validation = this.validate_operationCategory( operationCategoryValue );
         if ( validation.result ) {
-            ( isNewOperationAdded )
-                ? this.createOperation( operationValue )
-                : this.saveOperationChanges( operationValue );
+            ( isNewOperationCategoryAdded )
+                ? this.createOperationCategory( operationCategoryValue )
+                : this.saveOperationCategoryChanges( operationCategoryValue );
         }
         else {
-            this.setState( { operationValidationData: validation.operationValidationData } );
+            this.setState( { operationCategoryValidationData: validation.operationCategoryValidationData } );
         }
-    };*/
+    };
 
     btnCancel_cbChanged = () => {
         const {dispatch} = this.props;
@@ -260,15 +191,15 @@ class OperationCategoryCard extends React.PureComponent {
 
     /* == action functions == */
 
-    /*createOperation = ( newOperation ) => {
-        ( this.debug_mode ) && console.log( 'OperationCategoryCard: createOperation: ', newOperation );
-        fDataCreateOperation( this.props.dispatch, null, null, newOperation );
-    };*/
+    createOperationCategory = ( newOperationCategory ) => {
+        ( this.debug_mode ) && console.log( 'OperationCategoryCard: createOperationCategory: ', newOperationCategory );
+        fDataCreateOperationCategory( this.props.dispatch, null, null, newOperationCategory );
+    };
 
-    /*saveOperationChanges = ( operation ) => {
-        ( this.debug_mode ) && console.log( 'OperationCategoryCard: saveOperationChanges: ', operation );
-        fDataSaveOperation( this.props.dispatch, null, null, operation );
-    };*/
+    saveOperationCategoryChanges = ( operationCategory ) => {
+        ( this.debug_mode ) && console.log( 'OperationCategoryCard: saveOperationCategoryChanges: ', operationCategory );
+        fDataSaveOperationCategory( this.props.dispatch, null, null, operationCategory );
+    };
 
     /* == validation == */
 

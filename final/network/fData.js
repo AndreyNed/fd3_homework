@@ -15,6 +15,9 @@ import {
     acDataOperationCategoriesLoadError,
     acDataOperationCategoriesLoadStart,
     acDataOperationCategoriesLoadSuccess,
+    acDataOperationCategoryDeleteStart,
+    acDataOperationCategoryDeleteSuccess,
+    acDataOperationCategoryDeleteError,
     acDataOperationsLoadStart,
     acDataOperationsLoadSuccess,
     acDataOperationsLoadError,
@@ -26,7 +29,7 @@ import {
     acDataOperationDeleteError,
     acDataOperationCategorySaveStart,
     acDataOperationCategorySaveSuccess,
-    acDataOperationCategorySaveError, acDataOperationCategoryDeleteStart,
+    acDataOperationCategorySaveError,
 } from "../actions/acData";
 
 import { SERVER_URI } from "./network_consts";
@@ -616,5 +619,5 @@ export {
     fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations,
     fDataSaveOperation, fDataCreateOperation, fDataDeleteOperation,
     fDataSaveAccount, fDataCreateAccount, fDataDeleteAccount,
-
+    fDataSaveOperationCategory, fDataCreateOperationCategory, fDataDeleteOperationCategory,
 }

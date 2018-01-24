@@ -16,7 +16,10 @@ import {
     acUISetSettingsMode, acUIShowDataSavingMessage, acUIShowAccountCard, acUIShowOperationCategoryCard,
     acUIShowDeleteConfirmation, acUIShowDataDeletingMessage
 } from "../actions/acUI";
-import { acDataAccountSelect, acDataOperationCategorySelect, acDataAccountsShouldBeReloaded } from '../actions/acData';
+import {
+    acDataAccountSelect, acDataOperationCategorySelect, acDataAccountsShouldBeReloaded,
+    acDataOperationCategoriesShouldBeReloaded
+} from '../actions/acData';
 import { findArrayItemIndex } from "../utils/utils";
 
 import './PageSettings.scss';
@@ -92,7 +95,15 @@ class PageSettings extends React.PureComponent {
         ( this.debug_mode ) &&
             console.log( 'PageSettings: prepareData: props: ', props );
 
-        const { dispatch, accountSaveStatus, accountDeleteStatus, settingsMode } = this.props;
+        const {
+            dispatch,
+            accountSaveStatus,
+            accountDeleteStatus,
+            operationCategorySaveStatus,
+            operationCategoryDeleteStatus,
+            settingsMode
+        } = this.props;
+
         const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
 
         if ( settingsMode === ACCOUNTS ) {
@@ -113,9 +124,24 @@ class PageSettings extends React.PureComponent {
                 }, CONFIG_UI_MODE_TIMEOUT );
             }
         }
-
-
-
+        else if ( settingsMode === OPERATION_CATEGORIES ) {
+            if ( operationCategorySaveStatus === 1 ) {
+                dispatch( acUIShowDataSavingMessage() );
+            }
+            else if ( operationCategorySaveStatus > 1 ) {
+                setTimeout( () => {
+                    dispatch( acDataOperationCategoriesShouldBeReloaded() );
+                }, CONFIG_UI_MODE_TIMEOUT );
+            }
+            if ( operationCategoryDeleteStatus === 1 ) {
+                dispatch( acUIShowDataDeletingMessage() );
+            }
+            else if ( operationCategoryDeleteStatus > 1 ) {
+                setTimeout( () => {
+                    dispatch( acDataOperationCategoriesShouldBeReloaded() );
+                }, CONFIG_UI_MODE_TIMEOUT );
+            }
+        }
     };
 
     /* == prepare props == */
@@ -354,7 +380,7 @@ class PageSettings extends React.PureComponent {
 
     buttonPanel_btnDelete_cbChanged = () => {
         const { settingsMode } = this.props;
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        const { ACCOUNTS } = SETTINGS_MODES;
         ( settingsMode === ACCOUNTS )
             ? this.accountDelete()
             : this.operationCategoryDelete();
