@@ -4,9 +4,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Label from '../Label/Label';
-import {isExists, isNotEmpty} from "../../utils/utils";
+import { isExists, isNotEmpty } from "../../utils/utils";
 
-require('./TextInput.scss');
+import './TextInput.scss';
 
 /*
 *                    API
@@ -236,6 +236,10 @@ class TextInput extends React.PureComponent {
         this.saveAndSearch();
     };
 
+    crossMouseDown = () => {
+        this.clearValue();
+    };
+
     // == action functions ==
     cancelLastInput = () => {
         this.setState( {
@@ -251,6 +255,15 @@ class TextInput extends React.PureComponent {
         }, ()=>{
             if ( this.state.callbacks.cbSearched ) this.state.callbacks.cbSearched( this.state.value );
             // console.log( 'TextInput: saveAndSearch: ', this.state.value );
+        } );
+    };
+
+    clearValue = () => {
+        this.setState( {
+            value: '',
+            currValue: '',
+        }, () => {
+            this.changed( this.state.value );
         } );
     };
 
@@ -314,13 +327,14 @@ class TextInput extends React.PureComponent {
                            disabled =  { ( isReadOnly ) ? 'disabled' : null }
                            value =     { currValue || '' }
                            data-input_type = { inputType }
+                           data-cross = { ( inputType === search && isNotEmpty( currValue ) ) ? 'true' : 'false' }
                            onChange =  { ( !isReadOnly ) ? this.inputChange : null }
                            onBlur =    { this.inputBlur }
                            onKeyDown = { this.inputKeyDown }/>
                     {
                         ( inputType === search && isNotEmpty( currValue ) ) &&
                         <div className = { this.classCSS + "_cross_container" }
-                             onClick = { ( !isReadOnly ) ? this.crossClick : null }
+                             onMouseDown = { ( !isReadOnly ) ? this.crossMouseDown : null }
                              data-is_enable = { !isReadOnly }>
                             <svg width =   "16px"
                                  height =  "16px"
