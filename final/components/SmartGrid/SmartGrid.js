@@ -651,9 +651,9 @@ class SmartGrid extends React.PureComponent {
                     : thIndex;
                 th.style.width = width;
                 console.log( 'th: ', index, ': id: ', id, ': width: ', width );
-                this.tHs[ thIndex + 1 ].style.width = 'auto';
             }
         } );
+        this.tHs[ thIndex + 1 ].style.width = 'auto';
         this.thResizeHandler.dataset.active = "true";
         this.resizeStartX = e.clientX;
         ( this.debug_mode ) &&
