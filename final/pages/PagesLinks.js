@@ -15,6 +15,7 @@ class PagesLinks extends React.Component {
         return (
             <div className = { this.cssClass }>
                 <NavLink to = "/" exact     className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Главная</NavLink>
+                <NavLink to = "/currency"   className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Курсы валют</NavLink>
                 <NavLink to = "/accounts"   className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Счета</NavLink>
                 <NavLink to = "/operations" className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Операции</NavLink>
                 <NavLink to = "/settings"   className = { this.linkClass + ' main_menu_links' } activeClassName = { this.linkClassActive }>Настройки</NavLink>

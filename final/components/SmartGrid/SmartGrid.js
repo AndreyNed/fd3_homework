@@ -6,7 +6,7 @@ import TextInput from '../TextInput/TextInput';
 import ExcelConverter from '../ExcelConverter/ExcelConverter';
 import ButtonExcel from '../buttons/ButtonExcel/ButtonExcel';
 
-import {SORTING, DATA_TYPES, POINTER_POSITION, DISPLAY_TYPES} from "../../data_const/data_const";
+import {SORTING, DATA_TYPES, POINTER_POSITION, DISPLAY_TYPES, ALIGN_TYPES} from "../../data_const/data_const";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_SMART_GRID } from "../../config/config";
 
 import { isExists, isNotEmpty, isExistsAll, isNotEmptyAll, isNotNaN, isGTZero, findArrayItemIndex, findArrayItem } from "../../utils/utils";
@@ -51,6 +51,11 @@ class SmartGrid extends React.PureComponent {
                     DATA_TYPES.DATE_TIME,
                     DATA_TYPES.DATE_MS_INT,
                 ]),
+                align:                  PropTypes.oneOf([
+                    ALIGN_TYPES.CENTER,
+                    ALIGN_TYPES.LEFT,
+                    ALIGN_TYPES.RIGHT,
+                ]),
                 isSortable:             PropTypes.bool,
                 sorting:                PropTypes.oneOf([
                     SORTING.NONE,
@@ -78,6 +83,7 @@ class SmartGrid extends React.PureComponent {
                         value:          PropTypes.oneOfType([
                             PropTypes.number,
                             PropTypes.string,
+                            PropTypes.objectOf( Date ),
                         ]),
                         text:           PropTypes.string,
                         childElement:   PropTypes.func,
@@ -640,7 +646,7 @@ class SmartGrid extends React.PureComponent {
         let thId = parent.dataset.th_id;
         let thIndex = null;
 
-        console.log( "SmartGrid: resizeHandlerMouseDown: tHs: ", this.tHs );
+        // console.log( "SmartGrid: resizeHandlerMouseDown: tHs: ", this.tHs );
 
         this.tHs.forEach( ( th, index ) => {
             if ( isExists( th ) ) {
@@ -650,7 +656,7 @@ class SmartGrid extends React.PureComponent {
                     ? index
                     : thIndex;
                 th.style.width = width;
-                console.log( 'th: ', index, ': id: ', id, ': width: ', width );
+                // console.log( 'th: ', index, ': id: ', id, ': width: ', width );
             }
         } );
         this.tHs[ thIndex + 1 ].style.width = 'auto';
@@ -687,7 +693,7 @@ class SmartGrid extends React.PureComponent {
     };
 
     windowMouseUpStopColumnDragging = (e ) => {
-        console.log( 'Window click!!! Stop dragging' );
+        // console.log( 'Window click!!! Stop dragging' );
         if ( isExists( this.thTimer ) ) {
             this.stopTimer();
         }

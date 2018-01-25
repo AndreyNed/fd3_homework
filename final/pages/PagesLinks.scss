@@ -1,5 +1,6 @@
 $mainMenuNavLinkColor: #d3d3d3;
-$mainMenuNavLinkColorActive: #898989;
+$mainMenuNavLinkColorHover: #898989;
+$mainMenuNavLinkColorActive: #000000;
 
 .iAccount_main_menu {
     padding: 8px 16px;
@@ -7,10 +8,35 @@ $mainMenuNavLinkColorActive: #898989;
 
     & > .main_menu_links {
         display: inline-block;
-        width: 100px;
+        /*width: 150px;*/
+        margin: 0 16px;
         text-align: center;
         text-decoration: none;
         font: normal 18px/100% Arial,sans-serif;
+        position: relative;
+        transition: color 300ms;
+
+        &:after {
+            content: ' ';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            transition: width 300ms;
+            height: 2px;
+            border-bottom: 1px dotted #898989;
+        }
+
+        &:hover {
+            color: $mainMenuNavLinkColorHover;
+        }
+
+        /*&:hover {
+            &:after {
+                width: 100%;
+            }
+        }*/
     }
 
     .iAccount_nav_link {
@@ -19,6 +45,15 @@ $mainMenuNavLinkColorActive: #898989;
 
     .iAccount_nav_link_active {
         color: $mainMenuNavLinkColorActive;
+
+        &:hover {
+            color: $mainMenuNavLinkColorActive;
+        }
+
+        &:after {
+            width: 100%;
+            /*border-bottom: 1px dotted #898989;*/
+        }
     }
 }
 
