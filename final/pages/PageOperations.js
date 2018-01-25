@@ -100,213 +100,10 @@ class PageOperations extends React.PureComponent {
         }
     };
 
-    /*preparePropsTable = () => {
-        const { operationsData, accountsData, operationCategoriesData, operationSelectedIndex } = this.props;
-        // let headers = null;
-        let headers = [
-            {
-                id:         'id',
-                text:       'id',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '7%',
-                }
-            },
-            {
-                id:         'accountId',
-                text:       'Счет',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.DESCENDED,
-                isSearchable: true,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'categoryId',
-                text:       'Категория',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'type',
-                text:       'Тип',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '10%',
-                }
-            },
-            {
-                id:         'sum',
-                text:       'Сумма',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'date',
-                text:       'Дата',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'comment',
-                text:       'Комментарий',
-                isSortable: false,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: 0,
-                }
-            },
-        ];
-        let rows = operationsData.map( ( item, index ) => {
-            let cells = [
-                {
-                    id:    'id',
-                    value: item.id,
-                    text:  item.id + '',
-                },
-                {
-                    id:    'accountId',
-                    value: item.accountId,
-                    text:  findArrayItem( accountsData, { id: item.accountId } ).name,
-                },
-                {
-                    id:    'categoryId',
-                    value: item.categoryId,
-                    text:  findArrayItem( operationCategoriesData, { id: item.categoryId } ).name,
-                },
-                {
-                    id:    'type',
-                    value: item.type,
-                    text:  ( item.type.toLowerCase() === 'credit') ? 'расход' : 'приход',
-                },
-                {
-                    id:    'sum',
-                    value: item.sum,
-                    text:  item.sum + '',
-                },
-                {
-                    id:    'date',
-                    value: item.date,
-                    text:  new Date( item.date ).toDateString(),
-                },
-                {
-                    id:    'comment',
-                    value: item.comment,
-                    text:  item.comment,
-                },
-            ];
-            // console.log( 'PageOperations: preparePropsTable: operationSelectedIndex: ', operationSelectedIndex, ': item`s index: ', index );
-            return {
-                isSelected: ( index === operationSelectedIndex ),
-                rowIndex:   index + '',
-                cells:      cells,
-            }
-        } );
-
-        return {
-            headers: headers,
-            rows: rows,
-            options: {
-                tableWidth: '100%',
-            },
-            cbChanged:  this.operationsTable_cbChanged,
-            cbSelected: this.operationTable_cbSelected,
-        }
-    };*/
-
     preparePropsTable = () => {
         const { operationsData, accountsData, operationCategoriesData, operationSelectedIndex } = this.props;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
         const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
-        // let headers = null;
-        /*let headers = [
-            {
-                id:         'id',
-                text:       'id',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '7%',
-                }
-            },
-            {
-                id:         'accountId',
-                text:       'Счет',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.DESCENDED,
-                isSearchable: true,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'categoryId',
-                text:       'Категория',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'type',
-                text:       'Тип',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '10%',
-                }
-            },
-            {
-                id:         'sum',
-                text:       'Сумма',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'date',
-                text:       'Дата',
-                isSortable: true,
-                isSorted:   Table.SORT_TYPES.NONE,
-                options: {
-                    colWidth: '15%',
-                }
-            },
-            {
-                id:         'comment',
-                text:       'Комментарий',
-                isSortable: false,
-                isSorted:   Table.SORT_TYPES.NONE,
-                isSearchable: true,
-                options: {
-                    colWidth: 0,
-                }
-            },
-        ];*/
         let headers = [
             {
                 id:             'id',
@@ -400,52 +197,6 @@ class PageOperations extends React.PureComponent {
                 cbChanged:      null,
             },
         ];
-
-        /*let rows = operationsData.map( ( item, index ) => {
-            let cells = [
-                {
-                    id:    'id',
-                    value: item.id,
-                    text:  item.id + '',
-                },
-                {
-                    id:    'accountId',
-                    value: item.accountId,
-                    text:  findArrayItem( accountsData, { id: item.accountId } ).name,
-                },
-                {
-                    id:    'categoryId',
-                    value: item.categoryId,
-                    text:  findArrayItem( operationCategoriesData, { id: item.categoryId } ).name,
-                },
-                {
-                    id:    'type',
-                    value: item.type,
-                    text:  ( item.type.toLowerCase() === 'credit') ? 'расход' : 'приход',
-                },
-                {
-                    id:    'sum',
-                    value: item.sum,
-                    text:  item.sum + '',
-                },
-                {
-                    id:    'date',
-                    value: item.date,
-                    text:  new Date( item.date ).toDateString(),
-                },
-                {
-                    id:    'comment',
-                    value: item.comment,
-                    text:  item.comment,
-                },
-            ];
-            // console.log( 'PageOperations: preparePropsTable: operationSelectedIndex: ', operationSelectedIndex, ': item`s index: ', index );
-            return {
-                isSelected: ( index === operationSelectedIndex ),
-                rowIndex:   index + '',
-                cells:      cells,
-            }
-        } );*/
 
         let body = operationsData.map( ( item, index ) => {
             return {
@@ -568,7 +319,7 @@ class PageOperations extends React.PureComponent {
     };
 
     operationsTable_cbChanged = ( operationId ) => {
-        console.log( 'operationsTable_cbChanged: ', operationId );
+        // console.log( 'operationsTable_cbChanged: ', operationId );
         const { dispatch, operationsData } = this.props;
         let newOperationSelectedIndex = findArrayItemIndex( operationsData, { id: operationId } );
         // console.log( 'PageOperations: operationsTable_cbChanged: newOperationSelectedIndex: ', newOperationSelectedIndex );
@@ -603,19 +354,6 @@ class PageOperations extends React.PureComponent {
             </div>
         )
     };
-
-    /*renderMainSection = () => {
-        const table = this.preparePropsTable();
-        return(
-            <div className = { this.classCSS + '_main_section' }>
-                <div className="rows">
-                    <div className="cols col_16">
-                        <Table { ...table } />
-                    </div>
-                </div>
-            </div>
-        )
-    };*/
 
     renderMainSection = () => {
         const table = this.preparePropsTable();
