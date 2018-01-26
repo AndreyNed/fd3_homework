@@ -1,6 +1,6 @@
 'use strict';
 
-import { MODAL_CONTENT, SETTINGS_MODES, DELETE_MODES } from "../data_const/data_const";
+import { MODAL_CONTENT, SETTINGS_MODES, CURRENCY_MODES, DELETE_MODES } from "../data_const/data_const";
 
 import {
     UI_SHOW_MAT_GLASS,
@@ -13,6 +13,7 @@ import {
     UI_SHOW_DATA_DELETING_MESSAGE,
     UI_SHOW_DELETE_CONFIRMATION,
     UI_SET_SETTINGS_MODE,
+    UI_SET_CURRENCY_MODE,
 } from "../actions/acUI";
 
 const initState = {
@@ -21,6 +22,7 @@ const initState = {
     isNewAccountAdded:      false,
     modalContent:           MODAL_CONTENT.DATA_LOADING,
     settingsMode:           SETTINGS_MODES.ACCOUNTS,
+    currencyMode:           CURRENCY_MODES.DAILY_RATES,
     deleteMode:             DELETE_MODES.NONE,
 };
 
@@ -108,6 +110,13 @@ function rdUI ( state = initState, action ) {
             return {
                 ...state, ...{
                     settingsMode:       action.settingsMode,
+                }
+            };
+
+        case UI_SET_CURRENCY_MODE:
+            return {
+                ...state, ...{
+                    currencyMode:       action.currencyMode,
                 }
             };
 

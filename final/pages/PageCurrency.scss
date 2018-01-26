@@ -1,3 +1,16 @@
 .PageCurrency {
 
+    & > .wrapper {
+
+        & > .PageCurrency_left_section {
+            width: 200px;
+            float: left;
+            padding: 16px 0 16px 0;
+        }
+
+        & > .PageCurrency_main_section {
+            margin-left: 200px;
+            padding: 16px 0 16px 32px;
+        }
+    }
 }

@@ -18,6 +18,8 @@ const UI_SHOW_DELETE_CONFIRMATION = 'UI_SHOW_DELETE_CONFIRMATION';
 
 const UI_SET_SETTINGS_MODE = 'UI_SET_SETTINGS_MODE';
 
+const UI_SET_CURRENCY_MODE = 'UI_SET_CURRENCY_MODE';
+
 const acUIShowMatGlass = function() {
     return {
         type:               UI_SHOW_MAT_GLASS,
@@ -83,6 +85,13 @@ const acUISetSettingsMode = function( settingsMode ) {
     }
 };
 
+const acUISetCurrencyMode = function( currencyMode ) {
+    return {
+        type:               UI_SET_CURRENCY_MODE,
+        currencyMode:       currencyMode,
+    }
+};
+
 export {
     UI_SHOW_MAT_GLASS,                  acUIShowMatGlass,
     UI_HIDE_MAT_GLASS,                  acUIHideMatGlass,
@@ -94,4 +103,5 @@ export {
     UI_SHOW_DATA_DELETING_MESSAGE,      acUIShowDataDeletingMessage,
     UI_SHOW_DELETE_CONFIRMATION,        acUIShowDeleteConfirmation,
     UI_SET_SETTINGS_MODE,               acUISetSettingsMode,
+    UI_SET_CURRENCY_MODE,               acUISetCurrencyMode,
 }

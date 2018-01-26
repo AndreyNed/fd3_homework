@@ -32,11 +32,11 @@ $mainMenuNavLinkColorActive: #000000;
             color: $mainMenuNavLinkColorHover;
         }
 
-        /*&:hover {
+        &:hover {
             &:after {
                 width: 100%;
             }
-        }*/
+        }
     }
 
     .iAccount_nav_link {
@@ -50,10 +50,9 @@ $mainMenuNavLinkColorActive: #000000;
             color: $mainMenuNavLinkColorActive;
         }
 
-        &:after {
+        /*&:after {
             width: 100%;
-            /*border-bottom: 1px dotted #898989;*/
-        }
+        }*/
     }
 }
 

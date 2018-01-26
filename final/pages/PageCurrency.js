@@ -1,20 +1,49 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import SmartGrid from '../components/SmartGrid/SmartGrid';
+import DateRangeChart from '../components/DateRangeChart/DateRangeChart';
+import ButtonLabel from '../components/buttons/ButtonLabel/ButtonLabel';
 
 import './PageCurrency.scss';
-import {USER_LOGIN} from "../config/config";
-import {ALIGN_TYPES, DATA_TYPES, SORTING} from "../data_const/data_const";
+import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_CURRENCY } from "../config/config";
+import { ALIGN_TYPES, DATA_TYPES, SORTING, CURRENCY_MODES } from "../data_const/data_const";
+
+import { acUISetCurrencyMode } from "../actions/acUI";
 
 class PageCurrency extends React.PureComponent {
+
+    static propTypes = {
+        currencyMode:               PropTypes.oneOf([
+            CURRENCY_MODES.DAILY_RATES,
+            CURRENCY_MODES.DYNAMIC_RATES,
+        ]),
+
+        currencyData:               PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Date:                   PropTypes.objectOf( Date ),
+                Cur_Abbreviation:       PropTypes.string,
+                Cur_Scale:              PropTypes.number,
+                Cur_Name:               PropTypes.string,
+                Cur_OfficialRate:       PropTypes.number,
+            })
+        ),
+
+
+    };
+
+    static defaultProps = {
+
+    };
 
     constructor( props ) {
         super( props );
         this.classCSS = 'PageCurrency';
-        this.debug_mode = true;
+        this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_PAGE_CURRENCY;
     }
 
     componentWillMount() {
@@ -28,6 +57,31 @@ class PageCurrency extends React.PureComponent {
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
             console.log( 'PageCurrency: prepareData: props: ', props );
+    };
+
+    prepareLeftSectionProps = () => {
+        const { currencyMode } = this.props;
+        const { LEFT } = ALIGN_TYPES;
+        const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
+
+        return {
+            btnDailyRates: {
+                label: 'Ежедневный курс',
+                isActive: ( currencyMode === DAILY_RATES ),
+                options: {
+                    labelAlign: LEFT,
+                },
+                cbChanged: this.btnDailyRates_cbChanged,
+            },
+            btnDynamicRates: {
+                label: 'Курс в динамике',
+                isActive: ( currencyMode === DYNAMIC_RATES ),
+                options: {
+                    labelAlign: LEFT,
+                },
+                cbChanged: this.btnDynamicRates_cbChanged,
+            },
+        }
     };
 
     prepareTableProps = () => {
@@ -149,17 +203,85 @@ class PageCurrency extends React.PureComponent {
                     ],
                 }
             } ),
+        }
+    };
 
+    prepareDynamicRatesProps = () => {
+        return {
 
         }
     };
 
+    /* == callbacks == */
+
+    btnDailyRates_cbChanged = () => {
+        const { dispatch } = this.props;
+        const { DAILY_RATES } = CURRENCY_MODES;
+        dispatch( acUISetCurrencyMode( DAILY_RATES ) );
+    };
+
+    btnDynamicRates_cbChanged = () => {
+        const { dispatch } = this.props;
+        const { DYNAMIC_RATES } = CURRENCY_MODES;
+        dispatch( acUISetCurrencyMode( DYNAMIC_RATES ) );
+    };
+
+    /* == render functions == */
+
+    renderLeftSection = () => {
+        const { currencyMode } = this.props;
+        const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
+        let props = this.prepareLeftSectionProps();
+        return (
+            <div className = { this.classCSS + "_left_section" }>
+                <div className="rows btn_daily_rates"
+                     key="btn_daily_rates">
+                    <div className="cols col_16"
+                         style = {{
+                             fontWeight: ( currencyMode === DAILY_RATES )
+                                 ? 'bold'
+                                 : 'normal'
+                         }}>
+                        <ButtonLabel { ...props.btnDailyRates }/>
+                    </div>
+                </div>
+                <div className="rows btn_dynamic_rates"
+                     key="btn_dynamic_rates">
+                    <div className="cols col_16"
+                         style = {{
+                             fontWeight: ( currencyMode === DYNAMIC_RATES )
+                                 ? 'bold'
+                                 : 'normal'
+                         }}>
+                        <ButtonLabel { ...props.btnDynamicRates }/>
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
+    renderMainSection = () => {
+        const { currencyMode } = this.props;
+        const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
+        let propsDaily = this.prepareTableProps();
+        let propsDynamic = this.prepareDynamicRatesProps();
+        return ( currencyMode === DAILY_RATES )
+            ? <div className = { this.classCSS + "_main_section" }>
+                  <SmartGrid { ...propsDaily }/>
+              </div>
+            : ( currencyMode === DYNAMIC_RATES )
+                ? <div>
+                      <DateRangeChart { ...propsDynamic }/>
+                  </div>
+                : null;
+    };
+
     render() {
-        let props = this.prepareTableProps();
         return (
             <div className = { this.classCSS }>
                 <div className="wrapper">
-                    <SmartGrid { ...props }/>
+                    { this.renderLeftSection() }
+                    { this.renderMainSection() }
                 </div>
             </div>
         )
@@ -170,13 +292,14 @@ const mapStateToProps = function ( state ) {
     return {
         currencyLoadStatus:             state.currency.currencyLoadStatus,
         currencySaveStatus:             state.currency.currencySaveStatus,
-        currencySource:                 state.currency.currencySource,
+
         currencyData:                   state.currency.currencyData,
 
         currencySelectedIndex:          state.currency.currencySelectedIndex,
 
         matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,
+        currencyMode:                   state.ui.currencyMode,
     }
 };
 

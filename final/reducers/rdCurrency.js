@@ -8,6 +8,14 @@ import {
 
     CURRENCY_SELECT,
     CURRENCY_SET_CURRENCY_DATA,
+
+    CURRENCY_DYNAMIC_LOAD_START,
+    CURRENCY_DYNAMIC_LOAD_SUCCESS,
+    CURRENCY_DYNAMIC_LOAD_ERROR,
+    CURRENCY_DYNAMIC_SHOULD_BE_RELOADED,
+
+    CURRENCY_DYNAMIC_SELECT,
+    CURRENCY_DYNAMIC_SET_CURRENCY_DATA,
 } from "../actions/acCurrency";
 
 const initState = {
@@ -17,6 +25,14 @@ const initState = {
     currencyPrepareStatus:          0,
     currencySelectedIndex:          -1,
     currencyValue:                  {},
+
+    currencyDynamicSource:          null,
+    currencyDynamicData:            null,
+    currencyDynamicLoadStatus:      0,
+    currencyDynamicPrepareStatus:   0,
+    currencyDynamicStartDate:       null,
+    currencyDynamicEndDate:         null,
+    currencyDynamicSelectedIndex:   -1,
 };
 
 function rdCurrency ( state = initState, action ) {
@@ -69,6 +85,54 @@ function rdCurrency ( state = initState, action ) {
             return {
                 ...state, ...{
                     currencySelectedIndex: action.currencySelectedIndex,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_LOAD_START:
+            return {
+                ...state, ...{
+                    currencyDynamicLoadStatus: 1,
+                    currencyDynamicSource:     [],
+                }
+            };
+
+        case CURRENCY_DYNAMIC_LOAD_SUCCESS:
+            return {
+                ...state, ...{
+                    currencyDynamicLoadStatus:    2,
+                    currencyDynamicSource:        action.currencyDynamicSource,
+                    currencyDynamicPrepareStatus: 0,
+                    currencyDynamicData:          [],
+                }
+            };
+
+        case CURRENCY_DYNAMIC_LOAD_ERROR:
+            return {
+                ...state, ...{
+                    currencyDynamicLoadStatus: 3,
+                    currencyDynamicSource:     [],
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SHOULD_BE_RELOADED:
+            return {
+                ...state, ...{
+                    currencyDynamicLoadStatus:   0,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SET_CURRENCY_DATA:
+            return {
+                ...state, ...{
+                    currencyDynamicPrepareStatus: 2,
+                    currencyDynamicData:          action.currencyDynamicData,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SELECT:
+            return {
+                ...state, ...{
+                    currencyDynamicSelectedIndex: action.currencyDynamicSelectedIndex,
                 }
             };
 

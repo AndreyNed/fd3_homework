@@ -54,6 +54,11 @@ const SETTINGS_MODES = {
     OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
 };
 
+const CURRENCY_MODES = {
+    DAILY_RATES:            'DAILY_RATES',
+    DYNAMIC_RATES:          'DYNAMIC_RATES',
+};
+
 const DELETE_MODES = {
     OPERATIONS:             'OPERATIONS',
     ACCOUNTS:               'ACCOUNTS',
@@ -70,5 +75,6 @@ export {
     POINTER_POSITION,
     ALIGN_TYPES,
     SETTINGS_MODES,
+    CURRENCY_MODES,
     DELETE_MODES,
 }
