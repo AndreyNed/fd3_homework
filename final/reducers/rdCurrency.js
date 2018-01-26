@@ -30,6 +30,7 @@ const initState = {
     currencyDynamicData:            null,
     currencyDynamicLoadStatus:      0,
     currencyDynamicPrepareStatus:   0,
+    currencyDynamicCurID:           145,
     currencyDynamicStartDate:       null,
     currencyDynamicEndDate:         null,
     currencyDynamicSelectedIndex:   -1,
@@ -132,7 +133,7 @@ function rdCurrency ( state = initState, action ) {
         case CURRENCY_DYNAMIC_SELECT:
             return {
                 ...state, ...{
-                    currencyDynamicSelectedIndex: action.currencyDynamicSelectedIndex,
+                    currencyDynamicCurID: action.currencyDynamicCurID,
                 }
             };
 

@@ -80,10 +80,10 @@ const acCurrencyDynamicShouldBeReloaded = function () {
     }
 };
 
-const acCurrencyDynamicSelect = function ( index ) {
+const acCurrencyDynamicSelect = function ( id ) {
     return {
         type:                         CURRENCY_DYNAMIC_SELECT,
-        currencyDynamicSelectedIndex: index,
+        currencyDynamicCurID:         id,
     }
 };
 

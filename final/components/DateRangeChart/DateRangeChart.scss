@@ -1,4 +1,9 @@
 .DateRangeChart {
 
-
+    & > .DateRangeChart_caption {
+        padding: 16px 16px 16px 32px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #898989;
+    }
 }

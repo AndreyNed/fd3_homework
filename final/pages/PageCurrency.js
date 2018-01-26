@@ -265,15 +265,17 @@ class PageCurrency extends React.PureComponent {
         const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
         let propsDaily = this.prepareTableProps();
         let propsDynamic = this.prepareDynamicRatesProps();
-        return ( currencyMode === DAILY_RATES )
-            ? <div className = { this.classCSS + "_main_section" }>
-                  <SmartGrid { ...propsDaily }/>
-              </div>
-            : ( currencyMode === DYNAMIC_RATES )
-                ? <div>
-                      <DateRangeChart { ...propsDynamic }/>
-                  </div>
-                : null;
+        return (
+            <div className = { this.classCSS + "_main_section" }>
+                {
+                    ( currencyMode === DAILY_RATES )
+                        ? <SmartGrid { ...propsDaily }/>
+                        : ( currencyMode === DYNAMIC_RATES )
+                            ? <DateRangeChart { ...propsDynamic }/>
+                            : null
+                }
+            </div>
+        )
     };
 
     render() {
