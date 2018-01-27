@@ -4,7 +4,6 @@ import 'babel-polyfill';
 
 import React from 'react';
 import Loader from './components/loader/Loader';
-// import CurrencyLoader from './components/CurrencyLoader/CurrencyLoader';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';

@@ -6,4 +6,28 @@
         font-weight: bold;
         color: #898989;
     }
+
+    div.chart_box > div.chart {
+        position: relative;
+
+        path.chart_column:hover {
+            stroke: #ff0000;
+        }
+
+        path.chart_column[ data-selected="true" ] {
+            stroke: orange;
+        }
+
+        div.DateRangeChart_legend {
+            position: absolute;
+            bottom: -32px;
+            text-align: center;
+        }
+    }
+
+
+
+
+
+
 }

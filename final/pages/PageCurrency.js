@@ -304,7 +304,7 @@ const mapStateToProps = function ( state ) {
 
         currencySelectedIndex:          state.currency.currencySelectedIndex,
 
-        matGlassIsVisible:              state.ui.matGlassIsVisible,
+        // matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,
         currencyMode:                   state.ui.currencyMode,
     }

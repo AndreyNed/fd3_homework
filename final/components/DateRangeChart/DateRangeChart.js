@@ -15,12 +15,17 @@ import {
 
 import {
     acCurrencyDynamicSelect,
+    acCurrencyDynamicSetStartDate,
+    acCurrencyDynamicSetEndDate,
     acCurrencyDynamicShouldBeReloaded,
+    acCurrencySetDynamicCurrencyData,
 } from "../../actions/acCurrency";
 
-import {isNotEmpty, isNotEmptyAll} from "../../utils/utils";
+import {isExistsAll, isNotEmpty, isNotEmptyAll} from "../../utils/utils";
 
 import './DateRangeChart.scss';
+import {fCurrencyDynamicRates} from "../../network/fCurrency";
+import {DISPLAY_TYPES} from "../../data_const/data_const";
 
 class DateRangeChart extends React.PureComponent {
 
@@ -36,6 +41,14 @@ class DateRangeChart extends React.PureComponent {
             })
         ),
 
+        currencyDynamicSource:          PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Date:                   PropTypes.string,
+                Cur_OfficialRate:       PropTypes.number,
+            })
+        ),
+
         currencyDynamicData:            PropTypes.arrayOf(
             PropTypes.shape({
                 Cur_ID:                 PropTypes.number,
@@ -44,6 +57,7 @@ class DateRangeChart extends React.PureComponent {
             })
         ),
 
+        currencyDynamicLoadStatus:      PropTypes.number,
         currencyDynamicPrepareStatus:   PropTypes.number,
         currencyDynamicCurID:           PropTypes.number,
         currencyDynamicStartDate:       PropTypes.objectOf( Date ),
@@ -83,10 +97,62 @@ class DateRangeChart extends React.PureComponent {
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
             console.log( 'DateRangeChart: prepareData: new props: ', props )
+
+        const {
+            dispatch,
+            currencyData,
+            currencyDynamicSource,
+            currencyDynamicData,
+            currencyDynamicLoadStatus,
+            currencyDynamicPrepareStatus,
+            currencyDynamicCurID,
+            currencyDynamicStartDate,
+            currencyDynamicEndDate,
+        } = props;
+
+        if ( !currencyDynamicLoadStatus ) {
+            ( this.debug_mode ) &&
+                console.log( 'DateRangeChart: prepareData: currencyDynamicData need to be loaded...' );
+
+            let startStr = this.getStringDate( currencyDynamicStartDate );
+            let endStr = this.getStringDate( currencyDynamicEndDate );
+
+            ( isNotEmptyAll( [ startStr, endStr ] ) ) &&
+            fCurrencyDynamicRates(
+                dispatch, null, null,
+                {
+                    Cur_ID: ( currencyDynamicCurID + '' ),
+                    startDate: startStr,
+                    endDate:   endStr,
+                }
+            )
+        }
+
+        if ( currencyDynamicLoadStatus === 2 &&
+            currencyDynamicPrepareStatus === 0 ) {
+            this.prepareCurrencyDynamicData( currencyDynamicSource );
+        }
+    };
+
+    prepareCurrencyDynamicData = ( currencyDynamicSource ) => {
+        ( this.debug_mode ) &&
+        console.log( 'DateRangeChart: prepareCurrencyDynamicData: currencyDynamicSource: ', currencyDynamicSource );
+        const { dispatch } = this.props;
+        let currencyDynamicData = ( isNotEmpty( currencyDynamicSource ) )
+            ? currencyDynamicSource.map( ( item ) => {
+                let date = new Date( Date.parse( item.Date ) );
+                return {
+                    ...item,
+                    Date: date,
+                }
+            } )
+            : [];
+        dispatch( acCurrencySetDynamicCurrencyData( currencyDynamicData ) );
     };
 
     prepareFormProps = () => {
-        const { currencyData, currencyDynamicCurID } = this.props;
+        const { currencyData, currencyDynamicCurID, currencyDynamicStartDate, currencyDynamicEndDate } = this.props;
+        const { block } = DISPLAY_TYPES;
         let listValue = isNotEmpty( currencyData )
             ? currencyData.map( ( item ) => {
                 return {
@@ -110,15 +176,23 @@ class DateRangeChart extends React.PureComponent {
 
             dateStart: {
                 withLabel: true,
+                defValue:  currencyDynamicStartDate,
                 label:     'Начало периода',
+                display:   DateInput.displayTypes.block,
+                cbChanged: this.dateStart_cbChanged,
             },
 
             dateEnd: {
                 withLabel: true,
+                defValue:  currencyDynamicEndDate,
                 label:     'Конец периода',
+                display:   DateInput.displayTypes.block,
+                cbChanged: this.dateEnd_cbChanged,
             },
 
             btnOk: {
+                label:     'Показать',
+                display:   block,
                 cbChanged: this.btnOk_cbChanged,
             },
         }
@@ -127,9 +201,37 @@ class DateRangeChart extends React.PureComponent {
     /* == callbacks == */
 
     curID_cbChanged = ( value ) => {
-        // console.log( 'curID_cbChanged: ', value );
+        ( this.debug_mode ) && console.log( 'curID_cbChanged: ', value );
         const { dispatch } = this.props;
         dispatch( acCurrencyDynamicSelect( parseInt( value ) ) );
+    };
+
+    dateStart_cbChanged = ( value ) => {
+        const { dispatch, currencyDynamicEndDate } = this.props;
+        if ( isExistsAll( [ value, currencyDynamicEndDate ] ) ) {
+            value = ( value <= currencyDynamicEndDate )
+            ? value
+            : currencyDynamicEndDate;
+
+            /*value = ( currencyDynamicEndDate - value <= 365 )
+                ? value
+                : currencyDynamicEndDate - 365;*/
+        }
+        dispatch( acCurrencyDynamicSetStartDate( value ) );
+    };
+
+    dateEnd_cbChanged = ( value ) => {
+        const { dispatch, currencyDynamicStartDate } = this.props;
+        if ( isExistsAll( [ value, currencyDynamicStartDate ] ) ) {
+            value = ( value >= currencyDynamicStartDate )
+                ? value
+                : currencyDynamicStartDate;
+
+            /*value = ( value - currencyDynamicStartDate <= 365 )
+                ? value
+                : currencyDynamicStartDate + 365;*/
+        }
+        dispatch( acCurrencyDynamicSetEndDate( value ) );
     };
 
     btnOk_cbChanged = () => {
@@ -140,7 +242,7 @@ class DateRangeChart extends React.PureComponent {
     /* == service functions == */
 
     getMinMaxDelta = ( list, field ) => {
-        console.log( list, field );
+        // console.log( list, field );
         let result = null;
         if ( isNotEmptyAll( [ list, field ] ) ) {
             result = { min: list[ 0 ][ field ], max: 0 };
@@ -153,20 +255,73 @@ class DateRangeChart extends React.PureComponent {
         return result;
     };
 
+    getStringDate = (date ) => {
+        return ( date instanceof Date )
+            ? date.getFullYear() + '-' + ( date.getMonth() + 1 ) + '-' + date.getDate()
+            : '';
+    };
+
+    getFormattedDateDDMMYYY = ( date ) => {
+        let d = new Date( Date.parse( date ) );
+        return ( d instanceof Date )
+            ? this.N0( d.getDate(), 2 ) + '-' + this.N0( ( d.getMonth() + 1 ), 2 ) + '-' + d.getFullYear()
+            : '';
+    };
+
+    N0 = ( value, n ) => {
+        let v = value + '';
+        if ( v.length > n ) {
+            return v.substr( 0, n );
+        }
+        else if ( v.length < n ) {
+            while ( v.length < n ) {
+                v = '0' + v;
+            }
+        }
+        return v;
+    };
+
+    /* == controller == */
+
+    svgMouseOver = (e ) => {
+        if ( e.target.tagName === 'path' ) {
+            this.legendDate.innerHTML = e.target.dataset.date;
+            this.legendRate.innerHTML = e.target.dataset.rate;
+            let parentWidth = this.legend.parentElement.offsetWidth;
+            let x = e.nativeEvent.offsetX === undefined
+                ? e.nativeEvent.layerX
+                : e.nativeEvent.offsetX;
+            // console.log( x );
+            this.legend.style.left = ( x + this.legend.offsetWidth < parentWidth )
+                ? x + 'px'
+                : ( parentWidth - this.legend.offsetWidth - 4 ) + 'px';
+        }
+    };
+
+    svgMouseDown = ( e ) => {
+        if ( e.target.tagName === 'path' ) {
+            e.target.dataset.selected = 'true';
+        }
+    };
+
     /* == render functions == */
 
     renderChart = () => {
         const { currencyDynamicData } = this.props;
         let levels = this.getMinMaxDelta( currencyDynamicData, 'Cur_OfficialRate' );
-        console.log( 'levels: ', levels );
+        // console.log( 'levels: ', levels );
         return (
             <g>
                 {
                     ( isNotEmpty( currencyDynamicData ) ) &&
                         currencyDynamicData.map( ( item, index ) => {
                             return (
-                                <path key = { index }
-                                      d = { `M ${ index } 100 V ${ ( item.Cur_OfficialRate - levels.min ) / levels.delta * 100 }` }
+                                <path className="chart_column"
+                                      key = { index }
+                                      data-rate = { item.Cur_OfficialRate }
+                                      data-date = { this.getFormattedDateDDMMYYY( item.Date ) }
+                                      data-selected = 'false'
+                                      d = { `M ${ index } 120 V ${ 110 - ( item.Cur_OfficialRate - levels.min ) / levels.delta * 100 }` }
                                       stroke="#0000ff" strokeWidth="1" fill="#0000ff"/>
                             )
                         } )
@@ -176,13 +331,13 @@ class DateRangeChart extends React.PureComponent {
     };
 
     render() {
-        const { currencyDynamicData } = this.props;
+        const { currencyDynamicData, currencyDynamicStartDate, currencyDynamicEndDate } = this.props;
         let props = this.prepareFormProps();
         return (
             <div className = { this.classCSS }>
                 <div className = { this.classCSS + "_caption" }
                      key="caption">
-                    Динамика курса валют за период ( НБРБ )
+                    Динамика курса валют за период ( до 365 дней )
                 </div>
                 <div className="rows options"
                      key="options">
@@ -198,20 +353,25 @@ class DateRangeChart extends React.PureComponent {
                          key="endDate">
                         <DateInput { ...props.dateEnd }/>
                     </div>
-                    <div className="cols col_4"
-                         key="buttonOk">
-                        <ButtonOk { ...props.btnOk }/>
-                    </div>
+                    {
+                        ( isExistsAll([ currencyDynamicStartDate, currencyDynamicEndDate ]) ) &&
+                        <div className="cols col_4"
+                             key="buttonOk">
+                            <ButtonOk { ...props.btnOk }/>
+                        </div>
+                    }
                 </div>
-                <div className="rows chart"
+                <div className="rows chart_box"
                      key="chart">
-                    <div className="cols col_16">
+                    <div className="cols col_16 chart">
                         {
                             ( isNotEmpty( currencyDynamicData ) )
                             ? <svg className = { this.classCSS + "_chart_image" }
+                                   onMouseOver = { this.svgMouseOver }
+                                   onMouseDown = { this.svgMouseDown }
                                    width =   "100%"
                                    height =  "300px"
-                                   viewBox = "0 0 365 100"
+                                   viewBox = { `0 0 ${ currencyDynamicData.length } 120` }
                                    preserveAspectRatio = "none"
                                    xmlns =   "http://www.w3.org/2000/svg">
                                     { this.renderChart() }
@@ -219,6 +379,22 @@ class DateRangeChart extends React.PureComponent {
                             : <span>
                                   Нет данных для отображения
                               </span>
+                        }
+                        {
+                            ( isNotEmpty( currencyDynamicData ) ) &&
+                            <div className = { this.classCSS + "_legend" }
+                                 ref = { ( elm ) => { this.legend = elm } }>
+                                <div className = { this.classCSS + "_legend_date" }
+                                      key="legend_date"
+                                     ref = { ( elm ) => { this.legendDate = elm } }>
+
+                                </div>
+                                <div className = { this.classCSS + "_legend_rate" }
+                                      key="legend_rate"
+                                     ref = { ( elm ) => { this.legendRate = elm } }>
+
+                                </div>
+                            </div>
                         }
                     </div>
                 </div>
@@ -230,6 +406,9 @@ class DateRangeChart extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         currencyData:                   state.currency.currencyData,
+        currencyDynamicSource:          state.currency.currencyDynamicSource,
+        currencyDynamicLoadStatus:      state.currency.currencyDynamicLoadStatus,
+        currencyDynamicPrepareStatus:   state.currency.currencyDynamicPrepareStatus,
         currencyDynamicData:            state.currency.currencyDynamicData,
         currencyDynamicCurID:           state.currency.currencyDynamicCurID,
         currencyDynamicStartDate:       state.currency.currencyDynamicStartDate,

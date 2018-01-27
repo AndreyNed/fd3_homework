@@ -13,6 +13,8 @@ const CURRENCY_DYNAMIC_LOAD_SUCCESS =                   'CURRENCY_DYNAMIC_LOAD_S
 const CURRENCY_DYNAMIC_LOAD_ERROR =                     'CURRENCY_DYNAMIC_LOAD_ERROR';
 const CURRENCY_DYNAMIC_SHOULD_BE_RELOADED =             'CURRENCY_DYNAMIC_SHOULD_BE_RELOADED';
 
+const CURRENCY_DYNAMIC_SET_START_DATE =                 'CURRENCY_DYNAMIC_SET_START_DATE';
+const CURRENCY_DYNAMIC_SET_END_DATE =                   'CURRENCY_DYNAMIC_SET_END_DATE';
 const CURRENCY_DYNAMIC_SELECT =                         'CURRENCY_DYNAMIC_SELECT';
 const CURRENCY_DYNAMIC_SET_CURRENCY_DATA =              'CURRENCY_DYNAMIC_SET_CURRENCY_DATA';
 
@@ -80,6 +82,20 @@ const acCurrencyDynamicShouldBeReloaded = function () {
     }
 };
 
+const acCurrencyDynamicSetStartDate = function ( startDate ) {
+    return {
+        type:                         CURRENCY_DYNAMIC_SET_START_DATE,
+        currencyDynamicStartDate:     startDate,
+    }
+};
+
+const acCurrencyDynamicSetEndDate = function ( endDate ) {
+    return {
+        type:                         CURRENCY_DYNAMIC_SET_END_DATE,
+        currencyDynamicEndDate:       endDate,
+    }
+};
+
 const acCurrencyDynamicSelect = function ( id ) {
     return {
         type:                         CURRENCY_DYNAMIC_SELECT,
@@ -108,6 +124,8 @@ export {
     CURRENCY_DYNAMIC_LOAD_ERROR,            acCurrencyDynamicLoadError,
     CURRENCY_DYNAMIC_SHOULD_BE_RELOADED,    acCurrencyDynamicShouldBeReloaded,
 
+    CURRENCY_DYNAMIC_SET_START_DATE,        acCurrencyDynamicSetStartDate,
+    CURRENCY_DYNAMIC_SET_END_DATE,          acCurrencyDynamicSetEndDate,
     CURRENCY_DYNAMIC_SELECT,                acCurrencyDynamicSelect,
     CURRENCY_DYNAMIC_SET_CURRENCY_DATA,     acCurrencySetDynamicCurrencyData,
 }

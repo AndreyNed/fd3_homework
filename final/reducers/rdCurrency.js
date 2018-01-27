@@ -15,7 +15,7 @@ import {
     CURRENCY_DYNAMIC_SHOULD_BE_RELOADED,
 
     CURRENCY_DYNAMIC_SELECT,
-    CURRENCY_DYNAMIC_SET_CURRENCY_DATA,
+    CURRENCY_DYNAMIC_SET_CURRENCY_DATA, CURRENCY_DYNAMIC_SET_START_DATE, CURRENCY_DYNAMIC_SET_END_DATE,
 } from "../actions/acCurrency";
 
 const initState = {
@@ -31,8 +31,8 @@ const initState = {
     currencyDynamicLoadStatus:      0,
     currencyDynamicPrepareStatus:   0,
     currencyDynamicCurID:           145,
-    currencyDynamicStartDate:       null,
-    currencyDynamicEndDate:         null,
+    currencyDynamicStartDate:       new Date( 2017, 0, 1 ), // '2017-1-1',
+    currencyDynamicEndDate:         new Date( 2017, 11, 31 ), // '2017-12-31',
     currencyDynamicSelectedIndex:   -1,
 };
 
@@ -119,6 +119,21 @@ function rdCurrency ( state = initState, action ) {
             return {
                 ...state, ...{
                     currencyDynamicLoadStatus:   0,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SET_START_DATE:
+            console.log( 'CURRENCY_DYNAMIC_SET_START_DATE', action );
+            return {
+                ...state, ...{
+                    currencyDynamicStartDate:          action.currencyDynamicStartDate,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SET_END_DATE:
+            return {
+                ...state, ...{
+                    currencyDynamicEndDate:          action.currencyDynamicEndDate,
                 }
             };
 

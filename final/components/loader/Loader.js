@@ -106,28 +106,6 @@ class Loader extends React.PureComponent {
         currencyLoadStatus:             PropTypes.number,
         currencyPrepareStatus:          PropTypes.number,
 
-        currencyDynamicSource:          PropTypes.arrayOf(
-            PropTypes.shape({
-                Cur_ID:                 PropTypes.number,
-                Date:                   PropTypes.string,
-                Cur_OfficialRate:       PropTypes.number,
-            })
-        ),
-
-        currencyDynamicData:            PropTypes.arrayOf(
-            PropTypes.shape({
-                Cur_ID:                 PropTypes.number,
-                Date:                   PropTypes.objectOf( Date ),
-                Cur_OfficialRate:       PropTypes.number,
-            })
-        ),
-
-        currencyDynamicLoadStatus:      PropTypes.number,
-        currencyDynamicPrepareStatus:   PropTypes.number,
-        currencyDynamicCurID:           PropTypes.number,
-        currencyDynamicStartDate:       PropTypes.objectOf( Date ),
-        currencyDynamicEndDate:         PropTypes.objectOf( Date ),
-
         matGlassIsVisible:              PropTypes.bool,
         modalContent:                   PropTypes.oneOf([
             MODAL_CONTENT.NONE,
@@ -157,11 +135,9 @@ class Loader extends React.PureComponent {
         this.prepareData( newProps );
     }
 
-    prepareData = ( data ) => {
+    prepareData = ( props ) => {
         ( this.debug_mode ) &&
-            console.log( 'Loader: prepareData: data: ', data );
-
-        let props = { ...data };
+            console.log( 'Loader: prepareData: data: ', props );
 
         const {
             dispatch,
@@ -174,19 +150,10 @@ class Loader extends React.PureComponent {
             operationsLoadStatus,
             operationsSource,
             operationsPrepareStatus,
-            matGlassIsVisible,
             modalContent,
             currencySource,
-            currencyData,
             currencyLoadStatus,
             currencyPrepareStatus,
-            currencyDynamicSource,
-            currencyDynamicData,
-            currencyDynamicLoadStatus,
-            currencyDynamicPrepareStatus,
-            currencyDynamicCurID,
-            currencyDynamicStartDate,
-            currencyDynamicEndDate,
         } = props;
 
         if ( !accountsLoadStatus ||
@@ -234,12 +201,6 @@ class Loader extends React.PureComponent {
             fCurrencyDailyAll( dispatch, null, null );
         }
 
-        if ( !currencyDynamicLoadStatus ) {
-            fCurrencyDynamicRates( dispatch, null, null, {
-                Cur_ID: ( currencyDynamicCurID + '' ), startDate: '2017-1-1', endDate: '2017-12-31'
-            } )
-        }
-
         if ( accountsLoadStatus === 2 &&
              operationCategoriesLoadStatus === 2 &&
              operationsLoadStatus === 2 &&
@@ -261,11 +222,6 @@ class Loader extends React.PureComponent {
 
         if ( !currencyPrepareStatus && currencyLoadStatus === 2 ) {
             this.prepareCurrencyData( currencySource );
-        }
-
-        if ( currencyDynamicLoadStatus === 2 &&
-            currencyDynamicPrepareStatus === 0 ) {
-            this.prepareCurrencyDynamicData( currencyDynamicSource );
         }
     };
 
@@ -297,22 +253,6 @@ class Loader extends React.PureComponent {
             }
         } );
         dispatch( acCurrencySetCurrencyData( currencyData ) );
-    };
-
-    prepareCurrencyDynamicData = ( currencyDynamicSource ) => {
-        ( this.debug_mode ) &&
-            console.log( 'Loader: prepareCurrencyDynamicData: currencyDynamicSource: ', currencyDynamicSource );
-        const { dispatch } = this.props;
-        let currencyDynamicData = ( isNotEmpty( currencyDynamicSource ) )
-            ? currencyDynamicSource.map( ( item ) => {
-                let date = new Date( Date.parse( item.Date ) );
-                return {
-                    ...item,
-                    Date: date,
-                }
-            } )
-            : [];
-        dispatch( acCurrencySetDynamicCurrencyData( currencyDynamicData ) );
     };
 
     render() {
@@ -367,13 +307,13 @@ const mapStateToProps = function ( state ) {
         currencySource:                 state.currency.currencySource,
         currencyData:                   state.currency.currencyData,
 
-        currencyDynamicSource:          state.currency.currencyDynamicSource,
+        /*currencyDynamicSource:          state.currency.currencyDynamicSource,
         currencyDynamicData:            state.currency.currencyDynamicData,
         currencyDynamicLoadStatus:      state.currency.currencyDynamicLoadStatus,
         currencyDynamicPrepareStatus:   state.currency.currencyDynamicPrepareStatus,
         currencyDynamicCurID:           state.currency.currencyDynamicCurID,
         currencyDynamicStartDate:       state.currency.currencyDynamicStartDate,
-        currencyDynamicEndDate:         state.currency.currencyDynamicEndDate,
+        currencyDynamicEndDate:         state.currency.currencyDynamicEndDate,*/
 
         matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,
