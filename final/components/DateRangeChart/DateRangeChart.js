@@ -26,7 +26,7 @@ import { acUIShowDataLoadingMessage, acUIHideMatGlass } from '../../actions/acUI
 
 import { fCurrencyDynamicRates } from "../../network/fCurrency";
 
-import {isNotEmpty} from "../../utils/utils";
+import {isNotEmpty, isNotEmptyAll} from "../../utils/utils";
 
 import './DateRangeChart.scss';
 
@@ -207,18 +207,37 @@ class DateRangeChart extends React.PureComponent {
         dispatch( acCurrencyDynamicShouldBeReloaded() );
     };
 
+    /* == service functions == */
+
+    getMinMaxDelta = ( list, field ) => {
+        console.log( list, field );
+        let result = null;
+        if ( isNotEmptyAll( [ list, field ] ) ) {
+            result = { min: list[ 0 ][ field ], max: 0 };
+            for ( let i = 0; i < list.length; i++ ) {
+                result.min = Math.min( result.min, list[ i ][ field ] );
+                result.max = Math.max( result.max, list[ i ][ field ] );
+            }
+            result.delta = result.max - result.min;
+        }
+        return result;
+    };
+
     /* == render functions == */
 
     renderChart = () => {
         const { currencyDynamicData } = this.props;
+        let levels = this.getMinMaxDelta( currencyDynamicData, 'Cur_OfficialRate' );
+        console.log( 'levels: ', levels );
         return (
             <g>
                 {
                     ( isNotEmpty( currencyDynamicData ) ) &&
                         currencyDynamicData.map( ( item, index ) => {
                             return (
-                                <path d = { `M ${ index } 100 V ${ ( item.Cur_OfficialRate - 1 ) * 100 / 2 }` }
-                                stroke="#0000ff" strokeWidth="1" fill="#0000ff"/>
+                                <path key = { index }
+                                      d = { `M ${ index } 100 V ${ ( item.Cur_OfficialRate - levels.min ) / levels.delta * 100 }` }
+                                      stroke="#0000ff" strokeWidth="1" fill="#0000ff"/>
                             )
                         } )
                 }
