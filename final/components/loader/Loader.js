@@ -8,6 +8,7 @@ import OperationCard from '../OperationCard/OperationCard';
 import { BrowserRouter } from 'react-router-dom';
 import PagesRouter from '../../pages/PagesRouter';
 import PagesLinks  from '../../pages/PagesLinks';
+// import CurrencyLoader from '../../components/CurrencyLoader/CurrencyLoader';
 
 import { MODAL_CONTENT } from "../../data_const/data_const";
 import { CONFIG_UI_MODE_TIMEOUT, } from "../../config/config";
@@ -15,12 +16,10 @@ import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_LOADER } from "../../config/config
 import {isExists, isNotEmpty} from "../../utils/utils";
 
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
-import {acUIHideMatGlass, acUIShowMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
-import { acDataSetAccountsData, acDataSetOperationCategoriesData, acDataSetOperationsData } from "../../actions/acData";
-import {
-    acCurrencyShouldBeReloaded, acCurrencySelect, acCurrencySetCurrencyData,
-} from "../../actions/acCurrency";
-import { fCurrencyDailyAll } from "../../network/fCurrency";
+import {acUIHideMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
+import {acDataSetAccountsData, acDataSetOperationCategoriesData, acDataSetOperationsData} from "../../actions/acData";
+import {acCurrencySetCurrencyData, acCurrencySetDynamicCurrencyData} from "../../actions/acCurrency";
+import { fCurrencyDailyAll, fCurrencyDynamicRates } from "../../network/fCurrency";
 
 class Loader extends React.PureComponent {
 
@@ -107,8 +106,39 @@ class Loader extends React.PureComponent {
         currencyLoadStatus:             PropTypes.number,
         currencyPrepareStatus:          PropTypes.number,
 
+        currencyDynamicSource:          PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Date:                   PropTypes.string,
+                Cur_OfficialRate:       PropTypes.number,
+            })
+        ),
+
+        currencyDynamicData:            PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Date:                   PropTypes.objectOf( Date ),
+                Cur_OfficialRate:       PropTypes.number,
+            })
+        ),
+
+        currencyDynamicLoadStatus:      PropTypes.number,
+        currencyDynamicPrepareStatus:   PropTypes.number,
+        currencyDynamicCurID:           PropTypes.number,
+        currencyDynamicStartDate:       PropTypes.objectOf( Date ),
+        currencyDynamicEndDate:         PropTypes.objectOf( Date ),
+
         matGlassIsVisible:              PropTypes.bool,
-        modalContent:                   PropTypes.string,
+        modalContent:                   PropTypes.oneOf([
+            MODAL_CONTENT.NONE,
+            MODAL_CONTENT.DATA_DELETING,
+            MODAL_CONTENT.DELETE_CONFIRMATION,
+            MODAL_CONTENT.DATA_SAVING,
+            MODAL_CONTENT.DATA_LOADING,
+            MODAL_CONTENT.OPERATION_CARD,
+            MODAL_CONTENT.ACCOUNT_CARD,
+            MODAL_CONTENT.OPERATION_CATEGORY_CARD,
+        ]),
     };
 
     static defaultProps = {
@@ -150,6 +180,13 @@ class Loader extends React.PureComponent {
             currencyData,
             currencyLoadStatus,
             currencyPrepareStatus,
+            currencyDynamicSource,
+            currencyDynamicData,
+            currencyDynamicLoadStatus,
+            currencyDynamicPrepareStatus,
+            currencyDynamicCurID,
+            currencyDynamicStartDate,
+            currencyDynamicEndDate,
         } = props;
 
         if ( !accountsLoadStatus ||
@@ -197,6 +234,12 @@ class Loader extends React.PureComponent {
             fCurrencyDailyAll( dispatch, null, null );
         }
 
+        if ( !currencyDynamicLoadStatus ) {
+            fCurrencyDynamicRates( dispatch, null, null, {
+                Cur_ID: ( currencyDynamicCurID + '' ), startDate: '2017-1-1', endDate: '2017-12-31'
+            } )
+        }
+
         if ( accountsLoadStatus === 2 &&
              operationCategoriesLoadStatus === 2 &&
              operationsLoadStatus === 2 &&
@@ -218,6 +261,11 @@ class Loader extends React.PureComponent {
 
         if ( !currencyPrepareStatus && currencyLoadStatus === 2 ) {
             this.prepareCurrencyData( currencySource );
+        }
+
+        if ( currencyDynamicLoadStatus === 2 &&
+            currencyDynamicPrepareStatus === 0 ) {
+            this.prepareCurrencyDynamicData( currencyDynamicSource );
         }
     };
 
@@ -251,28 +299,39 @@ class Loader extends React.PureComponent {
         dispatch( acCurrencySetCurrencyData( currencyData ) );
     };
 
-    render() {
+    prepareCurrencyDynamicData = ( currencyDynamicSource ) => {
         ( this.debug_mode ) &&
-            console.log( 'Loader: render: props: ', this.props );
+            console.log( 'Loader: prepareCurrencyDynamicData: currencyDynamicSource: ', currencyDynamicSource );
+        const { dispatch } = this.props;
+        let currencyDynamicData = ( isNotEmpty( currencyDynamicSource ) )
+            ? currencyDynamicSource.map( ( item ) => {
+                let date = new Date( Date.parse( item.Date ) );
+                return {
+                    ...item,
+                    Date: date,
+                }
+            } )
+            : [];
+        dispatch( acCurrencySetDynamicCurrencyData( currencyDynamicData ) );
+    };
+
+    render() {
+        // ( this.debug_mode ) &&
+        //     console.log( 'Loader: render: props: ', this.props );
         const {
             accountsPrepareStatus, operationCategoriesPrepareStatus, operationsPrepareStatus,
             accountsData, operationCategoriesData, operationsData, currencyPrepareStatus, currencyData,
             modalContent
         } = this.props;
-
-        /*
-
-
-                    */
-
+        /**/
+        /*( currencyPrepareStatus === 2 && isNotEmpty( currencyData ) ) ) &&*/
         return (
             <div className = { this.classCSS }>
                 <MatGlass />
                 {
                     ( ( accountsPrepareStatus === 2 && isNotEmpty( accountsData ) ) &&
                       ( operationCategoriesPrepareStatus === 2 && isNotEmpty( operationCategoriesData ) ) &&
-                      ( operationsPrepareStatus === 2 && isNotEmpty( operationsData ) ) &&
-                      ( currencyPrepareStatus === 2 && isNotEmpty( currencyData ) ) ) &&
+                      ( operationsPrepareStatus === 2 && isNotEmpty( operationsData ) ) ) &&
                           <BrowserRouter>
                               <div className = { this.classCSS + "_router" }>
                                   <PagesLinks />
@@ -307,6 +366,14 @@ const mapStateToProps = function ( state ) {
         currencyPrepareStatus:          state.currency.currencyPrepareStatus,
         currencySource:                 state.currency.currencySource,
         currencyData:                   state.currency.currencyData,
+
+        currencyDynamicSource:          state.currency.currencyDynamicSource,
+        currencyDynamicData:            state.currency.currencyDynamicData,
+        currencyDynamicLoadStatus:      state.currency.currencyDynamicLoadStatus,
+        currencyDynamicPrepareStatus:   state.currency.currencyDynamicPrepareStatus,
+        currencyDynamicCurID:           state.currency.currencyDynamicCurID,
+        currencyDynamicStartDate:       state.currency.currencyDynamicStartDate,
+        currencyDynamicEndDate:         state.currency.currencyDynamicEndDate,
 
         matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,

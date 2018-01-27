@@ -13,6 +13,7 @@ import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_CURRENCY } from "
 import { ALIGN_TYPES, DATA_TYPES, SORTING, CURRENCY_MODES } from "../data_const/data_const";
 
 import { acUISetCurrencyMode } from "../actions/acUI";
+import {isNotEmpty} from "../utils/utils";
 
 class PageCurrency extends React.PureComponent {
 
@@ -172,7 +173,8 @@ class PageCurrency extends React.PureComponent {
                 },
             ],
 
-            body: currencyData.map( ( item, index ) => {
+            body: ( isNotEmpty( currencyData ) )
+                ? currencyData.map( ( item, index ) => {
                 return {
                     rowIndex: index,
                     cells: [
@@ -202,7 +204,8 @@ class PageCurrency extends React.PureComponent {
                         },
                     ],
                 }
-            } ),
+            } )
+                : [],
         }
     };
 
@@ -280,20 +283,22 @@ class PageCurrency extends React.PureComponent {
 
     render() {
         return (
+
             <div className = { this.classCSS }>
                 <div className="wrapper">
                     { this.renderLeftSection() }
                     { this.renderMainSection() }
                 </div>
             </div>
+
         )
     }
 }
 
 const mapStateToProps = function ( state ) {
     return {
-        currencyLoadStatus:             state.currency.currencyLoadStatus,
-        currencySaveStatus:             state.currency.currencySaveStatus,
+        // currencyPrepareStatus:          state.currency.currencyPrepareStatus,
+        // currencySaveStatus:             state.currency.currencySaveStatus,
 
         currencyData:                   state.currency.currencyData,
 

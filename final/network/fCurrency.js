@@ -56,7 +56,7 @@ const fCurrencyDailyAll = ( dispatch, cbSuccess, cbError,  ) => {
 
 const fCurrencyDynamicRates = ( dispatch, cbSuccess, cbError, options ) => {
     ( debug_mode ) &&
-        console.log( "fCurrencyDailyAll..." );
+        console.log( "fCurrencyDynamicRates..." );
 
     dispatch( acCurrencyDynamicLoadStart() );
 

@@ -4,6 +4,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { CONFIG_DEBUG_MODE, CONFIG_UI_MODE_TIMEOUT, USER_LOGIN } from "../config/config";
+import { DATA_TYPES } from "../data_const/data_const";
+import '../utils/utils';
+
 // import './ComponentTemplate.scss';
 
 class ComponentTemplate extends React.PureComponent {
@@ -29,12 +33,10 @@ class ComponentTemplate extends React.PureComponent {
         ComponentTemplate.classID++;
         this.state = {
             htmlID: ComponentTemplate.getHtmlID( props.htmlID ),
-        }
+        };
+        this.debug_mode = true;
+        this.classCSS = 'ComponentTemplate';
     }
-
-    debug_mode = true;
-
-    classCSS = 'ComponentTemplate';
 
     componentWillMount() {
         this.prepareData( this.props );
