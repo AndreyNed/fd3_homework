@@ -13,15 +13,20 @@ import {
     CONFIG_DEBUG_MODE_DATE_RANGE_CHART,
 } from "../../config/config";
 
+import { DRAG_MODE } from "../../data_const/data_const";
+
 import {
     acCurrencyDynamicSelect,
     acCurrencyDynamicSetStartDate,
     acCurrencyDynamicSetEndDate,
     acCurrencyDynamicShouldBeReloaded,
     acCurrencySetDynamicCurrencyData,
+    acCurrencyDynamicSetStartPoint,
+    acCurrencyDynamicSetEndPoint,
+    acCurrencyDynamicSetPoints,
 } from "../../actions/acCurrency";
 
-import {isExistsAll, isNotEmpty, isNotEmptyAll} from "../../utils/utils";
+import {isExists, isExistsAll, isNotEmpty, isNotEmptyAll} from "../../utils/utils";
 
 import './DateRangeChart.scss';
 import {fCurrencyDynamicRates} from "../../network/fCurrency";
@@ -62,6 +67,16 @@ class DateRangeChart extends React.PureComponent {
         currencyDynamicCurID:           PropTypes.number,
         currencyDynamicStartDate:       PropTypes.objectOf( Date ),
         currencyDynamicEndDate:         PropTypes.objectOf( Date ),
+        currencyDynamicStartPoint:      PropTypes.shape({
+            date:                       PropTypes.objectOf( Date ),
+            dateStr:                    PropTypes.string,
+            rate:                       PropTypes.number,
+        }),
+        currencyDynamicEndPoint:        PropTypes.shape({
+            date:                       PropTypes.objectOf( Date ),
+            dateStr:                    PropTypes.string,
+            rate:                       PropTypes.number,
+        }),
     };
 
     static defaultProps = {
@@ -80,9 +95,10 @@ class DateRangeChart extends React.PureComponent {
         super( props );
         DateRangeChart.classID++;
         this.state = {
-            htmlID: DateRangeChart.getHtmlID( props.htmlID ),
+            htmlID:     DateRangeChart.getHtmlID( props.htmlID ),
         };
         this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_DATE_RANGE_CHART;
+        this.dragMode = DRAG_MODE.NONE;
         this.classCSS = 'DateRangeChart';
     }
 
@@ -100,7 +116,6 @@ class DateRangeChart extends React.PureComponent {
 
         const {
             dispatch,
-            currencyData,
             currencyDynamicSource,
             currencyDynamicData,
             currencyDynamicLoadStatus,
@@ -136,7 +151,7 @@ class DateRangeChart extends React.PureComponent {
 
     prepareCurrencyDynamicData = ( currencyDynamicSource ) => {
         ( this.debug_mode ) &&
-        console.log( 'DateRangeChart: prepareCurrencyDynamicData: currencyDynamicSource: ', currencyDynamicSource );
+            console.log( 'DateRangeChart: prepareCurrencyDynamicData: currencyDynamicSource: ', currencyDynamicSource );
         const { dispatch } = this.props;
         let currencyDynamicData = ( isNotEmpty( currencyDynamicSource ) )
             ? currencyDynamicSource.map( ( item ) => {
@@ -147,6 +162,20 @@ class DateRangeChart extends React.PureComponent {
                 }
             } )
             : [];
+        if ( isNotEmpty( currencyDynamicData ) ) {
+            let startPoint = {
+                date:    currencyDynamicData[ 0 ].Date,
+                dateStr: this.getFormattedDateDDMMYYY( currencyDynamicData[ 0 ].Date ),
+                rate:    currencyDynamicData[ 0 ].Cur_OfficialRate,
+            };
+            let last = currencyDynamicData.length - 1;
+            let endPoint = {
+                date:    currencyDynamicData[ last ].Date,
+                dateStr: this.getFormattedDateDDMMYYY( currencyDynamicData[ last ].Date ),
+                rate:    currencyDynamicData[ last ].Cur_OfficialRate,
+            };
+            dispatch( acCurrencyDynamicSetPoints( startPoint, endPoint ) );
+        }
         dispatch( acCurrencySetDynamicCurrencyData( currencyDynamicData ) );
     };
 
@@ -285,7 +314,7 @@ class DateRangeChart extends React.PureComponent {
 
     svgMouseOver = (e ) => {
         if ( e.target.tagName === 'path' ) {
-            this.legendDate.innerHTML = e.target.dataset.date;
+            this.legendDate.innerHTML = e.target.dataset.date_str;
             this.legendRate.innerHTML = e.target.dataset.rate;
             let parentWidth = this.legend.parentElement.offsetWidth;
             let x = e.nativeEvent.offsetX === undefined
@@ -294,43 +323,91 @@ class DateRangeChart extends React.PureComponent {
             // console.log( x );
             this.legend.style.left = ( x + this.legend.offsetWidth < parentWidth )
                 ? x + 'px'
-                : ( parentWidth - this.legend.offsetWidth - 4 ) + 'px';
+                : ( parentWidth - this.legend.offsetWidth - 8 ) + 'px';
         }
     };
 
     svgMouseDown = ( e ) => {
         if ( e.target.tagName === 'path' ) {
+            const { point } = e.target.dataset;
+            this.dragMode = point;
+            // console.log( 'svgMouseDown: dragMode: ', this.dragMode );
+        }
+    };
+
+    svgMouseUp = ( e ) => {
+        if ( e.target.tagName === 'path' ) {
             e.target.dataset.selected = 'true';
+
+            const { dispatch } = this.props;
+            const { date, date_str, rate, point } = e.target.dataset;
+            const { NONE, START_POINT, END_POINT } = DRAG_MODE;
+
+            let pointCur = { date: new Date( Date.parse( date ) ), dateStr: date_str, rate: parseFloat( rate ) };
+            // console.log( 'svgMouseUp: point: ', pointCur );
+            switch ( this.dragMode ) {
+                case START_POINT:
+                    dispatch( acCurrencyDynamicSetStartPoint( pointCur ) );
+                    break;
+                case END_POINT:
+                    dispatch( acCurrencyDynamicSetEndPoint( pointCur ) );
+                    break;
+            }
+            // console.log( 'svgMouseUp: dragMode: ', this.dragMode );
         }
     };
 
     /* == render functions == */
 
     renderChart = () => {
-        const { currencyDynamicData } = this.props;
+        const { currencyDynamicData, currencyDynamicStartPoint, currencyDynamicEndPoint } = this.props;
+        const { START_POINT, END_POINT, NONE } = DRAG_MODE;
         let levels = this.getMinMaxDelta( currencyDynamicData, 'Cur_OfficialRate' );
-        // console.log( 'levels: ', levels );
-        return (
+        return ( isNotEmpty( currencyDynamicData) ) &&
             <g>
                 {
-                    ( isNotEmpty( currencyDynamicData ) ) &&
-                        currencyDynamicData.map( ( item, index ) => {
-                            return (
-                                <path className="chart_column"
-                                      key = { index }
-                                      data-rate = { item.Cur_OfficialRate }
-                                      data-date = { this.getFormattedDateDDMMYYY( item.Date ) }
-                                      data-selected = 'false'
-                                      d = { `M ${ index } 120 V ${ 110 - ( item.Cur_OfficialRate - levels.min ) / levels.delta * 100 }` }
-                                      stroke="#0000ff" strokeWidth="1" fill="#0000ff"/>
-                            )
-                        } )
+                    currencyDynamicData.map( ( item, index ) => {
+                        let itemDateValue = item.Date.getTime();
+                        return (
+                            <path className="chart_column"
+                                  key = { index }
+                                  data-rate = { item.Cur_OfficialRate }
+                                  data-date_str = { this.getFormattedDateDDMMYYY( item.Date ) }
+                                  data-date = { item.Date }
+                                  data-point = {
+                                      ( itemDateValue === currencyDynamicStartPoint.date.getTime() )
+                                          ? START_POINT
+                                          : ( itemDateValue === currencyDynamicEndPoint.date.getTime() )
+                                          ? END_POINT
+                                          : NONE
+                                  }
+                                  data-selected = 'false'
+                                  d = { `M ${ index + 0.5 } 120 V ${ 110 - ( item.Cur_OfficialRate - levels.min ) / levels.delta * 100 }` }
+                                  stroke="#0000ff" strokeWidth="1" fill="#0000ff"/>
+                        )
+                    } )
+                }
+                {
+                    ( isExists( currencyDynamicStartPoint.rate ) ) &&
+                        <path d = { `M 0 ${ 110 - ( currencyDynamicStartPoint.rate - levels.min ) / levels.delta * 100 } H ${ currencyDynamicData.length }` }
+                              stroke="#ff0000"
+                              strokeWidth="1"
+                              fill="none"
+                        />
+                }
+                {
+                    ( isExists( currencyDynamicEndPoint.rate ) ) &&
+                    <path d = { `M 0 ${ 110 - ( currencyDynamicEndPoint.rate - levels.min ) / levels.delta * 100 } H ${ currencyDynamicData.length }` }
+                          stroke="#ff0000"
+                          strokeWidth="1"
+                          fill="none"
+                    />
                 }
             </g>
-        )
     };
 
     render() {
+        ( this.debug_mode ) && console.log( 'DateRangeChart: RENDER...' );
         const { currencyDynamicData, currencyDynamicStartDate, currencyDynamicEndDate } = this.props;
         let props = this.prepareFormProps();
         return (
@@ -369,9 +446,10 @@ class DateRangeChart extends React.PureComponent {
                             ? <svg className = { this.classCSS + "_chart_image" }
                                    onMouseOver = { this.svgMouseOver }
                                    onMouseDown = { this.svgMouseDown }
+                                   onMouseUp = { this.svgMouseUp }
                                    width =   "100%"
                                    height =  "300px"
-                                   viewBox = { `0 0 ${ currencyDynamicData.length } 120` }
+                                   viewBox = { `0 0 ${ currencyDynamicData.length + 0.5 } 120` }
                                    preserveAspectRatio = "none"
                                    xmlns =   "http://www.w3.org/2000/svg">
                                     { this.renderChart() }
@@ -413,6 +491,8 @@ const mapStateToProps = function ( state ) {
         currencyDynamicCurID:           state.currency.currencyDynamicCurID,
         currencyDynamicStartDate:       state.currency.currencyDynamicStartDate,
         currencyDynamicEndDate:         state.currency.currencyDynamicEndDate,
+        currencyDynamicStartPoint:      state.currency.currencyDynamicStartPoint,
+        currencyDynamicEndPoint:        state.currency.currencyDynamicEndPoint,
     }
 };
 

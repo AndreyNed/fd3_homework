@@ -15,6 +15,9 @@ const CURRENCY_DYNAMIC_SHOULD_BE_RELOADED =             'CURRENCY_DYNAMIC_SHOULD
 
 const CURRENCY_DYNAMIC_SET_START_DATE =                 'CURRENCY_DYNAMIC_SET_START_DATE';
 const CURRENCY_DYNAMIC_SET_END_DATE =                   'CURRENCY_DYNAMIC_SET_END_DATE';
+const CURRENCY_DYNAMIC_SET_START_POINT =                'CURRENCY_DYNAMIC_SET_START_POINT';
+const CURRENCY_DYNAMIC_SET_END_POINT =                  'CURRENCY_DYNAMIC_SET_END_POINT';
+const CURRENCY_DYNAMIC_SET_POINTS =                     'CURRENCY_DYNAMIC_SET_POINTS';
 const CURRENCY_DYNAMIC_SELECT =                         'CURRENCY_DYNAMIC_SELECT';
 const CURRENCY_DYNAMIC_SET_CURRENCY_DATA =              'CURRENCY_DYNAMIC_SET_CURRENCY_DATA';
 
@@ -96,6 +99,29 @@ const acCurrencyDynamicSetEndDate = function ( endDate ) {
     }
 };
 
+const acCurrencyDynamicSetStartPoint = function ( startPoint ) {
+    console.log( 'action start point: ', startPoint );
+    return {
+        type:                          CURRENCY_DYNAMIC_SET_START_POINT,
+        currencyDynamicStartPoint:     startPoint,
+    }
+};
+
+const acCurrencyDynamicSetEndPoint = function ( endPoint ) {
+    return {
+        type:                          CURRENCY_DYNAMIC_SET_END_POINT,
+        currencyDynamicEndPoint:       endPoint,
+    }
+};
+
+const acCurrencyDynamicSetPoints = function ( startPoint, endPoint ) {
+    return {
+        type:                          CURRENCY_DYNAMIC_SET_POINTS,
+        currencyDynamicStartPoint:     startPoint,
+        currencyDynamicEndPoint:       endPoint,
+    }
+};
+
 const acCurrencyDynamicSelect = function ( id ) {
     return {
         type:                         CURRENCY_DYNAMIC_SELECT,
@@ -126,6 +152,9 @@ export {
 
     CURRENCY_DYNAMIC_SET_START_DATE,        acCurrencyDynamicSetStartDate,
     CURRENCY_DYNAMIC_SET_END_DATE,          acCurrencyDynamicSetEndDate,
+    CURRENCY_DYNAMIC_SET_START_POINT,       acCurrencyDynamicSetStartPoint,
+    CURRENCY_DYNAMIC_SET_END_POINT,         acCurrencyDynamicSetEndPoint,
+    CURRENCY_DYNAMIC_SET_POINTS,            acCurrencyDynamicSetPoints,
     CURRENCY_DYNAMIC_SELECT,                acCurrencyDynamicSelect,
     CURRENCY_DYNAMIC_SET_CURRENCY_DATA,     acCurrencySetDynamicCurrencyData,
 }

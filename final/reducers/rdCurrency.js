@@ -15,7 +15,12 @@ import {
     CURRENCY_DYNAMIC_SHOULD_BE_RELOADED,
 
     CURRENCY_DYNAMIC_SELECT,
-    CURRENCY_DYNAMIC_SET_CURRENCY_DATA, CURRENCY_DYNAMIC_SET_START_DATE, CURRENCY_DYNAMIC_SET_END_DATE,
+    CURRENCY_DYNAMIC_SET_CURRENCY_DATA,
+    CURRENCY_DYNAMIC_SET_START_DATE,
+    CURRENCY_DYNAMIC_SET_END_DATE,
+    CURRENCY_DYNAMIC_SET_START_POINT,
+    CURRENCY_DYNAMIC_SET_END_POINT,
+    CURRENCY_DYNAMIC_SET_POINTS,
 } from "../actions/acCurrency";
 
 const initState = {
@@ -34,6 +39,16 @@ const initState = {
     currencyDynamicStartDate:       new Date( 2017, 0, 1 ), // '2017-1-1',
     currencyDynamicEndDate:         new Date( 2017, 11, 31 ), // '2017-12-31',
     currencyDynamicSelectedIndex:   -1,
+    currencyDynamicStartPoint: {
+        date:                       new Date( 2017, 0, 1 ),
+        dateStr:                    '01-01-2017',
+        rate:                       0,
+    },
+    currencyDynamicEndPoint: {
+        date:                       new Date( 2017, 11, 31 ),
+        dateStr:                    '31-12-2017',
+        rate:                       0,
+    },
 };
 
 function rdCurrency ( state = initState, action ) {
@@ -123,7 +138,6 @@ function rdCurrency ( state = initState, action ) {
             };
 
         case CURRENCY_DYNAMIC_SET_START_DATE:
-            console.log( 'CURRENCY_DYNAMIC_SET_START_DATE', action );
             return {
                 ...state, ...{
                     currencyDynamicStartDate:          action.currencyDynamicStartDate,
@@ -134,6 +148,28 @@ function rdCurrency ( state = initState, action ) {
             return {
                 ...state, ...{
                     currencyDynamicEndDate:          action.currencyDynamicEndDate,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SET_START_POINT:
+            return {
+                ...state, ...{
+                    currencyDynamicStartPoint:          action.currencyDynamicStartPoint,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SET_END_POINT:
+            return {
+                ...state, ...{
+                    currencyDynamicEndPoint:          action.currencyDynamicEndPoint,
+                }
+            };
+
+        case CURRENCY_DYNAMIC_SET_POINTS:
+            return {
+                ...state, ...{
+                    currencyDynamicStartPoint:        action.currencyDynamicStartPoint,
+                    currencyDynamicEndPoint:          action.currencyDynamicEndPoint,
                 }
             };
 

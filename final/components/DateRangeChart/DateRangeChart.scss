@@ -14,8 +14,10 @@
             stroke: #ff0000;
         }
 
-        path.chart_column[ data-selected="true" ] {
+        path.chart_column[ data-point="END_POINT" ],
+        path.chart_column[ data-point="START_POINT" ] {
             stroke: orange;
+            cursor: col-resize;
         }
 
         div.DateRangeChart_legend {

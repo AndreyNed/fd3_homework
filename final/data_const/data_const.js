@@ -66,6 +66,12 @@ const DELETE_MODES = {
     NONE:                   'NONE',
 };
 
+const DRAG_MODE = {
+    START_POINT:            'START_POINT',
+    END_POINT:              'END_POINT',
+    NONE:                   'NONE',
+};
+
 export {
     OPERATION_TYPES,
     MODAL_CONTENT,
@@ -77,4 +83,5 @@ export {
     SETTINGS_MODES,
     CURRENCY_MODES,
     DELETE_MODES,
+    DRAG_MODE,
 }
