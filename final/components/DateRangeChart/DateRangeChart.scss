@@ -7,29 +7,63 @@
         color: #898989;
     }
 
-    div.chart_box > div.chart {
-        position: relative;
+    div.chart_box {
 
-        path.chart_column:hover {
-            stroke: #ff0000;
+        & > .os_y_note_box {
+            position: relative;
+
+            & > .os_y_note {
+                position: absolute;
+                /*transform-origin: 50% 100%;*/
+                transform: translate(-50%,-50%);
+                left: 50%;
+                top: 50%;
+                color: #898989;
+            }
         }
 
-        path.chart_column[ data-point="END_POINT" ],
-        path.chart_column[ data-point="START_POINT" ] {
-            stroke: orange;
-            cursor: col-resize;
-        }
+        & > div.chart {
+            position: relative;
 
-        div.DateRangeChart_legend {
-            position: absolute;
-            bottom: -32px;
-            text-align: center;
+            path.chart_column:hover {
+                stroke: #00EE76;
+            }
+
+            path.chart_column[ data-point="END_POINT" ],
+            path.chart_column[ data-point="START_POINT" ] {
+                stroke: orange;
+                cursor: col-resize;
+            }
+
+            div.DateRangeChart_legend {
+                position: absolute;
+                bottom: -32px;
+                text-align: center;
+            }
+
+            div.os_y_zero {
+                position: absolute;
+                bottom: 0;
+                left: -3.5em;
+                color: #898989;
+                /*transform: translateX(-50%);*/
+            }
         }
     }
 
+    & > div.os_x {
 
+        & > .os_x_note_box {
+            position: relative;
+            height: 32px;
 
-
-
-
+            & > .os_x_note {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                color: #898989;
+            }
+        }
+    }
 }

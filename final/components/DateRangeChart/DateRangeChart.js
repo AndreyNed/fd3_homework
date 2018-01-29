@@ -312,8 +312,8 @@ class DateRangeChart extends React.PureComponent {
 
     /* == controller == */
 
-    svgMouseOver = (e ) => {
-        if ( e.target.tagName === 'path' ) {
+    svgMouseOver = ( e ) => {
+        if ( e.target.tagName === 'path' && ('point' in e.target.dataset) ) {
             this.legendDate.innerHTML = e.target.dataset.date_str;
             this.legendRate.innerHTML = e.target.dataset.rate;
             let parentWidth = this.legend.parentElement.offsetWidth;
@@ -325,6 +325,11 @@ class DateRangeChart extends React.PureComponent {
                 ? x + 'px'
                 : ( parentWidth - this.legend.offsetWidth - 8 ) + 'px';
         }
+    };
+
+    svgMouseOut = ( e ) => {
+        this.legendDate.innerHTML = '';
+        this.legendRate.innerHTML = '';
     };
 
     svgMouseDown = ( e ) => {
@@ -359,10 +364,9 @@ class DateRangeChart extends React.PureComponent {
 
     /* == render functions == */
 
-    renderChart = () => {
+    renderChart = ( levels ) => {
         const { currencyDynamicData, currencyDynamicStartPoint, currencyDynamicEndPoint } = this.props;
         const { START_POINT, END_POINT, NONE } = DRAG_MODE;
-        let levels = this.getMinMaxDelta( currencyDynamicData, 'Cur_OfficialRate' );
         return ( isNotEmpty( currencyDynamicData) ) &&
             <g>
                 {
@@ -408,8 +412,17 @@ class DateRangeChart extends React.PureComponent {
 
     render() {
         ( this.debug_mode ) && console.log( 'DateRangeChart: RENDER...' );
-        const { currencyDynamicData, currencyDynamicStartDate, currencyDynamicEndDate } = this.props;
+        const {
+            currencyDynamicData,
+            currencyDynamicStartDate,
+            currencyDynamicEndDate,
+            currencyDynamicStartPoint,
+            currencyDynamicEndPoint
+        } = this.props;
         let props = this.prepareFormProps();
+        let ratesDelta = ( currencyDynamicEndPoint.rate - currencyDynamicStartPoint.rate ) / currencyDynamicEndPoint.rate * 100;
+        ratesDelta = Math.round( ratesDelta * 100 ) / 100;
+        let levels = this.getMinMaxDelta( currencyDynamicData, 'Cur_OfficialRate' );
         return (
             <div className = { this.classCSS }>
                 <div className = { this.classCSS + "_caption" }
@@ -440,11 +453,27 @@ class DateRangeChart extends React.PureComponent {
                 </div>
                 <div className="rows chart_box"
                      key="chart">
-                    <div className="cols col_16 chart">
+                    <div className="cols col_1 os_y_note_box"
+                         key="chart_os_y_note">
+                        <div className="os_y_note"
+                             key="os_y_note">
+                            Курс (BYN)
+                        </div>
+                    </div>
+                    <div className="cols col_15 chart">
+                        {
+                            ( isNotEmpty( currencyDynamicData ) ) &&
+                            <div className="os_y_zero"
+                                 key="os_y_zero"
+                                 ref = { ( elm ) => { this.osYZero = elm } }>
+                                { Math.round( ( levels.min + levels.delta * 0.1 ) * 1000 ) / 1000 }
+                            </div>
+                        }
                         {
                             ( isNotEmpty( currencyDynamicData ) )
                             ? <svg className = { this.classCSS + "_chart_image" }
                                    onMouseOver = { this.svgMouseOver }
+                                   onMouseOut = { this.svgMouseOut }
                                    onMouseDown = { this.svgMouseDown }
                                    onMouseUp = { this.svgMouseUp }
                                    width =   "100%"
@@ -452,7 +481,7 @@ class DateRangeChart extends React.PureComponent {
                                    viewBox = { `0 0 ${ currencyDynamicData.length + 0.5 } 120` }
                                    preserveAspectRatio = "none"
                                    xmlns =   "http://www.w3.org/2000/svg">
-                                    { this.renderChart() }
+                                    { this.renderChart( levels ) }
                               </svg>
                             : <span>
                                   Нет данных для отображения
@@ -474,6 +503,43 @@ class DateRangeChart extends React.PureComponent {
                                 </div>
                             </div>
                         }
+                    </div>
+                </div>
+                <div className="rows os_x"
+                     key="chart_os_x">
+                    <div className="cols col_1"
+                         key="os_x_empty">
+                    </div>
+                    <div className="cols col_15 os_x_note_box"
+                         key="os_x_note_box">
+                        <div className="os_x_note">
+                            Период (дни)
+                        </div>
+                    </div>
+                </div>
+                <div className="rows points_info">
+                    <div className="cols col_5 info_rates"
+                         key="info_rates">
+                        <div className="rows"
+                             key="info_rates_start">
+                            <div className="cols col_16">
+                                <label className = { this.classCSS + "_rates_start" }>
+                                    { `Точка 1: ${ currencyDynamicStartPoint.dateStr } (${ currencyDynamicStartPoint.rate })` }
+                                </label>
+                            </div>
+                        </div>
+                        <div className="rows"
+                             key="info_rates_end">
+                            <div className="cols col_16">
+                                <label className = { this.classCSS + "_rates_end" }>
+                                    { `Точка 2: ${ currencyDynamicEndPoint.dateStr } (${ currencyDynamicEndPoint.rate })` }
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="cols col_5 info_delta"
+                         key="info_delta">
+                        { `Изменение курса: ${ ratesDelta }%` }
                     </div>
                 </div>
             </div>
