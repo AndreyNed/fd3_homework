@@ -1,6 +1,7 @@
 import { thunkFetch } from "./thunkFetch";
 
 import { CURRENCY_URI, CURRENCY_DAILY_ALL, CURRENCY_DYNAMIC } from "./network_consts";
+import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_F_CURRENCY } from "../config/config";
 import {
     acCurrencyDynamicLoadStart,
     acCurrencyDynamicLoadSuccess,
@@ -10,7 +11,7 @@ import {
     acCurrencyLoadError,
 } from "../actions/acCurrency";
 
-const debug_mode = true;
+const debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_F_CURRENCY;
 
 const fCurrencyDailyAll = ( dispatch, cbSuccess, cbError,  ) => {
     ( debug_mode ) &&

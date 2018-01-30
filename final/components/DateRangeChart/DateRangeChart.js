@@ -26,7 +26,7 @@ import {
     acCurrencyDynamicSetPoints,
 } from "../../actions/acCurrency";
 
-import {isExists, isExistsAll, isNotEmpty, isNotEmptyAll} from "../../utils/utils";
+import {findArrayItemIndex, isExists, isExistsAll, isNotEmpty, isNotEmptyAll} from "../../utils/utils";
 
 import './DateRangeChart.scss';
 import {fCurrencyDynamicRates} from "../../network/fCurrency";
@@ -284,6 +284,22 @@ class DateRangeChart extends React.PureComponent {
         return result;
     };
 
+    getCurrency = () => {
+        const { currencyData, currencyDynamicData } = this.props;
+        if ( isNotEmptyAll( [ currencyDynamicData, currencyData ] ) ) {
+            let Cur_ID = currencyDynamicData[ 0 ].Cur_ID;
+            let index = findArrayItemIndex( currencyData, { Cur_ID: Cur_ID } );
+            // console.log( 'TEST: index: ', index );
+            const { Cur_Scale, Cur_Name, Cur_Abbreviation } = currencyData[ index ];
+            return {
+                scale: Cur_Scale,
+                name:  Cur_Name,
+                abbreviation: Cur_Abbreviation,
+            };
+        }
+        return { scale: 0, name: '' };
+    };
+
     getStringDate = (date ) => {
         return ( date instanceof Date )
             ? date.getFullYear() + '-' + ( date.getMonth() + 1 ) + '-' + date.getDate()
@@ -423,11 +439,16 @@ class DateRangeChart extends React.PureComponent {
         let ratesDelta = ( currencyDynamicEndPoint.rate - currencyDynamicStartPoint.rate ) / currencyDynamicEndPoint.rate * 100;
         ratesDelta = Math.round( ratesDelta * 100 ) / 100;
         let levels = this.getMinMaxDelta( currencyDynamicData, 'Cur_OfficialRate' );
+        let currency = this.getCurrency();
+
         return (
             <div className = { this.classCSS }>
                 <div className = { this.classCSS + "_caption" }
                      key="caption">
-                    Динамика курса валют за период ( до 365 дней )
+                    { `Динамика курса валют за период (до 365 дней):` }
+                    <div className = { this.classCSS + "_subcaption" }>
+                        { `Белорусских рублей (BYN) за ${ currency.scale } ${ currency.name } (${ currency.abbreviation })` }
+                    </div>
                 </div>
                 <div className="rows options"
                      key="options">
@@ -457,15 +478,14 @@ class DateRangeChart extends React.PureComponent {
                          key="chart_os_y_note">
                         <div className="os_y_note"
                              key="os_y_note">
-                            Курс (BYN)
+                            { `Курс (BYN / ${ currency.scale } ${ currency.abbreviation })` }
                         </div>
                     </div>
                     <div className="cols col_15 chart">
                         {
                             ( isNotEmpty( currencyDynamicData ) ) &&
                             <div className="os_y_zero"
-                                 key="os_y_zero"
-                                 ref = { ( elm ) => { this.osYZero = elm } }>
+                                 key="os_y_zero">
                                 { Math.round( ( levels.min + levels.delta * 0.1 ) * 1000 ) / 1000 }
                             </div>
                         }
@@ -505,43 +525,49 @@ class DateRangeChart extends React.PureComponent {
                         }
                     </div>
                 </div>
-                <div className="rows os_x"
-                     key="chart_os_x">
-                    <div className="cols col_1"
-                         key="os_x_empty">
-                    </div>
-                    <div className="cols col_15 os_x_note_box"
-                         key="os_x_note_box">
-                        <div className="os_x_note">
-                            Период (дни)
+                {
+                    ( isNotEmpty( currencyDynamicData ) ) &&
+                    <div className="rows os_x"
+                         key="chart_os_x">
+                        <div className="cols col_1"
+                             key="os_x_empty">
                         </div>
-                    </div>
-                </div>
-                <div className="rows points_info">
-                    <div className="cols col_5 info_rates"
-                         key="info_rates">
-                        <div className="rows"
-                             key="info_rates_start">
-                            <div className="cols col_16">
-                                <label className = { this.classCSS + "_rates_start" }>
-                                    { `Точка 1: ${ currencyDynamicStartPoint.dateStr } (${ currencyDynamicStartPoint.rate })` }
-                                </label>
-                            </div>
-                        </div>
-                        <div className="rows"
-                             key="info_rates_end">
-                            <div className="cols col_16">
-                                <label className = { this.classCSS + "_rates_end" }>
-                                    { `Точка 2: ${ currencyDynamicEndPoint.dateStr } (${ currencyDynamicEndPoint.rate })` }
-                                </label>
+                        <div className="cols col_15 os_x_note_box"
+                             key="os_x_note_box">
+                            <div className="os_x_note">
+                                Период (дни)
                             </div>
                         </div>
                     </div>
-                    <div className="cols col_5 info_delta"
-                         key="info_delta">
-                        { `Изменение курса: ${ ratesDelta }%` }
-                    </div>
-                </div>
+                }
+                {
+                    ( isNotEmpty( currencyDynamicData ) ) &&
+                        <div className="rows points_info">
+                            <div className="cols col_5 info_rates"
+                                 key="info_rates">
+                                <div className="rows"
+                                     key="info_rates_start">
+                                    <div className="cols col_16">
+                                        <label className = { this.classCSS + "_rates_start" }>
+                                            { `Точка 1: ${ currencyDynamicStartPoint.dateStr } (${ currencyDynamicStartPoint.rate })` }
+                                        </label>
+                                    </div>
+                                </div>
+                                <div className="rows"
+                                     key="info_rates_end">
+                                    <div className="cols col_16">
+                                        <label className = { this.classCSS + "_rates_end" }>
+                                            { `Точка 2: ${ currencyDynamicEndPoint.dateStr } (${ currencyDynamicEndPoint.rate })` }
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cols col_5 info_delta"
+                                 key="info_delta">
+                                { `Изменение курса: ${ ratesDelta }%` }
+                            </div>
+                        </div>
+                }
             </div>
         )
     }

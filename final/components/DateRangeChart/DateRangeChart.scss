@@ -5,6 +5,11 @@
         font-size: 32px;
         font-weight: bold;
         color: #898989;
+
+        & > .DateRangeChart_subcaption {
+            padding: 16px 0 0;
+            font-size: 24px;
+        }
     }
 
     div.chart_box {
@@ -14,8 +19,10 @@
 
             & > .os_y_note {
                 position: absolute;
-                /*transform-origin: 50% 100%;*/
-                transform: translate(-50%,-50%);
+                transform-origin: 30% 220%;
+                transform: rotate(-90deg);
+                white-space: nowrap;
+                /*transform: translate(-50%,-50%);*/
                 left: 50%;
                 top: 50%;
                 color: #898989;
@@ -64,6 +71,14 @@
                 transform: translateX(-50%);
                 color: #898989;
             }
+        }
+    }
+
+    & > .points_info {
+
+        & > .info_delta {
+            font-size: 18px;
+            font-weight: bold;
         }
     }
 }

@@ -5,10 +5,10 @@ import { Route } from 'react-router-dom';
 
 import PageAbout from './PageAbout';
 import PageMain  from './PageMain';
-import PageCurrency from './PageCurrency';
-import PageAccounts from './PageAccounts';
-import PageOperations from './PageOperations';
-import PageSettings from './PageSettings';
+import PageCurrency from './PageCurrency/PageCurrency';
+import PageAccounts from './PageAccounts/PageAccounts';
+import PageOperations from './PageOperations/PageOperations';
+import PageSettings from './PageSettings/PageSettings';
 
 class PagesRouter extends React.Component {
 
