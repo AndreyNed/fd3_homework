@@ -10,18 +10,24 @@ export const str0l = (val, len) => {
 
 // форматирует переданную дату-время в формате дд.мм.гггг
 export const formatDate = (dt) => {
-    let year = dt.getFullYear();
-    let month = dt.getMonth() + 1;
-    let day = dt.getDate();
-    return str0l(day, 2) + '.' + str0l(month, 2) + '.' + year;
+    if ( isExists( dt ) && ( dt instanceof Date ) ) {
+        let year = dt.getFullYear();
+        let month = dt.getMonth() + 1;
+        let day = dt.getDate();
+        return str0l(day, 2) + '.' + str0l(month, 2) + '.' + year;
+    }
+    return '';
 };
 
 // форматирует переданную дату-время в формате дд.мм.гггг чч:мм:сс
 export const formatDateTime = (dt) => {
-    let hours = dt.getHours();
-    let minutes = dt.getMinutes();
-    let seconds = dt.getSeconds();
-    return formatDate(dt) + ' ' + str0l(hours, 2) + ':' + str0l(minutes, 2) + ':' + str0l(seconds, 2);
+    if ( isExists( dt ) && ( dt instanceof Date ) ) {
+        let hours = dt.getHours();
+        let minutes = dt.getMinutes();
+        let seconds = dt.getSeconds();
+        return formatDate(dt) + ' ' + str0l(hours, 2) + ':' + str0l(minutes, 2) + ':' + str0l(seconds, 2);
+    }
+    return '';
 };
 
 // ищет в массиве хэшей элемент, удовлетворяющую условиям из хэша filter (поле:значение)
