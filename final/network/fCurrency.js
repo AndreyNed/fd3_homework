@@ -13,6 +13,48 @@ import {
 
 const debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_F_CURRENCY;
 
+const fCurrencyAll = ( dispatch, cbSuccess, cbError,  ) => {
+    ( debug_mode ) &&
+        console.log( "fCurrencyAll..." );
+
+    dispatch( acCurrencyAllLoadStart() );
+    let fetchError = function ( errorText ) {
+        dispatch( acCurrencyAllLoadError() );
+        if ( cbError ){
+            cbError( errorText );
+        }
+        else {
+            console.log( '%c%s', 'color: red;', 'fCurrencyAll: fetch error...', errorText );
+        }
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        ( debug_mode ) &&
+            console.log( "fCurrencyAll: fetchSuccess: ", loadedData );
+        dispatch( acCurrencyAllLoadSuccess( loadedData ) );
+        if ( cbSuccess ) {
+            cbSuccess( loadedData );
+        }
+    };
+
+    let fetchOptions = {
+        method: 'get',
+        cashe:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+    };
+
+    dispatch(
+        thunkFetch({
+            fetchURI:     CURRENCY_URI + CURRENCY_ALL,
+            fetchOptions: fetchOptions,
+            cbError:      fetchError,
+            cbSuccess:    fetchSuccess,
+        })
+    );
+};
+
 const fCurrencyDailyAll = ( dispatch, cbSuccess, cbError,  ) => {
     ( debug_mode ) &&
         console.log( "fCurrencyDailyAll..." );

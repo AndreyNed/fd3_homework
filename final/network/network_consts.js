@@ -4,6 +4,8 @@ export const CURRENCY_URI = 'http://www.nbrb.by/API/ExRates/Rates';
 
 export const CURRENCY_DAILY_ALL = '?Periodicity=0';
 
+export const CURRENCY_ALL = '?Periodicity=0';
+
 export const CURRENCY_DYNAMIC = ( Cur_ID, startDate, endDate ) => {
     return `/Dynamics/${ Cur_ID }?startDate=${ startDate }&endDate=${ endDate }`;
 };
