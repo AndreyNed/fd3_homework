@@ -18,8 +18,8 @@ import {isExists, isNotEmpty} from "../../utils/utils";
 import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
 import {acUIHideMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
 import {acDataSetAccountsData, acDataSetOperationCategoriesData, acDataSetOperationsData} from "../../actions/acData";
-import {acCurrencySetCurrencyData, acCurrencySetDynamicCurrencyData} from "../../actions/acCurrency";
-import { fCurrencyDailyAll, fCurrencyDynamicRates } from "../../network/fCurrency";
+import {acCurrencySetCurrencyData, acCurrencySetCurrencyAllData} from "../../actions/acCurrency";
+import { fCurrencyDailyAll, fCurrencyAll } from "../../network/fCurrency";
 
 class Loader extends React.PureComponent {
 
@@ -81,6 +81,40 @@ class Loader extends React.PureComponent {
         operationsLoadStatus:           PropTypes.number,
         operationsPrepareStatus:        PropTypes.number,
 
+        currencyAllSource:              PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Cur_ParentID:           PropTypes.number,
+                Cur_Code:               PropTypes.string,
+                Cur_Abbreviation:       PropTypes.string,
+                Cur_Scale:              PropTypes.number,
+                Cur_Name:               PropTypes.string,
+                Cur_Name_Bel:           PropTypes.string,
+                Cur_Name_Eng:           PropTypes.string,
+                Cur_QuotName:           PropTypes.string,
+                Cur_QuotName_Bel:       PropTypes.string,
+                Cur_QuotName_Eng:       PropTypes.string,
+                Cur_NameMulti:          PropTypes.string,
+                Cur_Name_BelMulti:      PropTypes.string,
+                Cur_Name_EngMulti:      PropTypes.string,
+                Cur_Periodicity:        PropTypes.number,
+                Cur_DateStart:          PropTypes.string,
+                Cur_DateEnd:            PropTypes.string,
+            })
+        ),
+
+        currencyAllDate:                PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Cur_Code:               PropTypes.string,
+                Cur_Abbreviation:       PropTypes.string,
+                Cur_Scale:              PropTypes.number,
+                Cur_Name:               PropTypes.string,
+                Cur_QuotName:           PropTypes.string,
+                Cur_NameMulti:          PropTypes.string,
+            })
+        ),
+
         currencySource:                 PropTypes.arrayOf(
             PropTypes.shape({
                 Cur_ID:                 PropTypes.number,
@@ -95,7 +129,7 @@ class Loader extends React.PureComponent {
         currencyData:                   PropTypes.arrayOf(
             PropTypes.shape({
                 Cur_ID:                 PropTypes.number,
-                Date:                   PropTypes.date,
+                Date:                   PropTypes.objectOf( Date ),
                 Cur_Abbreviation:       PropTypes.string,
                 Cur_Scale:              PropTypes.number,
                 Cur_Name:               PropTypes.string,
@@ -151,6 +185,9 @@ class Loader extends React.PureComponent {
             operationsSource,
             operationsPrepareStatus,
             modalContent,
+            currencyAllSource,
+            currencyAllLoadStatus,
+            currencyAllPrepareStatus,
             currencySource,
             currencyLoadStatus,
             currencyPrepareStatus,
@@ -159,6 +196,7 @@ class Loader extends React.PureComponent {
         if ( !accountsLoadStatus ||
              !operationCategoriesLoadStatus ||
              !operationsLoadStatus ||
+             !currencyAllLoadStatus ||
              !currencyLoadStatus )
             dispatch( acUIShowDataLoadingMessage() );
 
@@ -195,6 +233,12 @@ class Loader extends React.PureComponent {
             )
         }
 
+        if ( !currencyAllLoadStatus ) {
+            ( this.debug_mode ) &&
+                console.log( 'Loader: Currency all list need to be loaded...' );
+            fCurrencyAll( dispatch, null, null );
+        }
+
         if ( !currencyLoadStatus ) {
             ( this.debug_mode ) &&
                 console.log( 'Loader: Currency need to be loaded...' );
@@ -204,6 +248,7 @@ class Loader extends React.PureComponent {
         if ( accountsLoadStatus === 2 &&
              operationCategoriesLoadStatus === 2 &&
              operationsLoadStatus === 2 &&
+             currencyAllLoadStatus === 2 &&
              currencyLoadStatus === 2 &&
              modalContent === MODAL_CONTENT.DATA_LOADING )
             setTimeout( () => { dispatch( acUIHideMatGlass() ) }, CONFIG_UI_MODE_TIMEOUT );
@@ -218,6 +263,10 @@ class Loader extends React.PureComponent {
 
         if ( !operationsPrepareStatus && operationsLoadStatus === 2 ) {
             this.prepareOperationsData( operationsSource );
+        }
+
+        if ( !currencyAllPrepareStatus && currencyAllLoadStatus === 2 ) {
+            this.prepareCurrencyAllData( currencyAllSource );
         }
 
         if ( !currencyPrepareStatus && currencyLoadStatus === 2 ) {
@@ -255,6 +304,31 @@ class Loader extends React.PureComponent {
         dispatch( acCurrencySetCurrencyData( currencyData ) );
     };
 
+    prepareCurrencyAllData = ( currencyAllSource ) => {
+        const { dispatch } = this.props;
+        let currencyAllData = currencyAllSource.map( ( item ) => {
+            const {
+                Cur_ID,
+                Cur_Code,
+                Cur_Abbreviation,
+                Cur_Scale,
+                Cur_Name,
+                Cur_QuotName,
+                Cur_NameMulti,
+            } = item;
+            return {
+                Cur_ID,
+                Cur_Code,
+                Cur_Abbreviation,
+                Cur_Scale,
+                Cur_Name,
+                Cur_QuotName,
+                Cur_NameMulti,
+            }
+        } );
+        dispatch( acCurrencySetCurrencyAllData( currencyAllData ) );
+    };
+
     render() {
         // ( this.debug_mode ) &&
         //     console.log( 'Loader: render: props: ', this.props );
@@ -285,6 +359,7 @@ class Loader extends React.PureComponent {
 }
 
 const mapStateToProps = function ( state ) {
+    // console.log( 'Loader: mapStateToProps: state: ', state );
     return {
         accountsSource:                 state.data.accountsSource,
         operationCategoriesSource:      state.data.operationCategoriesSource,
@@ -302,18 +377,15 @@ const mapStateToProps = function ( state ) {
         operationCategoriesPrepareStatus: state.data.operationCategoriesPrepareStatus,
         operationsPrepareStatus:         state.data.operationsPrepareStatus,
 
+        currencyAllLoadStatus:          state.currency.currencyAllLoadStatus,
+        currencyAllPrepareStatus:       state.currency.currencyAllPrepareStatus,
+        currencyAllSource:              state.currency.currencyAllSource,
+        currencyAllData:                state.currency.currencyAllData,
+
         currencyLoadStatus:             state.currency.currencyLoadStatus,
         currencyPrepareStatus:          state.currency.currencyPrepareStatus,
         currencySource:                 state.currency.currencySource,
         currencyData:                   state.currency.currencyData,
-
-        /*currencyDynamicSource:          state.currency.currencyDynamicSource,
-        currencyDynamicData:            state.currency.currencyDynamicData,
-        currencyDynamicLoadStatus:      state.currency.currencyDynamicLoadStatus,
-        currencyDynamicPrepareStatus:   state.currency.currencyDynamicPrepareStatus,
-        currencyDynamicCurID:           state.currency.currencyDynamicCurID,
-        currencyDynamicStartDate:       state.currency.currencyDynamicStartDate,
-        currencyDynamicEndDate:         state.currency.currencyDynamicEndDate,*/
 
         matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,

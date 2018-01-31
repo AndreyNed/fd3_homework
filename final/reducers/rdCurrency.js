@@ -1,6 +1,13 @@
 'use strict';
 
 import {
+    CURRENCY_ALL_LOAD_START,
+    CURRENCY_ALL_LOAD_SUCCESS,
+    CURRENCY_ALL_LOAD_ERROR,
+    CURRENCY_ALL_SHOULD_BE_RELOADED,
+
+    CURRENCY_SET_CURRENCY_ALL_DATA,
+
     CURRENCY_LOAD_START,
     CURRENCY_LOAD_SUCCESS,
     CURRENCY_LOAD_ERROR,
@@ -24,6 +31,11 @@ import {
 } from "../actions/acCurrency";
 
 const initState = {
+    currencyAllSource:              null,
+    currencyAllData:                null,
+    currencyAllLoadStatus:          0,
+    currencyAllPrepareStatus:       0,
+
     currencySource:                 null,
     currencyData:                   null,
     currencyLoadStatus:             0,
@@ -53,6 +65,50 @@ const initState = {
 
 function rdCurrency ( state = initState, action ) {
     switch ( action.type ) {
+
+        case CURRENCY_ALL_LOAD_START:
+            // console.log( "2. rd CURRENCY_ALL_LOAD_START" );
+            return {
+                ...state, ...{
+                    currencyAllLoadStatus: 1,
+                    currencyAllSource:     [],
+                }
+            };
+
+        case CURRENCY_ALL_LOAD_SUCCESS:
+            // console.log( '4. rd CURRENCY_ALL_LOAD_SUCCESS: ', action.currencyAllSource );
+            return {
+                ...state, ...{
+                    currencyAllLoadStatus:    2,
+                    currencyAllSource:        action.currencyAllSource,
+                    currencyAllPrepareStatus: 0,
+                    currencyAllData:          [],
+                }
+            };
+
+        case CURRENCY_ALL_LOAD_ERROR:
+            return {
+                ...state, ...{
+                    currencyAllLoadStatus: 3,
+                    currencyAllSource:     [],
+                }
+            };
+
+        case CURRENCY_ALL_SHOULD_BE_RELOADED:
+            return {
+                ...state, ...{
+                    currencyAllLoadStatus:   0,
+                    currencyAllSaveStatus:   0,
+                }
+            };
+
+        case CURRENCY_SET_CURRENCY_ALL_DATA:
+            return {
+                ...state, ...{
+                    currencyAllPrepareStatus: 2,
+                    currencyAllData:          action.currencyAllData,
+                }
+            };
 
         case CURRENCY_LOAD_START:
             return {
