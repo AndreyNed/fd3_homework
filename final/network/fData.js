@@ -39,6 +39,202 @@ import {acUIHideMatGlass} from "../actions/acUI";
 
 const debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_F_DATA;
 
+const fDataLoadCurrencyList = function ( dispatch, cbSuccess, cbError ) {
+    ( debug_mode ) && console.log( 'fDataLoadCurrencyList...' );
+    dispatch( acDataCurrencyListLoadStart() );
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataLoadCurrencyList: ' + errorText );
+        dispatch( acDataCurrencyListLoadError( errorText ) );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        ( debug_mode ) && console.log( 'fDataLoadCurrencyList: fetchSuccess: loadedData: ', loadedData );
+        dispatch( acDataCurrencyListLoadSuccess( loadedData ) );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: 'command=get_currency_all',
+    };
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
+    ( debug_mode ) && console.log( 'fDataSaveCurrency...' );
+    dispatch( acDataCurrencySaveStart() );
+    const { id, code, name, abbreviation, scale, rate, updated } = currency;
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataSaveCurrency: ' + errorText );
+        dispatch( acDataCurrencySaveError( errorText ) );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+                console.log( '%c%s', 'color: green;font-weight:bold', 'fDataSaveCurrency: fetchSuccess: ', loadedData.responseText );
+            dispatch( acDataCurrencySaveError( errorText ) );
+        }
+        else {
+            ( debug_mode ) &&
+                console.log( '%c%s', 'color: red;font-weight:bold', 'fDataSaveCurrency: fetchSuccess: ', loadedData.responseText );
+        }
+        dispatch( acDataCurrencySaveSuccess() );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=save_account' +
+        `&currency_id=${ id }` +
+        `&currency_code=${ code }` +
+        `&currency_name=${ name }` +
+        `&currency_abbreviation=${ abbreviation }` +
+        `&currency_scale=${ scale }` +
+        `&currency_rate=${ rate }` +
+        `&currency_updated=${ updated }`
+    };
+
+    debug_mode && console.log( 'fDataSaveCurrency: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,// + value,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency ) {
+    ( debug_mode ) && console.log( 'fDataCreateCurrency...' );
+    dispatch( acDataCurrencySaveStart() );
+    const { code, name, abbreviation, scale, rate, updated } = newCurrency;
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataCreateCurrency: ' + errorText );
+        dispatch( acDataCurrencySaveError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataCreateCurrency: fetchSuccess: ', loadedData.responseText );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataCreateCurrency: fetchSuccess: ', loadedData.responseText );
+        }
+        dispatch( acDataCurrencySaveSuccess() );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=save_currency' +
+        `&currency_code=${ code }` +
+        `&currency_name=${ name }` +
+        `&currency_abbreviation=${ abbreviation }` +
+        `&currency_scale=${ scale }` +
+        `&currency_rate=${ rate }` +
+        `&currency_updated=${ updated }`
+    };
+
+    debug_mode && console.log( 'fDataCreateCurrency: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,// + value,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
+const fDataDeleteCurrency = function ( dispatch, cbSuccess, cbError, currencyId ) {
+    ( debug_mode ) && console.log( 'fDataDeleteCurrency...' );
+    dispatch( acDataCurrencyDeleteStart() );
+
+    let fetchError = function ( errorText ) {
+        console.error( 'fDataDeleteAccount: ' + errorText );
+        dispatch( acDataCurrencyDeleteError() );
+        if (cbError)
+            cbError( errorText );
+    };
+
+    let fetchSuccess = function ( loadedData ) {
+        if ( !loadedData.errorCode ) {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataDeleteCurrency: fetchSuccess: ', loadedData.responseText );
+        }
+        else {
+            ( debug_mode ) &&
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteCurrency: fetchSuccess: ', loadedData.responseText );
+        }
+        dispatch( acDataCurrencyDeleteSuccess() );
+        if ( cbSuccess )
+            cbSuccess( loadedData );
+    };
+
+    let fetchOptions = {
+        method: 'post',
+        mode:   'cors',
+        cache:  'no-cache',
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
+        },
+        body: 'command=delete_currency' +
+        `&currency_id=${ currencyId }`
+    };
+
+    debug_mode && console.log( 'fDataDeleteCurrency: fetchOptions: ', fetchOptions );
+
+    dispatch(
+        thunkFetch({
+            fetchURI: SERVER_URI,
+            fetchOptions: fetchOptions,
+            cbError: fetchError,
+            cbSuccess: fetchSuccess,
+        })
+    );
+};
+
 const fDataLoadAccounts = function ( dispatch, cbSuccess, cbError ) {
     ( debug_mode ) && console.log( 'fDataLoadAccounts...' );
     dispatch( acDataAccountsLoadStart() );
