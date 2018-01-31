@@ -1,0 +1,26 @@
+[
+  {
+    "Id": 0,
+    "Name": "Золото",
+    "NameBel": "Золата",
+    "NameEng": "Gold"
+  },
+  {
+    "Id": 1,
+    "Name": "Серебро",
+    "NameBel": "Серабро",
+    "NameEng": "Silver"
+  },
+  {
+    "Id": 2,
+    "Name": "Платина",
+    "NameBel": "Плаціна",
+    "NameEng": "Platinum"
+  },
+  {
+    "Id": 3,
+    "Name": "Палладий",
+    "NameBel": "Паладый",
+    "NameEng": "Palladium"
+  }
+]
