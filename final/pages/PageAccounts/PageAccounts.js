@@ -111,6 +111,14 @@ class PageAccounts extends React.PureComponent {
                             value: item.name,
                         },
                         {
+                            id: 'debit',
+                            value: accountInfo.debit,
+                        },
+                        {
+                            id: 'credit',
+                            value: accountInfo.credit,
+                        },
+                        {
                             id: 'amount',
                             value: accountInfo.amount,
                         },
@@ -159,6 +167,28 @@ class PageAccounts extends React.PureComponent {
                     width: '15%',
                 },
                 {
+                    id: 'debit',
+                    title: 'Приход',
+                    dataType: NUMBER,
+                    align: RIGHT,
+                    isSortable: true,
+                    sorting: NONE,
+                    isSearchable: false,
+                    isVisible: true,
+                    width: '15%',
+                },
+                {
+                    id: 'credit',
+                    title: 'Расход',
+                    dataType: NUMBER,
+                    align: RIGHT,
+                    isSortable: true,
+                    sorting: NONE,
+                    isSearchable: false,
+                    isVisible: true,
+                    width: '15%',
+                },
+                {
                     id: 'amount',
                     title: 'Сумма',
                     dataType: NUMBER,
@@ -201,17 +231,18 @@ class PageAccounts extends React.PureComponent {
 
     getAccountInfo = ( accountId ) => {
         const { operationsData } = this.props;
-        const { DEBIT } = OPERATION_TYPES;
-        let result = { amount: 0, updated: null };
+        const { CREDIT } = OPERATION_TYPES;
+        let result = { amount: 0, credit: 0, debit: 0, updated: null };
         if ( isNotEmpty( operationsData ) ) {
             operationsData.forEach( ( item ) => {
                 if ( item.accountId === accountId ) {
-                    result.amount += ( item.type === DEBIT )
-                        ? item.sum
-                        : -1 * item.sum;
+                    ( item.type === CREDIT )
+                        ? result.credit += item.sum
+                        : result.debit += item.sum;
                     result.updated = Math.max( result.updated, item.date );
                 }
             } );
+            result.amount = result.debit - result.credit;
         }
         // ( this.debug_mode ) &&
             // console.log( 'PageAccounts: getAccountInfo: accountId: ', accountId, '; result: ', result );
