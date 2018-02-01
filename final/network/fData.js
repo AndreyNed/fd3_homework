@@ -30,6 +30,15 @@ import {
     acDataOperationCategorySaveStart,
     acDataOperationCategorySaveSuccess,
     acDataOperationCategorySaveError,
+    acDataCurrencyListLoadStart,
+    acDataCurrencyListLoadSuccess,
+    acDataCurrencyListLoadError,
+    acDataCurrencyListSaveStart,
+    acDataCurrencyListSaveSuccess,
+    acDataCurrencyListSaveError,
+    acDataCurrencyListDeleteStart,
+    acDataCurrencyListDeleteSuccess,
+    acDataCurrencyListDeleteError,
 } from "../actions/acData";
 
 import { SERVER_URI } from "./network_consts";
@@ -69,22 +78,22 @@ const fDataLoadCurrencyList = function ( dispatch, cbSuccess, cbError ) {
 
     dispatch(
         thunkFetch({
-            fetchURI: SERVER_URI,
+            fetchURI:     SERVER_URI,
             fetchOptions: fetchOptions,
-            cbError: fetchError,
-            cbSuccess: fetchSuccess,
+            cbError:      fetchError,
+            cbSuccess:    fetchSuccess,
         })
     );
 };
 
 const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
     ( debug_mode ) && console.log( 'fDataSaveCurrency...' );
-    dispatch( acDataCurrencySaveStart() );
+    dispatch( acDataCurrencyListSaveStart() );
     const { id, code, name, abbreviation, scale, rate, updated } = currency;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataSaveCurrency: ' + errorText );
-        dispatch( acDataCurrencySaveError( errorText ) );
+        dispatch( acDataCurrencyListSaveError( errorText ) );
         if (cbError)
             cbError( errorText );
     };
@@ -93,13 +102,13 @@ const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
         if ( !loadedData.errorCode ) {
             ( debug_mode ) &&
                 console.log( '%c%s', 'color: green;font-weight:bold', 'fDataSaveCurrency: fetchSuccess: ', loadedData.responseText );
-            dispatch( acDataCurrencySaveError( errorText ) );
+            dispatch( acDataCurrencyListSaveError( errorText ) );
         }
         else {
             ( debug_mode ) &&
                 console.log( '%c%s', 'color: red;font-weight:bold', 'fDataSaveCurrency: fetchSuccess: ', loadedData.responseText );
         }
-        dispatch( acDataCurrencySaveSuccess() );
+        dispatch( acDataCurrencyListSaveSuccess() );
         if ( cbSuccess )
             cbSuccess( loadedData );
     };
@@ -135,12 +144,12 @@ const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
 
 const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency ) {
     ( debug_mode ) && console.log( 'fDataCreateCurrency...' );
-    dispatch( acDataCurrencySaveStart() );
+    dispatch( acDataCurrencyListSaveStart() );
     const { code, name, abbreviation, scale, rate, updated } = newCurrency;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataCreateCurrency: ' + errorText );
-        dispatch( acDataCurrencySaveError() );
+        dispatch( acDataCurrencyListSaveError() );
         if (cbError)
             cbError( errorText );
     };
@@ -154,7 +163,7 @@ const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency
             ( debug_mode ) &&
             console.log( '%c%s', 'color: red;font-weight:bold', 'fDataCreateCurrency: fetchSuccess: ', loadedData.responseText );
         }
-        dispatch( acDataCurrencySaveSuccess() );
+        dispatch( acDataCurrencyListSaveSuccess() );
         if ( cbSuccess )
             cbSuccess( loadedData );
     };
@@ -179,7 +188,7 @@ const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency
 
     dispatch(
         thunkFetch({
-            fetchURI: SERVER_URI,// + value,
+            fetchURI: SERVER_URI,
             fetchOptions: fetchOptions,
             cbError: fetchError,
             cbSuccess: fetchSuccess,
@@ -189,11 +198,11 @@ const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency
 
 const fDataDeleteCurrency = function ( dispatch, cbSuccess, cbError, currencyId ) {
     ( debug_mode ) && console.log( 'fDataDeleteCurrency...' );
-    dispatch( acDataCurrencyDeleteStart() );
+    dispatch( acDataCurrencyListDeleteStart() );
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataDeleteAccount: ' + errorText );
-        dispatch( acDataCurrencyDeleteError() );
+        dispatch( acDataCurrencyListDeleteError() );
         if (cbError)
             cbError( errorText );
     };
@@ -207,7 +216,7 @@ const fDataDeleteCurrency = function ( dispatch, cbSuccess, cbError, currencyId 
             ( debug_mode ) &&
             console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteCurrency: fetchSuccess: ', loadedData.responseText );
         }
-        dispatch( acDataCurrencyDeleteSuccess() );
+        dispatch( acDataCurrencyListDeleteSuccess() );
         if ( cbSuccess )
             cbSuccess( loadedData );
     };
@@ -818,4 +827,5 @@ export {
     fDataSaveOperation, fDataCreateOperation, fDataDeleteOperation,
     fDataSaveAccount, fDataCreateAccount, fDataDeleteAccount,
     fDataSaveOperationCategory, fDataCreateOperationCategory, fDataDeleteOperationCategory,
+    fDataLoadCurrencyList, fDataCreateCurrency, fDataSaveCurrency, fDataDeleteCurrency,
 }

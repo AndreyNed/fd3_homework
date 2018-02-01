@@ -6,11 +6,11 @@ const CONFIG_DEBUG_MODE_LOADER = ((( false )));
 
 const CONFIG_DEBUG_MODE_PAGE_OPERATIONS = ((( false )));
 
-const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( false )));
+const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( true )));
 
 const CONFIG_DEBUG_MODE_PAGE_CURRENCY = ((( false )));
 
-const CONFIG_DEBUG_MODE_PAGE_ACCOUNTS = ((( true )));
+const CONFIG_DEBUG_MODE_PAGE_ACCOUNTS = ((( false )));
 
 const CONFIG_DEBUG_MODE_DATA_LOADING = ((( false )));
 

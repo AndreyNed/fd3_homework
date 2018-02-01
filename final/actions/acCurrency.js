@@ -141,7 +141,7 @@ const acCurrencyDynamicSetEndDate = function ( endDate ) {
 };
 
 const acCurrencyDynamicSetStartPoint = function ( startPoint ) {
-    console.log( 'action start point: ', startPoint );
+    // console.log( 'action start point: ', startPoint );
     return {
         type:                          CURRENCY_DYNAMIC_SET_START_POINT,
         currencyDynamicStartPoint:     startPoint,

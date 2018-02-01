@@ -15,9 +15,17 @@ import { CONFIG_UI_MODE_TIMEOUT, } from "../../config/config";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_LOADER } from "../../config/config";
 import {isExists, isNotEmpty} from "../../utils/utils";
 
-import {fDataLoadAccounts, fDataLoadOperationCategories, fDataLoadOperations} from "../../network/fData";
+import {
+    fDataLoadAccounts,
+    fDataLoadOperationCategories,
+    fDataLoadOperations,
+    fDataLoadCurrencyList,
+} from "../../network/fData";
 import {acUIHideMatGlass, acUIShowDataLoadingMessage} from "../../actions/acUI";
-import {acDataSetAccountsData, acDataSetOperationCategoriesData, acDataSetOperationsData} from "../../actions/acData";
+import {
+    acDataCurrencyListSetData, acDataSetAccountsData, acDataSetOperationCategoriesData,
+    acDataSetOperationsData
+} from "../../actions/acData";
 import {acCurrencySetCurrencyData, acCurrencySetCurrencyAllData} from "../../actions/acCurrency";
 import { fCurrencyDailyAll, fCurrencyAll } from "../../network/fCurrency";
 
@@ -80,6 +88,31 @@ class Loader extends React.PureComponent {
         operationCategoriesPrepareStatus: PropTypes.number,
         operationsLoadStatus:           PropTypes.number,
         operationsPrepareStatus:        PropTypes.number,
+
+        currencyListLoadStatus:         PropTypes.number,
+        currencyListPrepareStatus:      PropTypes.number,
+        currencyListSource:             PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                code:                   PropTypes.string,
+                name:                   PropTypes.string,
+                abbreviation:           PropTypes.string,
+                scale:                  PropTypes.number,
+                rate:                   PropTypes.number,
+                updated:                PropTypes.any,
+            })
+        ),
+        currencyListData:               PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                code:                   PropTypes.string,
+                name:                   PropTypes.string,
+                abbreviation:           PropTypes.string,
+                scale:                  PropTypes.number,
+                rate:                   PropTypes.number,
+                updated:                PropTypes.number,
+            })
+        ),
 
         currencyAllSource:              PropTypes.arrayOf(
             PropTypes.shape({
@@ -184,6 +217,9 @@ class Loader extends React.PureComponent {
             operationsLoadStatus,
             operationsSource,
             operationsPrepareStatus,
+            currencyListSource,
+            currencyListLoadStatus,
+            currencyListPrepareStatus,
             modalContent,
             currencyAllSource,
             currencyAllLoadStatus,
@@ -196,6 +232,7 @@ class Loader extends React.PureComponent {
         if ( !accountsLoadStatus ||
              !operationCategoriesLoadStatus ||
              !operationsLoadStatus ||
+             !currencyListLoadStatus ||
              !currencyAllLoadStatus ||
              !currencyLoadStatus )
             dispatch( acUIShowDataLoadingMessage() );
@@ -233,6 +270,17 @@ class Loader extends React.PureComponent {
             )
         }
 
+        if ( !currencyListLoadStatus ) {
+            ( this.debug_mode ) &&
+            console.log( 'Loader: Currency list need to be loaded...' );
+
+            fDataLoadCurrencyList(
+                dispatch,
+                null,
+                () => { console.log( 'Error: ', text ) },
+            )
+        }
+
         if ( !currencyAllLoadStatus ) {
             ( this.debug_mode ) &&
                 console.log( 'Loader: Currency all list need to be loaded...' );
@@ -248,6 +296,7 @@ class Loader extends React.PureComponent {
         if ( accountsLoadStatus === 2 &&
              operationCategoriesLoadStatus === 2 &&
              operationsLoadStatus === 2 &&
+             currencyListLoadStatus === 2 &&
              currencyAllLoadStatus === 2 &&
              currencyLoadStatus === 2 &&
              modalContent === MODAL_CONTENT.DATA_LOADING )
@@ -263,6 +312,10 @@ class Loader extends React.PureComponent {
 
         if ( !operationsPrepareStatus && operationsLoadStatus === 2 ) {
             this.prepareOperationsData( operationsSource );
+        }
+
+        if ( !currencyListPrepareStatus && currencyListLoadStatus === 2 ) {
+            this.prepareCurrencyListData( currencyListSource );
         }
 
         if ( !currencyAllPrepareStatus && currencyAllLoadStatus === 2 ) {
@@ -290,6 +343,13 @@ class Loader extends React.PureComponent {
         const { dispatch } = this.props;
         let operationsData = [ ...operationsSource ];
         dispatch( acDataSetOperationsData( operationsData ) );
+    };
+
+    prepareCurrencyListData = ( currencyListSource ) => {
+        console.log( 'prepareCurrencyListData: currencyListSource: ', currencyListSource );
+        const { dispatch } = this.props;
+        let currencyListData = [ ...currencyListSource ];
+        dispatch( acDataCurrencyListSetData( currencyListData ) );
     };
 
     prepareCurrencyData = ( currencySource ) => {
@@ -376,6 +436,11 @@ const mapStateToProps = function ( state ) {
         accountsPrepareStatus:          state.data.accountsPrepareStatus,
         operationCategoriesPrepareStatus: state.data.operationCategoriesPrepareStatus,
         operationsPrepareStatus:         state.data.operationsPrepareStatus,
+
+        currencyListLoadStatus:         state.data.currencyListLoadStatus,
+        currencyListPrepareStatus:      state.data.currencyListPrepareStatus,
+        currencyListSource:             state.data.currencyListSource,
+        currencyListData:               state.data.currencyListData,
 
         currencyAllLoadStatus:          state.currency.currencyAllLoadStatus,
         currencyAllPrepareStatus:       state.currency.currencyAllPrepareStatus,

@@ -1,6 +1,19 @@
 'use strict';
 
 import {
+    DATA_CURRENCY_LIST_LOAD_START,
+    DATA_CURRENCY_LIST_LOAD_SUCCESS,
+    DATA_CURRENCY_LIST_LOAD_ERROR,
+    DATA_CURRENCY_LIST_SHOULD_BE_RELOADED,
+    DATA_CURRENCY_LIST_SET_DATA,
+    DATA_CURRENCY_LIST_SAVE_START,
+    DATA_CURRENCY_LIST_SAVE_SUCCESS,
+    DATA_CURRENCY_LIST_SAVE_ERROR,
+    DATA_CURRENCY_LIST_DELETE_START,
+    DATA_CURRENCY_LIST_DELETE_SUCCESS,
+    DATA_CURRENCY_LIST_DELETE_ERROR,
+    DATA_CURRENCY_LIST_SELECT,
+
     DATA_ACCOUNTS_LOAD_START,
     DATA_ACCOUNTS_LOAD_SUCCESS,
     DATA_ACCOUNTS_LOAD_ERROR,
@@ -13,6 +26,7 @@ import {
     DATA_ACCOUNT_DELETE_SUCCESS,
     DATA_ACCOUNT_DELETE_ERROR,
     DATA_ACCOUNT_SELECT,
+
     DATA_OPERATION_CATEGORIES_LOAD_START,
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,
     DATA_OPERATION_CATEGORIES_LOAD_ERROR,
@@ -25,6 +39,7 @@ import {
     DATA_OPERATION_CATEGORY_DELETE_SUCCESS,
     DATA_OPERATION_CATEGORY_DELETE_ERROR,
     DATA_OPERATION_CATEGORY_SELECT,
+
     DATA_OPERATIONS_LOAD_START,
     DATA_OPERATIONS_LOAD_SUCCESS,
     DATA_OPERATIONS_LOAD_ERROR,
@@ -40,7 +55,16 @@ import {
 } from "../actions/acData";
 
 const initState = {
-    accountsSource:                  null,
+    currencyListSource:             null,
+    currencyListData:               null,
+    currencyListLoadStatus:         0,
+    currencyListPrepareStatus:      0,
+    currencyListSaveStatus:         0,
+    currencyListDeleteStatus:       0,
+    currencyListSelectedIndex:      -1,
+    currencyListValue:              {},
+
+    accountsSource:                 null,
     accountsData:                   null,
     accountsLoadStatus:             0,
     accountsPrepareStatus:          0,
@@ -73,6 +97,58 @@ const initState = {
 
 function rdData ( state = initState, action ) {
     switch ( action.type ) {
+
+        case DATA_CURRENCY_LIST_LOAD_START:
+            return {
+                ...state, ...{
+                    currencyListLoadStatus: 1,
+                    currencyListSource:     [],
+                }
+            };
+
+        case DATA_CURRENCY_LIST_LOAD_SUCCESS:
+            return {
+                ...state, ...{
+                    currencyListLoadStatus:    2,
+                    currencyListSource:        action.currencyListSource,
+                    currencyListPrepareStatus: 0,
+                    currencyListData:          [],
+                }
+            };
+
+        case DATA_CURRENCY_LIST_LOAD_ERROR:
+            return {
+                ...state, ...{
+                    currencyListLoadStatus: 3,
+                    currencyListSource:     [],
+                }
+            };
+
+        case DATA_CURRENCY_LIST_SHOULD_BE_RELOADED:
+            return {
+                ...state, ...{
+                    currencyListLoadStatus:   0,
+                    currencyListSaveStatus:   0,
+                    currencyListDeleteStatus: 0,
+                }
+            };
+
+        case DATA_CURRENCY_LIST_SET_DATA:
+            return {
+                ...state, ...{
+                    currencyListPrepareStatus: 2,
+                    currencyListData:          action.currencyListData,
+                }
+            };
+
+        case DATA_CURRENCY_LIST_SELECT:
+            return {
+                ...state, ...{
+                    currencyListSelectedIndex: action.currencyListSelectedIndex,
+                }
+            };
+
+
 
         case DATA_ACCOUNTS_LOAD_START:
             return {

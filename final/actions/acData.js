@@ -1,5 +1,18 @@
 'use strict';
 
+const DATA_CURRENCY_LIST_LOAD_START =                   'DATA_CURRENCY_LIST_LOAD_START';
+const DATA_CURRENCY_LIST_LOAD_SUCCESS =                 'DATA_CURRENCY_LIST_LOAD_SUCCESS';
+const DATA_CURRENCY_LIST_LOAD_ERROR =                   'DATA_CURRENCY_LIST_LOAD_ERROR';
+const DATA_CURRENCY_LIST_SHOULD_BE_RELOADED =           'DATA_CURRENCY_LIST_SHOULD_BE_RELOADED';
+const DATA_CURRENCY_LIST_SET_DATA =                     'DATA_CURRENCY_LIST_SET_DATA';
+const DATA_CURRENCY_LIST_SAVE_START =                   'DATA_CURRENCY_LIST_SAVE_START';
+const DATA_CURRENCY_LIST_SAVE_SUCCESS =                 'DATA_CURRENCY_LIST_SAVE_SUCCESS';
+const DATA_CURRENCY_LIST_SAVE_ERROR =                   'DATA_CURRENCY_LIST_SAVE_ERROR';
+const DATA_CURRENCY_LIST_DELETE_START =                 'DATA_CURRENCY_LIST_DELETE_START';
+const DATA_CURRENCY_LIST_DELETE_SUCCESS =               'DATA_CURRENCY_LIST_DELETE_SUCCESS';
+const DATA_CURRENCY_LIST_DELETE_ERROR =                 'DATA_CURRENCY_LIST_DELETE_ERROR';
+const DATA_CURRENCY_LIST_SELECT =                       'DATA_CURRENCY_LIST_SELECT';
+
 const DATA_ACCOUNTS_LOAD_START =                        'DATA_ACCOUNTS_LOAD_START';
 const DATA_ACCOUNTS_LOAD_SUCCESS =                      'DATA_ACCOUNTS_LOAD_SUCCESS';
 const DATA_ACCOUNTS_LOAD_ERROR =                        'DATA_ACCOUNTS_LOAD_ERROR';
@@ -38,6 +51,81 @@ const DATA_OPERATION_DELETE_START =                     'DATA_OPERATION_DELETE_S
 const DATA_OPERATION_DELETE_SUCCESS =                   'DATA_OPERATION_DELETE_SUCCESS';
 const DATA_OPERATION_DELETE_ERROR =                     'DATA_OPERATION_DELETE_ERROR';
 const DATA_OPERATION_SELECT =                           'DATA_OPERATION_SELECT';
+
+const acDataCurrencyListLoadStart = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_LOAD_START,
+    }
+};
+
+const acDataCurrencyListLoadSuccess = function ( loadedData ) {
+    return {
+        type:               DATA_CURRENCY_LIST_LOAD_SUCCESS,
+        currencyListSource: loadedData,
+    }
+};
+
+const acDataCurrencyListLoadError = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_LOAD_ERROR,
+    }
+};
+
+const acDataCurrencyListShouldBeReloaded = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_SHOULD_BE_RELOADED,
+    }
+};
+
+const acDataCurrencyListSetData = function ( currencyListData ) {
+    return {
+        type:               DATA_CURRENCY_LIST_SET_DATA,
+        currencyListData:   currencyListData,
+    }
+};
+
+const acDataCurrencyListSaveStart = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_SAVE_START,
+    }
+};
+
+const acDataCurrencyListSaveSuccess = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_SAVE_SUCCESS,
+    }
+};
+
+const acDataCurrencyListSaveError = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_SAVE_ERROR,
+    }
+};
+
+const acDataCurrencyListDeleteStart = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_DELETE_START,
+    }
+};
+
+const acDataCurrencyListDeleteSuccess = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_DELETE_SUCCESS,
+    }
+};
+
+const acDataCurrencyListDeleteError = function () {
+    return {
+        type:               DATA_CURRENCY_LIST_DELETE_ERROR,
+    }
+};
+
+const acDataCurrencyListSelect = function ( index ) {
+    return {
+        type:                      DATA_CURRENCY_LIST_SELECT,
+        currencyListSelectedIndex: index,
+    }
+};
 
 const acDataAccountsLoadStart = function () {
     return {
@@ -265,43 +353,59 @@ const acDataOperationSelect = function ( index ) {
 };
 
 export {
-    DATA_ACCOUNTS_LOAD_START,           acDataAccountsLoadStart,
-    DATA_ACCOUNTS_LOAD_SUCCESS,         acDataAccountsLoadSuccess,
-    DATA_ACCOUNTS_LOAD_ERROR,           acDataAccountsLoadError,
-    DATA_ACCOUNTS_SHOULD_BE_RELOADED,   acDataAccountsShouldBeReloaded,
-    DATA_ACCOUNTS_SET_ACCOUNTS_DATA,   acDataSetAccountsData,
-    DATA_ACCOUNT_SAVE_START,            acDataAccountSaveStart,
-    DATA_ACCOUNT_SAVE_SUCCESS,          acDataAccountSaveSuccess,
-    DATA_ACCOUNT_SAVE_ERROR,            acDataAccountSaveError,
-    DATA_ACCOUNT_DELETE_START,          acDataAccountDeleteStart,
-    DATA_ACCOUNT_DELETE_SUCCESS,        acDataAccountDeleteSuccess,
-    DATA_ACCOUNT_DELETE_ERROR,          acDataAccountDeleteError,
-    DATA_ACCOUNT_SELECT,                acDataAccountSelect,
+    DATA_CURRENCY_LIST_LOAD_START,                acDataCurrencyListLoadStart,
+    DATA_CURRENCY_LIST_LOAD_SUCCESS,              acDataCurrencyListLoadSuccess,
+    DATA_CURRENCY_LIST_LOAD_ERROR,                acDataCurrencyListLoadError,
+    DATA_CURRENCY_LIST_SHOULD_BE_RELOADED,        acDataCurrencyListShouldBeReloaded,
+    DATA_CURRENCY_LIST_SET_DATA,                  acDataCurrencyListSetData,
+    DATA_CURRENCY_LIST_SAVE_START,                acDataCurrencyListSaveStart,
+    DATA_CURRENCY_LIST_SAVE_SUCCESS,              acDataCurrencyListSaveSuccess,
+    DATA_CURRENCY_LIST_SAVE_ERROR,                acDataCurrencyListSaveError,
+    DATA_CURRENCY_LIST_DELETE_START,              acDataCurrencyListDeleteStart,
+    DATA_CURRENCY_LIST_DELETE_SUCCESS,            acDataCurrencyListDeleteSuccess,
+    DATA_CURRENCY_LIST_DELETE_ERROR,              acDataCurrencyListDeleteError,
+
+    DATA_CURRENCY_LIST_SELECT,                    acDataCurrencyListSelect,
+
+    DATA_ACCOUNTS_LOAD_START,                     acDataAccountsLoadStart,
+    DATA_ACCOUNTS_LOAD_SUCCESS,                   acDataAccountsLoadSuccess,
+    DATA_ACCOUNTS_LOAD_ERROR,                     acDataAccountsLoadError,
+    DATA_ACCOUNTS_SHOULD_BE_RELOADED,             acDataAccountsShouldBeReloaded,
+    DATA_ACCOUNTS_SET_ACCOUNTS_DATA,              acDataSetAccountsData,
+    DATA_ACCOUNT_SAVE_START,                      acDataAccountSaveStart,
+    DATA_ACCOUNT_SAVE_SUCCESS,                    acDataAccountSaveSuccess,
+    DATA_ACCOUNT_SAVE_ERROR,                      acDataAccountSaveError,
+    DATA_ACCOUNT_DELETE_START,                    acDataAccountDeleteStart,
+    DATA_ACCOUNT_DELETE_SUCCESS,                  acDataAccountDeleteSuccess,
+    DATA_ACCOUNT_DELETE_ERROR,                    acDataAccountDeleteError,
+
+    DATA_ACCOUNT_SELECT,                          acDataAccountSelect,
 
     DATA_OPERATION_CATEGORIES_LOAD_START,         acDataOperationCategoriesLoadStart,
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,       acDataOperationCategoriesLoadSuccess,
     DATA_OPERATION_CATEGORIES_LOAD_ERROR,         acDataOperationCategoriesLoadError,
     DATA_OPERATION_CATEGORIES_SHOULD_BE_RELOADED, acDataOperationCategoriesShouldBeReloaded,
-    DATA_SET_OPERATION_CATEGORIES_DATA, acDataSetOperationCategoriesData,
+    DATA_SET_OPERATION_CATEGORIES_DATA,           acDataSetOperationCategoriesData,
     DATA_OPERATION_CATEGORY_SAVE_START,           acDataOperationCategorySaveStart,
     DATA_OPERATION_CATEGORY_SAVE_SUCCESS,         acDataOperationCategorySaveSuccess,
     DATA_OPERATION_CATEGORY_SAVE_ERROR,           acDataOperationCategorySaveError,
     DATA_OPERATION_CATEGORY_DELETE_START,         acDataOperationCategoryDeleteStart,
     DATA_OPERATION_CATEGORY_DELETE_SUCCESS,       acDataOperationCategoryDeleteSuccess,
     DATA_OPERATION_CATEGORY_DELETE_ERROR,         acDataOperationCategoryDeleteError,
+
     DATA_OPERATION_CATEGORY_SELECT,               acDataOperationCategorySelect,
 
-    DATA_OPERATIONS_LOAD_START,         acDataOperationsLoadStart,
-    DATA_OPERATIONS_LOAD_SUCCESS,       acDataOperationsLoadSuccess,
-    DATA_OPERATIONS_LOAD_ERROR,         acDataOperationsLoadError,
-    DATA_OPERATIONS_SHOULD_BE_RELOADED, acDataOperationsShouldBeReloaded,
-    DATA_OPERATIONS_SET_OPERATIONS_DATA, acDataSetOperationsData,
-    DATA_OPERATION_SAVE_START,          acDataOperationSaveStart,
-    DATA_OPERATION_SAVE_SUCCESS,        acDataOperationSaveSuccess,
-    DATA_OPERATION_SAVE_ERROR,          acDataOperationSaveError,
-    DATA_OPERATION_DELETE_START,        acDataOperationDeleteStart,
-    DATA_OPERATION_DELETE_SUCCESS,      acDataOperationDeleteSuccess,
-    DATA_OPERATION_DELETE_ERROR,        acDataOperationDeleteError,
+    DATA_OPERATIONS_LOAD_START,                   acDataOperationsLoadStart,
+    DATA_OPERATIONS_LOAD_SUCCESS,                 acDataOperationsLoadSuccess,
+    DATA_OPERATIONS_LOAD_ERROR,                   acDataOperationsLoadError,
+    DATA_OPERATIONS_SHOULD_BE_RELOADED,           acDataOperationsShouldBeReloaded,
+    DATA_OPERATIONS_SET_OPERATIONS_DATA,          acDataSetOperationsData,
+    DATA_OPERATION_SAVE_START,                    acDataOperationSaveStart,
+    DATA_OPERATION_SAVE_SUCCESS,                  acDataOperationSaveSuccess,
+    DATA_OPERATION_SAVE_ERROR,                    acDataOperationSaveError,
+    DATA_OPERATION_DELETE_START,                  acDataOperationDeleteStart,
+    DATA_OPERATION_DELETE_SUCCESS,                acDataOperationDeleteSuccess,
+    DATA_OPERATION_DELETE_ERROR,                  acDataOperationDeleteError,
 
-    DATA_OPERATION_SELECT,              acDataOperationSelect,
+    DATA_OPERATION_SELECT,                        acDataOperationSelect,
 }

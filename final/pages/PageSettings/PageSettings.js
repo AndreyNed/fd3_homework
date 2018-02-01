@@ -18,9 +18,9 @@ import {
 } from "../../actions/acUI";
 import {
     acDataAccountSelect, acDataOperationCategorySelect, acDataAccountsShouldBeReloaded,
-    acDataOperationCategoriesShouldBeReloaded
+    acDataOperationCategoriesShouldBeReloaded, acDataCurrencyListSelect
 } from '../../actions/acData';
-import { findArrayItemIndex } from "../../utils/utils";
+import {findArrayItemIndex, isNotEmpty} from "../../utils/utils";
 
 import './PageSettings.scss';
 
@@ -31,6 +31,7 @@ class PageSettings extends React.PureComponent {
         settingsMode:                       PropTypes.oneOf([
             SETTINGS_MODES.ACCOUNTS,
             SETTINGS_MODES.OPERATION_CATEGORIES,
+            SETTINGS_MODES.CURRENCY_LIST,
         ]),
 
         accountsData:                   PropTypes.arrayOf(
@@ -151,7 +152,7 @@ class PageSettings extends React.PureComponent {
     leftPanelProps = () => {
         const { settingsMode } = this.props;
         const { LEFT } = ALIGN_TYPES;
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
 
         return {
             btnAccounts: {
@@ -170,6 +171,14 @@ class PageSettings extends React.PureComponent {
                 },
                 cbChanged: this.btnOperationCategories_cbChanged,
             },
+            btnCurrencyList: {
+                label: 'Валюты',
+                isActive: ( settingsMode === CURRENCY_LIST ),
+                options: {
+                    labelAlign: LEFT,
+                },
+                cbChanged: this.btnCurrencyList_cbChanged,
+            },
         }
     };
 
@@ -177,8 +186,16 @@ class PageSettings extends React.PureComponent {
         ( this.debug_mode ) &&
             console.log( 'PageSettings: tableProps: props: ', this.props );
 
-        const { settingsMode, accountsData, operationCategoriesData, accountSelectedIndex, operationCategorySelectedIndex } = this.props;
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        const {
+            settingsMode,
+            accountsData,
+            operationCategoriesData,
+            accountSelectedIndex,
+            operationCategorySelectedIndex,
+            currencyListData,
+            currencyListSelectedIndex,
+        } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
         const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
         const { LEFT, CENTER, RIGHT } = ALIGN_TYPES;
@@ -309,6 +326,129 @@ class PageSettings extends React.PureComponent {
                 } );
                 break;
 
+            case CURRENCY_LIST:
+                caption = 'Валюта для счета';
+                defValue = ( currencyListSelectedIndex > -1 )
+                    ? currencyListData[ currencyListSelectedIndex ].id
+                    : -1;
+                headers = [
+                    {
+                        id:           'id',
+                        title:        'ID',
+                        dataType:     NUMBER,
+                        align:        RIGHT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '5%',
+                    },
+                    {
+                        id:           'name',
+                        title:        'Наименование',
+                        dataType:     STRING,
+                        align:        LEFT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '20%',
+                    },
+                    {
+                        id:           'code',
+                        title:        'Код',
+                        dataType:     STRING,
+                        align:        LEFT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '10%',
+                    },
+                    {
+                        id:           'abbreviation',
+                        title:        'Абревиатура',
+                        dataType:     STRING,
+                        align:        CENTER,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '10%',
+                    },
+                    {
+                        id:           'scale',
+                        title:        'Множитель',
+                        dataType:     NUMBER,
+                        align:        RIGHT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '10%',
+                    },
+                    {
+                        id:           'rate',
+                        title:        'Курс к BYN',
+                        dataType:     NUMBER,
+                        align:        RIGHT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '15%',
+                    },
+                    {
+                        id:           'updated',
+                        title:        'Обновление',
+                        dataType:     DATE_MS_INT,
+                        align:        RIGHT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        'auto',
+                    },
+                ];
+                body = ( isNotEmpty( currencyListData ) )
+                ? currencyListData.map( ( row, index ) => {
+                    return {
+                        rowIndex: index,
+                        cells: [
+                            {
+                                id: 'id',
+                                value: row.id,
+                            },
+                            {
+                                id: 'name',
+                                value: row.name,
+                            },
+                            {
+                                id: 'code',
+                                value: row.code,
+                            },
+                            {
+                                id: 'abbreviation',
+                                value: row.abbreviation,
+                            },
+                            {
+                                id: 'scale',
+                                value: row.scale,
+                            },
+                            {
+                                id: 'rate',
+                                value: row.rate,
+                            },
+                            {
+                                id: 'updated',
+                                value: row.updated,
+                            },
+                        ]
+                    }
+                } )
+                : [];
+                break;
+
             default:
                 ( this.debug_mode ) &&
                     console.log( '%c%s','color: orange;','Warning: Page settings: tableProps: unknown settingsMode: ', settingsMode );
@@ -337,15 +477,17 @@ class PageSettings extends React.PureComponent {
 
     buttonPanelProps = () => {
         const { block, inlineBlock, hidden, none } = DISPLAY_TYPES;
-        const { settingsMode, accountSelectedIndex, operationCategorySelectedIndex } = this.props;
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        const { settingsMode, accountSelectedIndex, operationCategorySelectedIndex, currencyListSelectedIndex } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
         let display = {
             btnAdd: block,
             btnDelete: ( settingsMode === ACCOUNTS && accountSelectedIndex > -1 )
                 ? block
                 : ( settingsMode === OPERATION_CATEGORIES && operationCategorySelectedIndex > -1 )
                     ? block
-                    : none,
+                    : ( settingsMode === CURRENCY_LIST && currencyListSelectedIndex > -1 )
+                        ? block
+                        : none,
         };
         return {
             btnAdd: {
@@ -373,20 +515,51 @@ class PageSettings extends React.PureComponent {
         dispatch( acUISetSettingsMode( SETTINGS_MODES.OPERATION_CATEGORIES ) );
     };
 
+    btnCurrencyList_cbChanged = () => {
+        const { dispatch } = this.props;
+        dispatch( acUISetSettingsMode( SETTINGS_MODES.CURRENCY_LIST ) );
+    };
+
     table_cbChanged = ( newId ) => {
         const { settingsMode } = this.props;
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
-        ( settingsMode === ACCOUNTS )
-            ? this.accountsChanged( newId )
-            : this.operationCategoriesChanged( newId );
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
+
+        switch ( settingsMode ) {
+            case ACCOUNTS:
+                this.accountsChanged( newId );
+                break;
+
+            case OPERATION_CATEGORIES:
+                this.operationCategoriesChanged( newId );
+                break;
+
+            case CURRENCY_LIST:
+                this.currencyListChanged( newId );
+                break;
+
+            default:
+        }
     };
 
     table_cbSelected = ( newSelectedIndex ) => {
         const { settingsMode } = this.props;
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
-        ( settingsMode === ACCOUNTS )
-            ? this.accountSelected( newSelectedIndex )
-            : this.operationCategoriesSelected( newSelectedIndex );
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
+
+        switch ( settingsMode ) {
+            case ACCOUNTS:
+                this.accountSelected( newSelectedIndex );
+                break;
+
+            case OPERATION_CATEGORIES:
+                this.operationCategoriesSelected( newSelectedIndex );
+                break;
+
+            case CURRENCY_LIST:
+                this.currencyListSelected( newSelectedIndex );
+                break;
+
+            default:
+        }
     };
 
     buttonPanel_btnAdd_cbChanged = () => {
@@ -425,6 +598,15 @@ class PageSettings extends React.PureComponent {
         dispatch( acUIShowOperationCategoryCard( false ) );
     };
 
+    currencyListChanged = ( newCurrencyListId ) => {
+        console.log( 'PageSettings: currencyListChanged: ', newCurrencyListId );
+        const { dispatch, currencyListData } = this.props;
+        let newCurrencyListSelectedIndex = findArrayItemIndex( currencyListData, { id: newCurrencyListId } );
+        console.log( 'PageSettings: currencyListChanged: newCurrencyListSelectedIndex: ', newCurrencyListSelectedIndex );
+        dispatch( acDataCurrencyListSelect( newCurrencyListSelectedIndex ) );
+        // dispatch( acUIShowCurrencyListCard( false ) );
+    };
+
     accountSelected = ( newAccountSelectedIndex ) => {
         // console.log( 'PageSettings: accountSelected: ', newAccountSelectedIndex );
         const { dispatch } = this.props;
@@ -435,6 +617,12 @@ class PageSettings extends React.PureComponent {
         // console.log( 'PageSettings: operationCategoriesSelected: ', newOperationCategorySelectedIndex );
         const { dispatch } = this.props;
         dispatch( acDataOperationCategorySelect( newOperationCategorySelectedIndex) );
+    };
+
+    currencyListSelected = ( newCurrencyListSelectedIndex ) => {
+        console.log( 'PageSettings: currencyListSelected: ', newCurrencyListSelectedIndex );
+        const { dispatch } = this.props;
+        dispatch( acDataCurrencyListSelect( newCurrencyListSelectedIndex) );
     };
 
     accountAdd = () => {
@@ -463,6 +651,7 @@ class PageSettings extends React.PureComponent {
 
     renderLeftSection = () => {
         const { settingsMode } = this.props;
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
         let props = this.leftPanelProps();
         return (
             <div className = { this.classCSS + '_left_section' }>
@@ -470,7 +659,7 @@ class PageSettings extends React.PureComponent {
                      key="btn_accounts">
                     <div className="cols col_16"
                          style = {{
-                             fontWeight: ( settingsMode === SETTINGS_MODES.ACCOUNTS )
+                             fontWeight: ( settingsMode === ACCOUNTS )
                              ? 'bold'
                              : 'normal'
                          }}>
@@ -481,11 +670,22 @@ class PageSettings extends React.PureComponent {
                      key="btn_operationCategories">
                     <div className="cols col_16"
                          style = {{
-                             fontWeight: ( settingsMode === SETTINGS_MODES.OPERATION_CATEGORIES )
+                             fontWeight: ( settingsMode === OPERATION_CATEGORIES )
                                  ? 'bold'
                                  : 'normal'
                          }}>
                         <ButtonLabel { ...props.btnOperationCategories }/>
+                    </div>
+                </div>
+                <div className = { 'rows ' + 'btn_currency_list' }
+                     key="btn_currencyList">
+                    <div className="cols col_16"
+                         style = {{
+                             fontWeight: ( settingsMode === CURRENCY_LIST )
+                                 ? 'bold'
+                                 : 'normal'
+                         }}>
+                        <ButtonLabel { ...props.btnCurrencyList }/>
                     </div>
                 </div>
             </div>
@@ -546,6 +746,9 @@ const mapStateToProps = function ( state ) {
         operationCategoriesData:        state.data.operationCategoriesData,
         operationCategoryValue:         state.data.operationCategoryValue,
         operationCategorySelectedIndex: state.data.operationCategorySelectedIndex,
+        currencyListData:               state.data.currencyListData,
+        currencyListValue:              state.data.currencyListValue,
+        currencyListSelectedIndex:      state.data.currencyListSelectedIndex,
 
         accountSaveStatus:              state.data.accountSaveStatus,
         accountDeleteStatus:            state.data.accountDeleteStatus,
@@ -553,6 +756,9 @@ const mapStateToProps = function ( state ) {
         operationCategorySaveStatus:    state.data.operationCategorySaveStatus,
         operationCategoryDeleteStatus:  state.data.operationCategoryDeleteStatus,
         operationCategoriesLoadStatus:  state.data.operationCategoriesLoadStatus,
+        currencyListSaveStatus:         state.data.currencyListSaveStatus,
+        currencyListDeleteStatus:       state.data.currencyListDeleteStatus,
+        currencyListLoadStatus:         state.data.currencyListLoadStatus,
     }
 };
 
