@@ -6,6 +6,8 @@ const UI_SHOW_OPERATION_CARD = 'UI_SHOW_OPERATION_CARD';
 
 const UI_SHOW_ACCOUNT_CARD = 'UI_SHOW_ACCOUNT_CARD';
 
+const UI_SHOW_CURRENCY_LIST_CARD = 'UI_SHOW_CURRENCY_LIST_CARD';
+
 const UI_SHOW_OPERATION_CATEGORY_CARD = 'UI_SHOW_OPERATION_CATEGORY_CARD';
 
 const UI_SHOW_DATA_LOADING_MESSAGE = 'UI_SHOW_DATA_LOADING_MESSAGE';
@@ -50,6 +52,13 @@ const acUIShowOperationCategoryCard = function( isNew ) {
     return {
         type:                           UI_SHOW_OPERATION_CATEGORY_CARD,
         isNewOperationCategoryAdded:    isNew,
+    }
+};
+
+const acUIShowCurrencyListCard = function( isNew ) {
+    return {
+        type:                           UI_SHOW_CURRENCY_LIST_CARD,
+        isNewCurrencyListAdded:         isNew,
     }
 };
 
@@ -98,6 +107,7 @@ export {
     UI_SHOW_OPERATION_CARD,             acUIShowOperationCard,
     UI_SHOW_ACCOUNT_CARD,               acUIShowAccountCard,
     UI_SHOW_OPERATION_CATEGORY_CARD,    acUIShowOperationCategoryCard,
+    UI_SHOW_CURRENCY_LIST_CARD,         acUIShowCurrencyListCard,
     UI_SHOW_DATA_LOADING_MESSAGE,       acUIShowDataLoadingMessage,
     UI_SHOW_DATA_SAVING_MESSAGE,        acUIShowDataSavingMessage,
     UI_SHOW_DATA_DELETING_MESSAGE,      acUIShowDataDeletingMessage,

@@ -13,13 +13,23 @@ import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_SETTINGS, CONFIG_
 import {ALIGN_TYPES, DATA_TYPES, DELETE_MODES, DISPLAY_TYPES, SETTINGS_MODES, SORTING} from "../../data_const/data_const";
 
 import {
-    acUISetSettingsMode, acUIShowDataSavingMessage, acUIShowAccountCard, acUIShowOperationCategoryCard,
-    acUIShowDeleteConfirmation, acUIShowDataDeletingMessage
+    acUISetSettingsMode,
+    acUIShowDataSavingMessage,
+    acUIShowAccountCard,
+    acUIShowOperationCategoryCard,
+    acUIShowCurrencyListCard,
+    acUIShowDeleteConfirmation,
+    acUIShowDataDeletingMessage
 } from "../../actions/acUI";
+
 import {
-    acDataAccountSelect, acDataOperationCategorySelect, acDataAccountsShouldBeReloaded,
-    acDataOperationCategoriesShouldBeReloaded, acDataCurrencyListSelect
+    acDataAccountSelect,
+    acDataOperationCategorySelect,
+    acDataAccountsShouldBeReloaded,
+    acDataOperationCategoriesShouldBeReloaded,
+    acDataCurrencyListSelect
 } from '../../actions/acData';
+
 import {findArrayItemIndex, isNotEmpty} from "../../utils/utils";
 
 import './PageSettings.scss';
@@ -358,7 +368,7 @@ class PageSettings extends React.PureComponent {
                         id:           'code',
                         title:        'Код',
                         dataType:     STRING,
-                        align:        LEFT,
+                        align:        CENTER,
                         isSortable:   true,
                         sorting:      NONE,
                         isSearchable: true,
@@ -378,7 +388,7 @@ class PageSettings extends React.PureComponent {
                     },
                     {
                         id:           'scale',
-                        title:        'Множитель',
+                        title:        'Соотношение',
                         dataType:     NUMBER,
                         align:        RIGHT,
                         isSortable:   true,
@@ -564,18 +574,34 @@ class PageSettings extends React.PureComponent {
 
     buttonPanel_btnAdd_cbChanged = () => {
         const { settingsMode } = this.props;
-        const { ACCOUNTS } = SETTINGS_MODES;
-        ( settingsMode === ACCOUNTS )
-            ? this.accountAdd()
-            : this.operationCategoryAdd();
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
+        switch( settingsMode ) {
+            case ACCOUNTS:
+                this.accountAdd();
+                break;
+            case OPERATION_CATEGORIES:
+                this.operationCategoryAdd();
+                break;
+            case CURRENCY_LIST:
+                this.currencyListAdd();
+                break;
+        }
     };
 
     buttonPanel_btnDelete_cbChanged = () => {
         const { settingsMode } = this.props;
-        const { ACCOUNTS } = SETTINGS_MODES;
-        ( settingsMode === ACCOUNTS )
-            ? this.accountDelete()
-            : this.operationCategoryDelete();
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
+        switch( settingsMode ) {
+            case ACCOUNTS:
+                this.accountDelete();
+                break;
+            case OPERATION_CATEGORIES:
+                this.operationCategoryDelete();
+                break;
+            case CURRENCY_LIST:
+                this.currencyListDelete();
+                break;
+        }
     };
 
     /* action functions */
@@ -635,6 +661,11 @@ class PageSettings extends React.PureComponent {
         dispatch( acUIShowOperationCategoryCard( true ) );
     };
 
+    currencyListAdd = () => {
+        const { dispatch } = this.props;
+        dispatch( acUIShowCurrencyListCard( true ) );
+    };
+
     accountDelete = () => {
         const { dispatch } = this.props;
         const { ACCOUNTS } = DELETE_MODES;
@@ -645,6 +676,12 @@ class PageSettings extends React.PureComponent {
         const { dispatch } = this.props;
         const { OPERATION_CATEGORIES } = DELETE_MODES;
         dispatch( acUIShowDeleteConfirmation( OPERATION_CATEGORIES ) )
+    };
+
+    currencyListDelete = () => {
+        const { dispatch } = this.props;
+        const { CURRENCY_LIST } = DELETE_MODES;
+        dispatch( acUIShowDeleteConfirmation( CURRENCY_LIST ) )
     };
 
     /* == render functions == */

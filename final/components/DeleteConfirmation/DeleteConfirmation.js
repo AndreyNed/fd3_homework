@@ -22,6 +22,7 @@ class DeleteConfirmation extends React.PureComponent {
             DELETE_MODES.OPERATIONS,
             DELETE_MODES.ACCOUNTS,
             DELETE_MODES.OPERATION_CATEGORIES,
+            DELETE_MODES.CURRENCY_LIST,
             DELETE_MODES.NONE,
         ]),
         operationsData:                 PropTypes.arrayOf(
@@ -51,6 +52,18 @@ class DeleteConfirmation extends React.PureComponent {
             })
         ),
         operationCategorySelectedIndex: PropTypes.number,
+        currencyListData:               PropTypes.arrayOf(
+            PropTypes.shape({
+                id:                     PropTypes.number,
+                code:                   PropTypes.string,
+                name:                   PropTypes.string,
+                abbreviation:           PropTypes.string,
+                scale:                  PropTypes.number,
+                rate:                   PropTypes.number,
+                updated:                PropTypes.number,
+            })
+        ),
+        currencyListSelectedIndex:      PropTypes.number,
         cbChanged:                      PropTypes.func,
     };
 
@@ -118,9 +131,11 @@ class DeleteConfirmation extends React.PureComponent {
             accountsData,
             operationCategorySelectedIndex,
             operationCategoriesData,
+            currencyListSelectedIndex,
+            currencyListData,
             deleteMode
         } = this.props;
-        const { OPERATIONS, ACCOUNTS, OPERATION_CATEGORIES, NONE } = DELETE_MODES;
+        const { OPERATIONS, ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST, NONE } = DELETE_MODES;
         console.log( "Удалить: deleteMode: ", deleteMode );
         switch ( deleteMode ) {
             case OPERATIONS:
@@ -134,6 +149,11 @@ class DeleteConfirmation extends React.PureComponent {
             case OPERATION_CATEGORIES:
                 let categoryId = operationCategoriesData[ operationCategorySelectedIndex ].id;
                 fDataDeleteOperationCategory( dispatch, null, null, categoryId );
+                break;
+            case CURRENCY_LIST:
+                let currencyListId = currencyListData[ currencyListSelectedIndex ].id;
+                console.log( 'Delete currencyList item: id: ', currencyListId );
+                // fDataDeleteOperationCategory( dispatch, null, null, categoryId );
                 break;
         }
     };
@@ -193,6 +213,8 @@ const mapStateToProps = function ( state ) {
         accountsData:                   state.data.accountsData,
         operationCategorySelectedIndex: state.data.operationCategorySelectedIndex,
         operationCategoriesData:        state.data.operationCategoriesData,
+        currencyListData:               state.data.currencyListData,
+        currencyListSelectedIndex:      state.data.currencyListSelectedIndex,
     }
 };
 

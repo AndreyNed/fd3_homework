@@ -1,0 +1,53 @@
+@import "../../data_const/style_const";
+
+.OperationCategoryCard {
+    position: absolute;
+    z-index: 1010;
+    width: 600px;
+    min-height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: $modalFormBackgroundColor;
+    border-radius: $borderRadiusDefault;
+
+    & > .OperationCategoryCard_form {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        width: 550px;
+        min-height: 250px;
+
+        & > .rows > .cols {
+
+            &.header {
+                padding: 4px 0;
+
+                & > .OperationCategoryCard_header {
+                    font-size: $formHeaderFont;
+                    font-weight: bold;
+                    color: #898989;
+                }
+            }
+
+            & > .validation_hint_box {
+                & > .validation_hint {
+                    font-size: $smallFont;
+                    color: $validationHintColor;
+                    display: block;
+                    text-align: right;
+                    padding: 4px 4px;
+                }
+            }
+        }
+
+
+        & > .OperationCategoryCard_buttons_panel {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+    }
+}

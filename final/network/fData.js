@@ -86,13 +86,13 @@ const fDataLoadCurrencyList = function ( dispatch, cbSuccess, cbError ) {
     );
 };
 
-const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
-    ( debug_mode ) && console.log( 'fDataSaveCurrency...' );
+const fDataSaveCurrencyToList = function (dispatch, cbSuccess, cbError, currency ) {
+    ( debug_mode ) && console.log( 'fDataSaveCurrencyToList...' );
     dispatch( acDataCurrencyListSaveStart() );
     const { id, code, name, abbreviation, scale, rate, updated } = currency;
 
     let fetchError = function ( errorText ) {
-        console.error( 'fDataSaveCurrency: ' + errorText );
+        console.error( 'fDataSaveCurrencyToList: ' + errorText );
         dispatch( acDataCurrencyListSaveError( errorText ) );
         if (cbError)
             cbError( errorText );
@@ -101,12 +101,12 @@ const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
     let fetchSuccess = function ( loadedData ) {
         if ( !loadedData.errorCode ) {
             ( debug_mode ) &&
-                console.log( '%c%s', 'color: green;font-weight:bold', 'fDataSaveCurrency: fetchSuccess: ', loadedData.responseText );
+                console.log( '%c%s', 'color: green;font-weight:bold', 'fDataSaveCurrencyToList: fetchSuccess: ', loadedData.responseText );
             dispatch( acDataCurrencyListSaveError( errorText ) );
         }
         else {
             ( debug_mode ) &&
-                console.log( '%c%s', 'color: red;font-weight:bold', 'fDataSaveCurrency: fetchSuccess: ', loadedData.responseText );
+                console.log( '%c%s', 'color: red;font-weight:bold', 'fDataSaveCurrencyToList: fetchSuccess: ', loadedData.responseText );
         }
         dispatch( acDataCurrencyListSaveSuccess() );
         if ( cbSuccess )
@@ -130,7 +130,7 @@ const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
         `&currency_updated=${ updated }`
     };
 
-    debug_mode && console.log( 'fDataSaveCurrency: fetchOptions: ', fetchOptions );
+    debug_mode && console.log( 'fDataSaveCurrencyToList: fetchOptions: ', fetchOptions );
 
     dispatch(
         thunkFetch({
@@ -142,13 +142,13 @@ const fDataSaveCurrency = function ( dispatch, cbSuccess, cbError, currency ) {
     );
 };
 
-const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency ) {
-    ( debug_mode ) && console.log( 'fDataCreateCurrency...' );
+const fDataCreateCurrencyToList = function (dispatch, cbSuccess, cbError, newCurrency ) {
+    ( debug_mode ) && console.log( 'fDataCreateCurrencyToList...' );
     dispatch( acDataCurrencyListSaveStart() );
     const { code, name, abbreviation, scale, rate, updated } = newCurrency;
 
     let fetchError = function ( errorText ) {
-        console.error( 'fDataCreateCurrency: ' + errorText );
+        console.error( 'fDataCreateCurrencyToList: ' + errorText );
         dispatch( acDataCurrencyListSaveError() );
         if (cbError)
             cbError( errorText );
@@ -157,11 +157,11 @@ const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency
     let fetchSuccess = function ( loadedData ) {
         if ( !loadedData.errorCode ) {
             ( debug_mode ) &&
-            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataCreateCurrency: fetchSuccess: ', loadedData.responseText );
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataCreateCurrencyToList: fetchSuccess: ', loadedData.responseText );
         }
         else {
             ( debug_mode ) &&
-            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataCreateCurrency: fetchSuccess: ', loadedData.responseText );
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataCreateCurrencyToList: fetchSuccess: ', loadedData.responseText );
         }
         dispatch( acDataCurrencyListSaveSuccess() );
         if ( cbSuccess )
@@ -184,7 +184,7 @@ const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency
         `&currency_updated=${ updated }`
     };
 
-    debug_mode && console.log( 'fDataCreateCurrency: fetchOptions: ', fetchOptions );
+    debug_mode && console.log( 'fDataCreateCurrencyToList: fetchOptions: ', fetchOptions );
 
     dispatch(
         thunkFetch({
@@ -196,8 +196,8 @@ const fDataCreateCurrency = function ( dispatch, cbSuccess, cbError, newCurrency
     );
 };
 
-const fDataDeleteCurrency = function ( dispatch, cbSuccess, cbError, currencyId ) {
-    ( debug_mode ) && console.log( 'fDataDeleteCurrency...' );
+const fDataDeleteCurrencyFromList = function (dispatch, cbSuccess, cbError, currencyId ) {
+    ( debug_mode ) && console.log( 'fDataDeleteCurrencyFromList...' );
     dispatch( acDataCurrencyListDeleteStart() );
 
     let fetchError = function ( errorText ) {
@@ -210,11 +210,11 @@ const fDataDeleteCurrency = function ( dispatch, cbSuccess, cbError, currencyId 
     let fetchSuccess = function ( loadedData ) {
         if ( !loadedData.errorCode ) {
             ( debug_mode ) &&
-            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataDeleteCurrency: fetchSuccess: ', loadedData.responseText );
+            console.log( '%c%s', 'color: green;font-weight:bold', 'fDataDeleteCurrencyFromList: fetchSuccess: ', loadedData.responseText );
         }
         else {
             ( debug_mode ) &&
-            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteCurrency: fetchSuccess: ', loadedData.responseText );
+            console.log( '%c%s', 'color: red;font-weight:bold', 'fDataDeleteCurrencyFromList: fetchSuccess: ', loadedData.responseText );
         }
         dispatch( acDataCurrencyListDeleteSuccess() );
         if ( cbSuccess )
@@ -232,7 +232,7 @@ const fDataDeleteCurrency = function ( dispatch, cbSuccess, cbError, currencyId 
         `&currency_id=${ currencyId }`
     };
 
-    debug_mode && console.log( 'fDataDeleteCurrency: fetchOptions: ', fetchOptions );
+    debug_mode && console.log( 'fDataDeleteCurrencyFromList: fetchOptions: ', fetchOptions );
 
     dispatch(
         thunkFetch({
@@ -827,5 +827,5 @@ export {
     fDataSaveOperation, fDataCreateOperation, fDataDeleteOperation,
     fDataSaveAccount, fDataCreateAccount, fDataDeleteAccount,
     fDataSaveOperationCategory, fDataCreateOperationCategory, fDataDeleteOperationCategory,
-    fDataLoadCurrencyList, fDataCreateCurrency, fDataSaveCurrency, fDataDeleteCurrency,
+    fDataLoadCurrencyList, fDataCreateCurrencyToList, fDataSaveCurrencyToList, fDataDeleteCurrencyFromList,
 }

@@ -183,6 +183,7 @@ class Loader extends React.PureComponent {
             MODAL_CONTENT.OPERATION_CARD,
             MODAL_CONTENT.ACCOUNT_CARD,
             MODAL_CONTENT.OPERATION_CATEGORY_CARD,
+            MODAL_CONTENT.CURRENCY_LIST,
         ]),
     };
 

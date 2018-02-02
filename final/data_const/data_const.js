@@ -12,6 +12,7 @@ const MODAL_CONTENT = {
     OPERATION_CARD:             'OPERATION_CARD',
     ACCOUNT_CARD:               'ACCOUNT_CARD',
     OPERATION_CATEGORY_CARD:    'OPERATION_CATEGORY_CARD',
+    CURRENCY_LIST:              'CURRENCY_LIST',
     DELETE_CONFIRMATION:        'DELETE_CONFIRMATION',
     NONE:                       'NONE',
 };
@@ -64,6 +65,7 @@ const DELETE_MODES = {
     OPERATIONS:             'OPERATIONS',
     ACCOUNTS:               'ACCOUNTS',
     OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
+    CURRENCY_LIST:          'CURRENCY_LIST',
     NONE:                   'NONE',
 };
 

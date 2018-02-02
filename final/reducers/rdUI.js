@@ -7,6 +7,7 @@ import {
     UI_HIDE_MAT_GLASS,
     UI_SHOW_OPERATION_CARD,
     UI_SHOW_ACCOUNT_CARD,
+    UI_SHOW_CURRENCY_LIST_CARD,
     UI_SHOW_OPERATION_CATEGORY_CARD,
     UI_SHOW_DATA_LOADING_MESSAGE,
     UI_SHOW_DATA_SAVING_MESSAGE,
@@ -20,6 +21,7 @@ const initState = {
     matGlassIsVisible:      true,
     isNewOperationAdded:    false,
     isNewAccountAdded:      false,
+    isNewCurrencyListAdded: false,
     modalContent:           MODAL_CONTENT.DATA_LOADING,
     settingsMode:           SETTINGS_MODES.ACCOUNTS,
     currencyMode:           CURRENCY_MODES.DAILY_RATES,
@@ -78,6 +80,16 @@ function rdUI ( state = initState, action ) {
                     modalContent:                   MODAL_CONTENT.OPERATION_CATEGORY_CARD,
                     matGlassIsVisible:              true,
                     isNewOperationCategoryAdded:    action.isNewOperationCategoryAdded,
+                }
+            };
+
+        case UI_SHOW_CURRENCY_LIST_CARD:
+            console.log( 'rdUI: UI_SHOW_CURRENCY_LIST_CARD: action: ', action );
+            return {
+                ...state, ...{
+                    modalContent:                   MODAL_CONTENT.CURRENCY_LIST,
+                    matGlassIsVisible:              true,
+                    isNewCurrencyListAdded:         action.isNewCurrencyListAdded,
                 }
             };
 
