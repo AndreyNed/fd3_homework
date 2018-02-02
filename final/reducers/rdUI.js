@@ -87,7 +87,7 @@ function rdUI ( state = initState, action ) {
             console.log( 'rdUI: UI_SHOW_CURRENCY_LIST_CARD: action: ', action );
             return {
                 ...state, ...{
-                    modalContent:                   MODAL_CONTENT.CURRENCY_LIST,
+                    modalContent:                   MODAL_CONTENT.CURRENCY_LIST_CARD,
                     matGlassIsVisible:              true,
                     isNewCurrencyListAdded:         action.isNewCurrencyListAdded,
                 }

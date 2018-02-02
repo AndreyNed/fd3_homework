@@ -290,14 +290,15 @@ class DateRangeChart extends React.PureComponent {
             let Cur_ID = currencyDynamicData[ 0 ].Cur_ID;
             let index = findArrayItemIndex( currencyData, { Cur_ID: Cur_ID } );
             // console.log( 'TEST: index: ', index );
-            const { Cur_Scale, Cur_Name, Cur_Abbreviation } = currencyData[ index ];
+            const { Cur_Scale, Cur_Name, Cur_QuotName, Cur_Abbreviation } = currencyData[ index ];
             return {
                 scale: Cur_Scale,
                 name:  Cur_Name,
+                quotName: Cur_QuotName,
                 abbreviation: Cur_Abbreviation,
             };
         }
-        return { scale: 0, name: '' };
+        return { scale: 0, name: '', Cur_QuotName: '', abbreviation: '' };
     };
 
     getStringDate = (date ) => {
@@ -447,7 +448,7 @@ class DateRangeChart extends React.PureComponent {
                      key="caption">
                     { `Динамика курса валют за период (до 365 дней):` }
                     <div className = { this.classCSS + "_subcaption" }>
-                        { `Белорусских рублей (BYN) за ${ currency.scale } ${ currency.name } (${ currency.abbreviation })` }
+                        { `Белорусских рублей (BYN) за ${ currency.quotName } (${ currency.abbreviation })` }
                     </div>
                 </div>
                 <div className="rows options"

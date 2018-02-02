@@ -13,7 +13,7 @@ import PagesLinks  from '../../pages/PagesLinks';
 import { MODAL_CONTENT } from "../../data_const/data_const";
 import { CONFIG_UI_MODE_TIMEOUT, } from "../../config/config";
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_LOADER } from "../../config/config";
-import {isExists, isNotEmpty} from "../../utils/utils";
+import {findArrayItemIndex, isExists, isNotEmpty} from "../../utils/utils";
 
 import {
     fDataLoadAccounts,
@@ -183,7 +183,7 @@ class Loader extends React.PureComponent {
             MODAL_CONTENT.OPERATION_CARD,
             MODAL_CONTENT.ACCOUNT_CARD,
             MODAL_CONTENT.OPERATION_CATEGORY_CARD,
-            MODAL_CONTENT.CURRENCY_LIST,
+            MODAL_CONTENT.CURRENCY_LIST_CARD,
         ]),
     };
 
@@ -223,6 +223,7 @@ class Loader extends React.PureComponent {
             currencyListPrepareStatus,
             modalContent,
             currencyAllSource,
+            currencyAllData,
             currencyAllLoadStatus,
             currencyAllPrepareStatus,
             currencySource,
@@ -323,8 +324,8 @@ class Loader extends React.PureComponent {
             this.prepareCurrencyAllData( currencyAllSource );
         }
 
-        if ( !currencyPrepareStatus && currencyLoadStatus === 2 ) {
-            this.prepareCurrencyData( currencySource );
+        if ( !currencyPrepareStatus && currencyLoadStatus === 2 && currencyAllPrepareStatus === 2 ) {
+            this.prepareCurrencyData( currencySource, currencyAllData );
         }
     };
 
@@ -353,13 +354,21 @@ class Loader extends React.PureComponent {
         dispatch( acDataCurrencyListSetData( currencyListData ) );
     };
 
-    prepareCurrencyData = ( currencySource ) => {
+    prepareCurrencyData = ( currencySource, currencyAllData ) => {
         const { dispatch } = this.props;
         let currencyData = currencySource.map( ( item ) => {
             let date = new Date( Date.parse( item.Date ) );
+            let currencyAllIndex = findArrayItemIndex( currencyAllData, { Cur_ID: item.Cur_ID } );
+            const { Cur_Code, Cur_Name, Cur_NameMulti, Cur_QuotName } = currencyAllData[ currencyAllIndex ];
+            // console.log( 'TEST: item.Cur_ID:', item.Cur_ID, ': index: ', currencyAllIndex );
             return {
                 ...item,
                 Date: date,
+                Cur_Code,
+                Cur_Name,
+                Cur_NameMulti,
+                Cur_QuotName,
+                // Cur_Code: currencyAllData[ currencyAllIndex ].Cur_Code,
             }
         } );
         dispatch( acCurrencySetCurrencyData( currencyData ) );

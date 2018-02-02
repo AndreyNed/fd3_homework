@@ -10,7 +10,7 @@ import ButtonDelete from '../../components/buttons/ButtonDelete/ButtonDelete';
 import SmartGrid from '../../components/SmartGrid/SmartGrid';
 
 import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_SETTINGS, CONFIG_UI_MODE_TIMEOUT } from "../../config/config";
-import {ALIGN_TYPES, DATA_TYPES, DELETE_MODES, DISPLAY_TYPES, SETTINGS_MODES, SORTING} from "../../data_const/data_const";
+import { ALIGN_TYPES, DATA_TYPES, DELETE_MODES, DISPLAY_TYPES, SETTINGS_MODES, SORTING } from "../../data_const/data_const";
 
 import {
     acUISetSettingsMode,

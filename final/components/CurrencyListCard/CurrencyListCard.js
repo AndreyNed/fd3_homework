@@ -8,12 +8,13 @@ import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_CURRENCY_LIST_CARD } from "../../c
 import { MODAL_CONTENT } from "../../data_const/data_const";
 
 import TextInput from '../TextInput/TextInput';
+import ComboInput from '../ComboInput/ComboInput';
 import ButtonSave from '../buttons/ButtonSave/ButtonSave';
 import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 import ButtonClear from '../buttons/ButtonClear/ButtonClear';
 
 import './CurrencyListCard.scss';
-import {isExists, isNotEmpty, isNotNaN} from "../../utils/utils";
+import {findArrayItemIndex, isExists, isNotEmpty, isNotNaN} from "../../utils/utils";
 import { fDataSaveCurrencyToList, fDataCreateCurrencyToList } from "../../network/fData";
 import { acUIHideMatGlass } from "../../actions/acUI";
 
@@ -115,14 +116,32 @@ class CurrencyListCard extends React.PureComponent {
 
     formProps = () => {
         const {  } = this.state.currencyListValue;
-        const { currencyListData, isNewCurrencyListAdded } = this.props;
+        const { currencyListData, currencyData, isNewCurrencyListAdded } = this.props;
+
+        let listValue = ( !isNotEmpty( currencyData ) )
+            ? null
+            : ( !isNotEmpty( currencyListData ) )
+                ? [ ...currencyData ]
+                : currencyData.filter( ( item ) => {
+                    return ( findArrayItemIndex( currencyListData, { code: item.Cur_Code } ) === -1 );
+                } );
         return {
             header: {
                 title:  ( isNewCurrencyListAdded )
                     ? "Новая валюта счета"
                     : "Валюта счета",
             },
-
+            currencySelector: {
+                withLabel: true,
+                label: 'Название валюты',
+                isReadOnly: false,
+                inputType: ComboInput.inputTypes.comboFilter,
+                display: ComboInput.displayTypes.block,
+                listValue,
+                asValue: 'Cur_Code',
+                asText: 'Cur_Name',
+                cbChanged: null,
+            },
             btnOk: {
                 label: 'Сохранить',
                 cbChanged: this.btnSave_cbChanged,
@@ -185,8 +204,9 @@ class CurrencyListCard extends React.PureComponent {
 
     render() {
         const { modalContent, isNewCurrencyListAdded } = this.props;
+        const { CURRENCY_LIST_CARD } = MODAL_CONTENT;
         let props = this.formProps();
-        return ( modalContent === MODAL_CONTENT.OPERATION_CATEGORY_CARD ) &&
+        return ( modalContent === CURRENCY_LIST_CARD ) &&
             <div className = { this.classCSS }
                  onClick = { this.formClick }>
                 <div className = { this.classCSS + '_form' }>
@@ -198,7 +218,12 @@ class CurrencyListCard extends React.PureComponent {
                             </span>
                         </div>
                     </div>
-                    
+                    <div className='rows currency_row'
+                         key='currency_row'>
+                        <div className="cols col_16 currency_col">
+                            <ComboInput { ...props.currencySelector }/>
+                        </div>
+                    </div>
                     <div className={ "rows " + this.classCSS + "_buttons_panel" }>
                         <div className="cols col_4"
                              key="Сохранить">
@@ -219,6 +244,8 @@ const mapStateToProps = function ( state ) {
     return {
         currencyListData:          state.data.currencyListData,
         currencyListSelectedIndex: state.data.currencyListSelectedIndex,
+
+        currencyData:              state.currency.currencyData,
 
         isNewCurrencyListAdded:    state.ui.isNewCurrencyListAdded,
         modalContent:              state.ui.modalContent,

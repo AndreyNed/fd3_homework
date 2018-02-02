@@ -1,6 +1,6 @@
 @import "../../data_const/style_const";
 
-.OperationCategoryCard {
+.CurrencyListCard {
     position: absolute;
     z-index: 1010;
     width: 600px;
@@ -11,7 +11,7 @@
     background-color: $modalFormBackgroundColor;
     border-radius: $borderRadiusDefault;
 
-    & > .OperationCategoryCard_form {
+    & > .CurrencyListCard_form {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -24,26 +24,15 @@
             &.header {
                 padding: 4px 0;
 
-                & > .OperationCategoryCard_header {
+                & > .CurrencyListCard_header {
                     font-size: $formHeaderFont;
                     font-weight: bold;
                     color: #898989;
                 }
             }
-
-            & > .validation_hint_box {
-                & > .validation_hint {
-                    font-size: $smallFont;
-                    color: $validationHintColor;
-                    display: block;
-                    text-align: right;
-                    padding: 4px 4px;
-                }
-            }
         }
 
-
-        & > .OperationCategoryCard_buttons_panel {
+        & > .CurrencyListCard_buttons_panel {
             position: absolute;
             bottom: 0;
             left: 0;

@@ -22,7 +22,7 @@ class DeleteConfirmation extends React.PureComponent {
             DELETE_MODES.OPERATIONS,
             DELETE_MODES.ACCOUNTS,
             DELETE_MODES.OPERATION_CATEGORIES,
-            DELETE_MODES.CURRENCY_LIST,
+            DELETE_MODES.CURRENCY_LIST_CARD,
             DELETE_MODES.NONE,
         ]),
         operationsData:                 PropTypes.arrayOf(

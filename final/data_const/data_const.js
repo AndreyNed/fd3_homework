@@ -12,7 +12,7 @@ const MODAL_CONTENT = {
     OPERATION_CARD:             'OPERATION_CARD',
     ACCOUNT_CARD:               'ACCOUNT_CARD',
     OPERATION_CATEGORY_CARD:    'OPERATION_CATEGORY_CARD',
-    CURRENCY_LIST:              'CURRENCY_LIST',
+    CURRENCY_LIST_CARD:         'CURRENCY_LIST_CARD',
     DELETE_CONFIRMATION:        'DELETE_CONFIRMATION',
     NONE:                       'NONE',
 };
@@ -53,7 +53,7 @@ const ALIGN_TYPES = {
 const SETTINGS_MODES = {
     ACCOUNTS:               'ACCOUNTS',
     OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
-    CURRENCY_LIST:          'CURRENCY_LIST',
+    CURRENCY_LIST:          'CURRENCY_LIST_CARD',
 };
 
 const CURRENCY_MODES = {
@@ -65,7 +65,7 @@ const DELETE_MODES = {
     OPERATIONS:             'OPERATIONS',
     ACCOUNTS:               'ACCOUNTS',
     OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
-    CURRENCY_LIST:          'CURRENCY_LIST',
+    CURRENCY_LIST:          'CURRENCY_LIST_CARD',
     NONE:                   'NONE',
 };
 
