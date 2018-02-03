@@ -48,6 +48,17 @@ class CurrencyListCard extends React.PureComponent {
             rate:                       PropTypes.number,
             updated:                    PropTypes.number,
         }),
+
+        currencyData:                   PropTypes.arrayOf(
+            PropTypes.shape({
+                Cur_ID:                 PropTypes.number,
+                Date:                   PropTypes.objectOf( Date ),
+                Cur_Abbreviation:       PropTypes.string,
+                Cur_Scale:              PropTypes.number,
+                Cur_Name:               PropTypes.string,
+                Cur_OfficialRate:       PropTypes.number,
+            })
+        ),
     };
 
     static defaultProps = {
@@ -61,6 +72,7 @@ class CurrencyListCard extends React.PureComponent {
             rate:                       0,
             updated:                    ( ( d ) => d.getTime() )( new Date() ),
         },
+        currencyData:                   [],
     };
 
     static classID = 0;
@@ -115,9 +127,10 @@ class CurrencyListCard extends React.PureComponent {
     };
 
     formProps = () => {
-        const {  } = this.state.currencyListValue;
+        let { currencyListValue } = this.state;
         const { currencyListData, currencyData, isNewCurrencyListAdded } = this.props;
 
+        // подготовить список значений для ComboInput
         let listValue = ( !isNotEmpty( currencyData ) )
             ? null
             : ( !isNotEmpty( currencyListData ) )
@@ -125,6 +138,24 @@ class CurrencyListCard extends React.PureComponent {
                 : currencyData.filter( ( item ) => {
                     return ( findArrayItemIndex( currencyListData, { code: item.Cur_Code } ) === -1 );
                 } );
+
+        // подготовить значение по умолчанию для ComboInput
+        let defValue = ( isExists( currencyListValue ) && isNotEmpty( currencyListValue.code ) )
+            ? currencyListValue.code
+            : '';
+
+        if ( isNotEmpty( listValue ) ) {
+            let index = findArrayItemIndex(listValue, {Cur_Code: currencyListValue.code});
+
+            if (index < 0 && isNotEmpty(defValue)) {
+                this.setState({currencyListValue: {...CurrencyListCard.defaultProps.currencyListValue}},
+                    () => {
+                        ( this.debug_mode ) &&
+                        console.log('CurrencyListCard: formProps: state.currencyListValue: ', this.state.currencyListValue);
+                    })
+            }
+        }
+
         return {
             header: {
                 title:  ( isNewCurrencyListAdded )
@@ -137,10 +168,11 @@ class CurrencyListCard extends React.PureComponent {
                 isReadOnly: false,
                 inputType: ComboInput.inputTypes.comboFilter,
                 display: ComboInput.displayTypes.block,
+                defValue,
                 listValue,
                 asValue: 'Cur_Code',
                 asText: 'Cur_Name',
-                cbChanged: null,
+                cbChanged: this.listItem_cbChanged,
             },
             btnOk: {
                 label: 'Сохранить',
@@ -157,6 +189,38 @@ class CurrencyListCard extends React.PureComponent {
 
     listItem_cbChanged = ( value ) => {
         console.log( 'CurrencyListCard: listItem_cbChanged: ', value );
+
+        /*const { currencyData } = this.props;
+
+        let index = ( isNotEmpty( value ) )
+            ? findArrayItemIndex( currencyData, { Cur_Code: value } )
+            : -1;
+
+        if ( index > -1 ) {
+            if ( isNotEmpty( listValue ) ) {
+                const {
+                    Cur_Code,
+                    Cur_Name,
+                    Cur_Abbreviation,
+                    Cur_Scale,
+                    Cur_Rate,
+                    Date
+                } = listValue[ 0 ];
+                let currencyListValue = {
+                    code: Cur_Code,
+                    name: Cur_Name,
+                    abbreviation: Cur_Abbreviation,
+                    scale: Cur_Scale,
+                    rate: Cur_Rate,
+                    updated: Date.getTime()
+                };
+                this.setState( { currencyListValue }, () => {
+                    console.log( 'listItem_cbChanged: currencyListValue: ', currencyListValue );
+                } )
+            }
+        }*/
+
+
         /*const { currencyListValue } = this.state;
         let newCurrencyListValue = { ...currencyListValue };
         newCurrencyListValue.name = ( isNotEmpty( value ) )
@@ -244,6 +308,7 @@ const mapStateToProps = function ( state ) {
     return {
         currencyListData:          state.data.currencyListData,
         currencyListSelectedIndex: state.data.currencyListSelectedIndex,
+        currencyListValue:         state.data.currencyListValue,
 
         currencyData:              state.currency.currencyData,
 
