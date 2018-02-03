@@ -126,7 +126,8 @@ class CurrencyListCard extends React.PureComponent {
         if ( isNotEmpty( listValue ) ) {
             defValue = ( currencyListSelectedIndex > -1 )
                 ? currencyData[ currencyListSelectedIndex ].Cur_Code
-                : listValue[ 0 ].Cur_Code;
+                : '';
+                 // : listValue[ 0 ].Cur_Code;
         }
 
         return {
@@ -167,14 +168,15 @@ class CurrencyListCard extends React.PureComponent {
         let currencyListSelectedIndex = findArrayItemIndex( currencyData, { Cur_Code: value } );
 
         this.setState( { currencyListSelectedIndex }, () => {
-            console.log( 'CurrencyListCard: listItem_cbChanged: state: ', this.state );
+            ( this.debug_mode ) &&
+                console.log( 'CurrencyListCard: listItem_cbChanged: state: ', this.state );
         } );
     };
 
     btnSave_cbChanged = () => {
         const { currencyListSelectedIndex } = this.state;
         const { currencyData } = this.props;
-        console.log( "TEST: currencyData: ", currencyData );
+        // console.log( "TEST: currencyData: ", currencyData );
 
         if ( isNotEmpty( currencyData ) && currencyListSelectedIndex > -1 ) {
 

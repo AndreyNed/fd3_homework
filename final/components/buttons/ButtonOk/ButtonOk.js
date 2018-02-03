@@ -3,10 +3,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button';
-//import { connect } from 'react-redux';
+
+import {DISPLAY_TYPES} from "../../../data_const/data_const";
 
 import './ButtonOk.scss';
-import {DISPLAY_TYPES} from "../../../data_const/data_const";
 
 class ButtonOk extends Button {
 
@@ -53,6 +53,7 @@ class ButtonOk extends Button {
 
     render() {
         const { display } = this.props;
+        // console.log( "TEST: BTNOK: display: ", display );
         const { addedClass } = this.props.options;
         let innerSVG = (
             <g className="ButtonOk_inner_svg">

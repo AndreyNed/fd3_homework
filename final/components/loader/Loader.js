@@ -173,7 +173,7 @@ class Loader extends React.PureComponent {
         currencyLoadStatus:             PropTypes.number,
         currencyPrepareStatus:          PropTypes.number,
 
-        matGlassIsVisible:              PropTypes.bool,
+        // matGlassIsVisible:              PropTypes.bool,
         modalContent:                   PropTypes.oneOf([
             MODAL_CONTENT.NONE,
             MODAL_CONTENT.DATA_DELETING,
@@ -432,37 +432,36 @@ const mapStateToProps = function ( state ) {
     // console.log( 'Loader: mapStateToProps: state: ', state );
     return {
         accountsSource:                 state.data.accountsSource,
-        operationCategoriesSource:      state.data.operationCategoriesSource,
-        operationsSource:               state.data.operationsSource,
-
         accountsData:                   state.data.accountsData,
-        operationCategoriesData:        state.data.operationCategoriesData,
-        operationsData:                 state.data.operationsData,
-
         accountsLoadStatus:             state.data.accountsLoadStatus,
-        operationCategoriesLoadStatus:  state.data.operationCategoriesLoadStatus,
-        operationsLoadStatus:           state.data.operationsLoadStatus,
-
         accountsPrepareStatus:          state.data.accountsPrepareStatus,
+
+        operationCategoriesSource:      state.data.operationCategoriesSource,
+        operationCategoriesData:        state.data.operationCategoriesData,
+        operationCategoriesLoadStatus:  state.data.operationCategoriesLoadStatus,
         operationCategoriesPrepareStatus: state.data.operationCategoriesPrepareStatus,
+
+        operationsSource:               state.data.operationsSource,
+        operationsData:                 state.data.operationsData,
+        operationsLoadStatus:           state.data.operationsLoadStatus,
         operationsPrepareStatus:         state.data.operationsPrepareStatus,
 
-        currencyListLoadStatus:         state.data.currencyListLoadStatus,
-        currencyListPrepareStatus:      state.data.currencyListPrepareStatus,
         currencyListSource:             state.data.currencyListSource,
         currencyListData:               state.data.currencyListData,
+        currencyListLoadStatus:         state.data.currencyListLoadStatus,
+        currencyListPrepareStatus:      state.data.currencyListPrepareStatus,
 
-        currencyAllLoadStatus:          state.currency.currencyAllLoadStatus,
-        currencyAllPrepareStatus:       state.currency.currencyAllPrepareStatus,
         currencyAllSource:              state.currency.currencyAllSource,
         currencyAllData:                state.currency.currencyAllData,
+        currencyAllLoadStatus:          state.currency.currencyAllLoadStatus,
+        currencyAllPrepareStatus:       state.currency.currencyAllPrepareStatus,
 
-        currencyLoadStatus:             state.currency.currencyLoadStatus,
-        currencyPrepareStatus:          state.currency.currencyPrepareStatus,
         currencySource:                 state.currency.currencySource,
         currencyData:                   state.currency.currencyData,
+        currencyLoadStatus:             state.currency.currencyLoadStatus,
+        currencyPrepareStatus:          state.currency.currencyPrepareStatus,
 
-        matGlassIsVisible:              state.ui.matGlassIsVisible,
+        // matGlassIsVisible:              state.ui.matGlassIsVisible,
         modalContent:                   state.ui.modalContent,
     }
 };

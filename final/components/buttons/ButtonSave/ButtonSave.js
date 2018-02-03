@@ -50,6 +50,8 @@ class ButtonSave extends Button {
     }*/
 
     render() {
+        const { display } = this.props;
+        // console.log( "TEST: BTNSAVE: display: ", display );
         let innerSVG = (
             <g className="ButtonSave_inner_svg">
                 <circle cx="32" cy="32" r="31"
@@ -96,7 +98,7 @@ class ButtonSave extends Button {
 
         );
 
-        return super.render( innerSVG, this.props.options.addedClass )
+        return super.render( innerSVG, this.props.options.addedClass, display )
     }
 }
 

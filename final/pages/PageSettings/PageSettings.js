@@ -565,7 +565,7 @@ class PageSettings extends React.PureComponent {
                 break;
 
             case CURRENCY_LIST:
-                this.currencyListChanged( newId );
+                // this.currencyListChanged( newId );
                 break;
 
             default:
@@ -646,10 +646,10 @@ class PageSettings extends React.PureComponent {
     };
 
     currencyListChanged = ( newCurrencyListId ) => {
-        console.log( 'PageSettings: currencyListChanged: ', newCurrencyListId );
+        // console.log( 'PageSettings: currencyListChanged: ', newCurrencyListId );
         const { dispatch, currencyListData } = this.props;
         let newCurrencyListSelectedIndex = findArrayItemIndex( currencyListData, { id: newCurrencyListId } );
-        console.log( 'PageSettings: currencyListChanged: newCurrencyListSelectedIndex: ', newCurrencyListSelectedIndex );
+        // console.log( 'PageSettings: currencyListChanged: newCurrencyListSelectedIndex: ', newCurrencyListSelectedIndex );
         dispatch( acDataCurrencyListSelect( newCurrencyListSelectedIndex ) );
         // dispatch( acUIShowCurrencyListCard( false ) );
     };
@@ -667,9 +667,9 @@ class PageSettings extends React.PureComponent {
     };
 
     currencyListSelected = ( newCurrencyListSelectedIndex ) => {
-        console.log( 'PageSettings: currencyListSelected: ', newCurrencyListSelectedIndex );
+        // console.log( 'PageSettings: currencyListSelected: ', newCurrencyListSelectedIndex );
         const { dispatch } = this.props;
-        dispatch( acDataCurrencyListSelect( newCurrencyListSelectedIndex) );
+            dispatch( acDataCurrencyListSelect( newCurrencyListSelectedIndex) );
     };
 
     accountAdd = () => {

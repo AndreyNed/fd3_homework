@@ -87,12 +87,10 @@ class DeleteConfirmation extends React.PureComponent {
         DeleteConfirmation.classID++;
         this.state = {
             htmlID: DeleteConfirmation.getHtmlID( props.htmlID ),
-        }
+        };
+        this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_DELETE_CONFIRMATION;
+        this.classCSS = 'DeleteConfirmation';
     }
-
-    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_DELETE_CONFIRMATION;
-
-    classCSS = 'DeleteConfirmation';
 
     componentWillMount() {
         this.prepareData( this.props );
@@ -139,7 +137,8 @@ class DeleteConfirmation extends React.PureComponent {
             deleteMode
         } = this.props;
         const { OPERATIONS, ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST, NONE } = DELETE_MODES;
-        console.log( "Удалить: deleteMode: ", deleteMode );
+        ( this.debug_mode ) &&
+            console.log( "Удалить: deleteMode: ", deleteMode );
         switch ( deleteMode ) {
             case OPERATIONS:
                 let operationId = operationsData[ operationSelectedIndex ].id;
@@ -155,7 +154,7 @@ class DeleteConfirmation extends React.PureComponent {
                 break;
             case CURRENCY_LIST:
                 let currencyListId = currencyListData[ currencyListSelectedIndex ].id;
-                console.log( 'Delete currencyList item: id: ', currencyListId );
+                // console.log( 'Delete currencyList item: id: ', currencyListId );
                 fDataDeleteCurrencyFromList( dispatch, null, null, currencyListId );
                 break;
         }
@@ -202,7 +201,6 @@ class DeleteConfirmation extends React.PureComponent {
                 </div>
             </div>
     }
-
 }
 
 const mapStateToProps = function ( state ) {
