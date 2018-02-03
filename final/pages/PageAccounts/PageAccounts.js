@@ -11,7 +11,7 @@ import '../../utils/utils';
 import SmartGrid from '../../components/SmartGrid/SmartGrid';
 
 import './PageAccounts.scss';
-import {formatDate, isExists, isNotEmpty} from "../../utils/utils";
+import {findArrayItemIndex, formatDate, isExists, isNotEmpty} from "../../utils/utils";
 
 class PageAccounts extends React.PureComponent {
 
@@ -21,6 +21,7 @@ class PageAccounts extends React.PureComponent {
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
                 comment:                PropTypes.string,
+                currency:               PropTypes.number,
             })
         ),
 
@@ -89,12 +90,12 @@ class PageAccounts extends React.PureComponent {
 
     prepareTableProps = () => {
         const { NUMBER, STRING, DATE } = DATA_TYPES;
-        const { RIGHT, LEFT } = ALIGN_TYPES;
+        const { RIGHT, LEFT, CENTER } = ALIGN_TYPES;
         const { NONE } = SORTING;
         const { accountsData } = this.props;
         let body = ( isNotEmpty( accountsData ) )
             ? accountsData.map( ( item, index ) => {
-                let accountInfo = this.getAccountInfo( item.id );
+                let accountInfo = this.getAccountInfo( item.id, item.currency );
                 let date = ( isExists( accountInfo.updated ) )
                     ? new Date( accountInfo.updated )
                     : '';
@@ -121,6 +122,14 @@ class PageAccounts extends React.PureComponent {
                         {
                             id: 'amount',
                             value: accountInfo.amount,
+                        },
+                        {
+                            id: 'currency',
+                            value: accountInfo.currency,
+                        },
+                        {
+                            id: 'amountBYN',
+                            value: accountInfo.amountBYN,
                         },
                         {
                             id: 'updated',
@@ -175,7 +184,7 @@ class PageAccounts extends React.PureComponent {
                     sorting: NONE,
                     isSearchable: false,
                     isVisible: true,
-                    width: '15%',
+                    width: '10%',
                 },
                 {
                     id: 'credit',
@@ -186,11 +195,33 @@ class PageAccounts extends React.PureComponent {
                     sorting: NONE,
                     isSearchable: false,
                     isVisible: true,
-                    width: '15%',
+                    width: '10%',
                 },
                 {
                     id: 'amount',
                     title: 'Сумма',
+                    dataType: NUMBER,
+                    align: RIGHT,
+                    isSortable: true,
+                    sorting: NONE,
+                    isSearchable: false,
+                    isVisible: true,
+                    width: '10%',
+                },
+                {
+                    id: 'currency',
+                    title: 'Валюта',
+                    dataType: STRING,
+                    align: CENTER,
+                    isSortable: true,
+                    sorting: NONE,
+                    isSearchable: false,
+                    isVisible: true,
+                    width: '15%',
+                },
+                {
+                    id: 'amountBYN',
+                    title: 'Сумма (BYN)',
                     dataType: NUMBER,
                     align: RIGHT,
                     isSortable: true,
@@ -208,7 +239,7 @@ class PageAccounts extends React.PureComponent {
                     sorting: NONE,
                     isSearchable: false,
                     isVisible: true,
-                    width: '15%',
+                    width: '10%',
                 },
                 {
                     id: 'comment',
@@ -229,10 +260,10 @@ class PageAccounts extends React.PureComponent {
 
     /* == service functions == */
 
-    getAccountInfo = ( accountId ) => {
-        const { operationsData } = this.props;
+    getAccountInfo = ( accountId, currencyId ) => {
+        const { operationsData, currencyListData } = this.props;
         const { CREDIT } = OPERATION_TYPES;
-        let result = { amount: 0, credit: 0, debit: 0, updated: null };
+        let result = { amount: 0, credit: 0, debit: 0, currency: '', amountBYN: 0, rate: 1, scale: 1, updated: null };
         if ( isNotEmpty( operationsData ) ) {
             operationsData.forEach( ( item ) => {
                 if ( item.accountId === accountId ) {
@@ -244,6 +275,18 @@ class PageAccounts extends React.PureComponent {
             } );
             result.amount = result.debit - result.credit;
         }
+        if ( isExists( currencyId ) && currencyId > 0 && isNotEmpty( currencyListData ) ) {
+            let curIndex = findArrayItemIndex( currencyListData, { id: currencyId } );
+            if ( curIndex > -1 ) {
+                result.currency = currencyListData[ curIndex ].abbreviation;
+                result.rate = currencyListData[ curIndex ].rate;
+                result.scale = currencyListData[ curIndex ].scale;
+                // console.log( `AccountId: ${accountId}, curAbbreviation: ${curAbbreviation}` );
+            } else {
+
+            }
+        }
+        result.amountBYN = result.amount / result.scale * result.rate;
         // ( this.debug_mode ) &&
             // console.log( 'PageAccounts: getAccountInfo: accountId: ', accountId, '; result: ', result );
         return result;
@@ -291,6 +334,7 @@ const mapStateToProps = function ( state ) {
     return {
         accountsData:                   state.data.accountsData,
         operationsData:                 state.data.operationsData,
+        currencyListData:               state.data.currencyListData,
 
         currencyData:                   state.currency.currencyData,
 

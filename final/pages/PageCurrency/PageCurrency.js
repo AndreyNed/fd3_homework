@@ -21,6 +21,7 @@ class PageCurrency extends React.PureComponent {
         currencyMode:               PropTypes.oneOf([
             CURRENCY_MODES.DAILY_RATES,
             CURRENCY_MODES.DYNAMIC_RATES,
+            CURRENCY_MODES.CURRENCY_CALCULATOR,
         ]),
 
         currencyData:               PropTypes.arrayOf(
@@ -63,7 +64,7 @@ class PageCurrency extends React.PureComponent {
     prepareLeftSectionProps = () => {
         const { currencyMode } = this.props;
         const { LEFT } = ALIGN_TYPES;
-        const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
+        const { DAILY_RATES, DYNAMIC_RATES, CURRENCY_CALCULATOR } = CURRENCY_MODES;
 
         return {
             btnDailyRates: {
@@ -81,6 +82,14 @@ class PageCurrency extends React.PureComponent {
                     labelAlign: LEFT,
                 },
                 cbChanged: this.btnDynamicRates_cbChanged,
+            },
+            btnCurrencyCalculator: {
+                label: 'Калькулятор валют',
+                isActive: ( currencyMode === CURRENCY_CALCULATOR ),
+                options: {
+                    labelAlign: LEFT,
+                },
+                cbChanged: this.btnCurrencyCalculator_cbChanged,
             },
         }
     };
@@ -229,11 +238,17 @@ class PageCurrency extends React.PureComponent {
         dispatch( acUISetCurrencyMode( DYNAMIC_RATES ) );
     };
 
+    btnCurrencyCalculator_cbChanged = () => {
+        const { dispatch } = this.props;
+        const { CURRENCY_CALCULATOR } = CURRENCY_MODES;
+        dispatch( acUISetCurrencyMode( CURRENCY_CALCULATOR ) );
+    };
+
     /* == render functions == */
 
     renderLeftSection = () => {
         const { currencyMode } = this.props;
-        const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
+        const { DAILY_RATES, DYNAMIC_RATES, CURRENCY_CALCULATOR } = CURRENCY_MODES;
         let props = this.prepareLeftSectionProps();
         return (
             <div className = { this.classCSS + "_left_section" }>
@@ -259,23 +274,40 @@ class PageCurrency extends React.PureComponent {
                         <ButtonLabel { ...props.btnDynamicRates }/>
                     </div>
                 </div>
+                <div className="rows btn_currency_calculator"
+                     key="btn_currency_calculator">
+                    <div className="cols col_16"
+                         style = {{
+                             fontWeight: ( currencyMode === CURRENCY_CALCULATOR )
+                                 ? 'bold'
+                                 : 'normal'
+                         }}>
+                        <ButtonLabel { ...props.btnCurrencyCalculator }/>
+                    </div>
+                </div>
             </div>
         )
     };
 
     renderMainSection = () => {
         const { currencyMode } = this.props;
-        const { DAILY_RATES, DYNAMIC_RATES } = CURRENCY_MODES;
+        const { DAILY_RATES, DYNAMIC_RATES, CURRENCY_CALCULATOR } = CURRENCY_MODES;
         let propsDaily = this.prepareTableProps();
         let propsDynamic = this.prepareDynamicRatesProps();
+        // let propsCurrencyCalculator = this.prepareCurrencyCalculatorProps();
         return (
             <div className = { this.classCSS + "_main_section" }>
                 {
-                    ( currencyMode === DAILY_RATES )
-                        ? <SmartGrid { ...propsDaily }/>
-                        : ( currencyMode === DYNAMIC_RATES )
-                            ? <DateRangeChart { ...propsDynamic }/>
-                            : null
+                    ( currencyMode === DAILY_RATES ) &&
+                        <SmartGrid { ...propsDaily }/>
+                }
+                {
+                    ( currencyMode === DYNAMIC_RATES ) &&
+                        <DateRangeChart { ...propsDynamic }/>
+                }
+                {
+                    ( currencyMode === CURRENCY_CALCULATOR ) &&
+                        null
                 }
             </div>
         )

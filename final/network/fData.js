@@ -285,7 +285,7 @@ const fDataLoadAccounts = function ( dispatch, cbSuccess, cbError ) {
 const fDataSaveAccount = function ( dispatch, cbSuccess, cbError, account ) {
     ( debug_mode ) && console.log( 'fDataSaveAccount...' );
     dispatch( acDataAccountSaveStart() );
-    const { id, name, comment } = account;
+    const { id, name, comment, currency } = account;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataSaveAccount: ' + errorText );
@@ -318,7 +318,8 @@ const fDataSaveAccount = function ( dispatch, cbSuccess, cbError, account ) {
         body: 'command=save_account' +
         `&account_id=${ id }` +
         `&account_name=${ name }` +
-        `&account_comment=${ comment }`
+        `&account_comment=${ comment }` +
+        `&account_currency=${ currency }`
     };
 
     debug_mode && console.log( 'fDataSaveAccount: fetchOptions: ', fetchOptions );
@@ -336,7 +337,7 @@ const fDataSaveAccount = function ( dispatch, cbSuccess, cbError, account ) {
 const fDataCreateAccount = function ( dispatch, cbSuccess, cbError, newAccount ) {
     ( debug_mode ) && console.log( 'fDataCreateAccount...' );
     dispatch( acDataAccountSaveStart() );
-    const { name, comment } = newAccount;
+    const { name, comment, currency } = newAccount;
 
     let fetchError = function ( errorText ) {
         console.error( 'fDataCreateAccount: ' + errorText );
@@ -368,7 +369,8 @@ const fDataCreateAccount = function ( dispatch, cbSuccess, cbError, newAccount )
         },
         body: 'command=add_account' +
         `&account_name=${ name }` +
-        `&account_comment=${ comment }`
+        `&account_comment=${ comment }` +
+        `&account_currency=${ currency }`
     };
 
     debug_mode && console.log( 'fDataCreateAccount: fetchOptions: ', fetchOptions );

@@ -37,6 +37,7 @@ class Loader extends React.PureComponent {
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
                 comment:                PropTypes.string,
+                currency:               PropTypes.number,
             })
         ),
         accountsData:                   PropTypes.arrayOf(
@@ -44,6 +45,7 @@ class Loader extends React.PureComponent {
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
                 comment:                PropTypes.string,
+                currency:               PropTypes.number,
             })
         ),
         operationCategoriesSource:      PropTypes.arrayOf(

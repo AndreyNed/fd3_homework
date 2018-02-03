@@ -50,6 +50,7 @@ class PageSettings extends React.PureComponent {
                 id:                     PropTypes.number,
                 name:                   PropTypes.string,
                 comment:                PropTypes.string,
+                currency:               PropTypes.number,
             })
         ),
 
@@ -61,6 +62,7 @@ class PageSettings extends React.PureComponent {
             id:                         PropTypes.number,
             name:                       PropTypes.string,
             comment:                    PropTypes.string,
+            currency:                   PropTypes.number,
         }),
 
         accountSelectedIndex:           PropTypes.number,
@@ -264,6 +266,17 @@ class PageSettings extends React.PureComponent {
                         width:        '30%',
                     },
                     {
+                        id:           'currency',
+                        title:        'Валюта',
+                        dataType:     STRING,
+                        align:        LEFT,
+                        isSortable:   true,
+                        sorting:      NONE,
+                        isSearchable: true,
+                        isVisible:    true,
+                        width:        '15%',
+                    },
+                    {
                         id:           'comment',
                         title:        'Комментарий',
                         dataType:     STRING,
@@ -276,6 +289,15 @@ class PageSettings extends React.PureComponent {
                     },
                 ];
                 body = accountsData.map( ( row, index ) => {
+                    let currencyValue = '';
+                    if ( isNotEmpty( currencyListData ) ) {
+                        let curIndex = findArrayItemIndex( currencyListData, { id: row.currency } );
+                        if ( curIndex > -1 ) {
+                            const { name, abbreviation } = currencyListData[ curIndex ];
+                            currencyValue = `${name} (${abbreviation})`;
+                        }
+                        // console.log( `TEST: account name: ${row.name}, currency: ${row.currency}, currencyValue: ${currencyValue}`);
+                    }
                     return {
                         rowIndex: index,
                         cells: [
@@ -288,9 +310,13 @@ class PageSettings extends React.PureComponent {
                                 value: row.name,
                             },
                             {
+                                id: 'currency',
+                                value: currencyValue,
+                            },
+                            {
                                 id: 'comment',
                                 value: row.comment,
-                            }
+                            },
                         ]
                     }
                 } );
