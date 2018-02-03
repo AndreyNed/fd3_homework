@@ -12,7 +12,10 @@ import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 
 import './DeleteConfirmation.scss';
 import { acUIHideMatGlass } from "../../actions/acUI";
-import { fDataDeleteAccount, fDataDeleteOperation, fDataDeleteOperationCategory } from "../../network/fData";
+import {
+    fDataDeleteAccount, fDataDeleteCurrencyFromList, fDataDeleteOperation,
+    fDataDeleteOperationCategory
+} from "../../network/fData";
 
 class DeleteConfirmation extends React.PureComponent {
 
@@ -22,7 +25,7 @@ class DeleteConfirmation extends React.PureComponent {
             DELETE_MODES.OPERATIONS,
             DELETE_MODES.ACCOUNTS,
             DELETE_MODES.OPERATION_CATEGORIES,
-            DELETE_MODES.CURRENCY_LIST_CARD,
+            DELETE_MODES.CURRENCY_LIST,
             DELETE_MODES.NONE,
         ]),
         operationsData:                 PropTypes.arrayOf(
@@ -153,7 +156,7 @@ class DeleteConfirmation extends React.PureComponent {
             case CURRENCY_LIST:
                 let currencyListId = currencyListData[ currencyListSelectedIndex ].id;
                 console.log( 'Delete currencyList item: id: ', currencyListId );
-                // fDataDeleteOperationCategory( dispatch, null, null, categoryId );
+                fDataDeleteCurrencyFromList( dispatch, null, null, currencyListId );
                 break;
         }
     };

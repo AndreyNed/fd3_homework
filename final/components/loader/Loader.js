@@ -348,7 +348,7 @@ class Loader extends React.PureComponent {
     };
 
     prepareCurrencyListData = ( currencyListSource ) => {
-        console.log( 'prepareCurrencyListData: currencyListSource: ', currencyListSource );
+        // console.log( 'prepareCurrencyListData: currencyListSource: ', currencyListSource );
         const { dispatch } = this.props;
         let currencyListData = [ ...currencyListSource ];
         dispatch( acDataCurrencyListSetData( currencyListData ) );

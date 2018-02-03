@@ -148,7 +148,49 @@ function rdData ( state = initState, action ) {
                 }
             };
 
+        case DATA_CURRENCY_LIST_SAVE_START:
+            return {
+                ...state, ...{
+                    currencyListSaveStatus:    1,
+                }
+            };
 
+        case DATA_CURRENCY_LIST_SAVE_SUCCESS:
+            return {
+                ...state, ...{
+                    currencyListSaveStatus:    2,
+                }
+            };
+
+        case DATA_CURRENCY_LIST_SAVE_ERROR:
+            return {
+                ...state, ...{
+                    currencyListSaveStatus:    3,
+                }
+            };
+
+        case DATA_CURRENCY_LIST_DELETE_START:
+            return {
+                ...state, ...{
+                    currencyListDeleteStatus:  1,
+                }
+            };
+
+        case DATA_CURRENCY_LIST_DELETE_SUCCESS:
+            return {
+                ...state, ...{
+                    currencyListDeleteStatus:   2,
+                    currencyListSelectedIndex: -1,
+                }
+            };
+
+        case DATA_CURRENCY_LIST_DELETE_ERROR:
+            return {
+                ...state, ...{
+                    currencyListDeleteStatus:  3,
+                    currencyListSelectedIndex: -1,
+                }
+            };
 
         case DATA_ACCOUNTS_LOAD_START:
             return {

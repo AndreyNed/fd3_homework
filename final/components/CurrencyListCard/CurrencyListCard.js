@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_CURRENCY_LIST_CARD } from "../../config/config";
-import { MODAL_CONTENT } from "../../data_const/data_const";
+import {DISPLAY_TYPES, MODAL_CONTENT} from "../../data_const/data_const";
 
 import TextInput from '../TextInput/TextInput';
 import ComboInput from '../ComboInput/ComboInput';
@@ -88,6 +88,7 @@ class CurrencyListCard extends React.PureComponent {
         CurrencyListCard.classID++;
         this.state = {
             htmlID: CurrencyListCard.getHtmlID( props.htmlID ),
+            currencyListSelectedIndex: -1,
         };
         this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_CURRENCY_LIST_CARD;
         this.classCSS = 'CurrencyListCard';
@@ -104,31 +105,12 @@ class CurrencyListCard extends React.PureComponent {
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
             console.log( 'CurrencyListCard: prepareData: new props: ', props );
-
-        let newState = {
-            currencyListValidationData: { ...CurrencyListCard.defaultProps.currencyListValidationData }
-        };
-
-        const {
-            isNewCurrencyListAdded,
-            currencyListSelectedIndex,
-            currencyListData
-        } = props;
-
-        // console.log( 'CurrencyListCard: prepareData: consts: ', isNewCurrencyListAdded, CurrencyListSelectedIndex, CurrencyListData );
-        newState.currencyListValue = ( isNewCurrencyListAdded || currencyListSelectedIndex < 0 )
-            ? { ...CurrencyListCard.defaultProps.currencyListValue }
-            : { ...currencyListData[ currencyListSelectedIndex ] };
-
-        this.setState( { ...newState }, () => {
-            ( this.debug_mode ) &&
-                console.log( 'CurrencyListCard: prepareData: new state: ', this.state );
-        } );
     };
 
     formProps = () => {
-        let { currencyListValue } = this.state;
+        let { currencyListSelectedIndex } = this.state;
         const { currencyListData, currencyData, isNewCurrencyListAdded } = this.props;
+        const { block, none } = DISPLAY_TYPES;
 
         // подготовить список значений для ComboInput
         let listValue = ( !isNotEmpty( currencyData ) )
@@ -140,20 +122,11 @@ class CurrencyListCard extends React.PureComponent {
                 } );
 
         // подготовить значение по умолчанию для ComboInput
-        let defValue = ( isExists( currencyListValue ) && isNotEmpty( currencyListValue.code ) )
-            ? currencyListValue.code
-            : '';
-
+        let defValue = '';
         if ( isNotEmpty( listValue ) ) {
-            let index = findArrayItemIndex(listValue, {Cur_Code: currencyListValue.code});
-
-            if (index < 0 && isNotEmpty(defValue)) {
-                this.setState({currencyListValue: {...CurrencyListCard.defaultProps.currencyListValue}},
-                    () => {
-                        ( this.debug_mode ) &&
-                        console.log('CurrencyListCard: formProps: state.currencyListValue: ', this.state.currencyListValue);
-                    })
-            }
+            defValue = ( currencyListSelectedIndex > -1 )
+                ? currencyData[ currencyListSelectedIndex ].Cur_Code
+                : listValue[ 0 ].Cur_Code;
         }
 
         return {
@@ -176,6 +149,7 @@ class CurrencyListCard extends React.PureComponent {
             },
             btnOk: {
                 label: 'Сохранить',
+                display: ( currencyListSelectedIndex > -1 ) ? block : none,
                 cbChanged: this.btnSave_cbChanged,
             },
             btnCancel: {
@@ -188,55 +162,50 @@ class CurrencyListCard extends React.PureComponent {
     /* == callbacks == */
 
     listItem_cbChanged = ( value ) => {
-        console.log( 'CurrencyListCard: listItem_cbChanged: ', value );
+        // console.log( 'CurrencyListCard: listItem_cbChanged: ', value );
+        const { currencyData } = this.props;
+        let currencyListSelectedIndex = findArrayItemIndex( currencyData, { Cur_Code: value } );
 
-        /*const { currencyData } = this.props;
-
-        let index = ( isNotEmpty( value ) )
-            ? findArrayItemIndex( currencyData, { Cur_Code: value } )
-            : -1;
-
-        if ( index > -1 ) {
-            if ( isNotEmpty( listValue ) ) {
-                const {
-                    Cur_Code,
-                    Cur_Name,
-                    Cur_Abbreviation,
-                    Cur_Scale,
-                    Cur_Rate,
-                    Date
-                } = listValue[ 0 ];
-                let currencyListValue = {
-                    code: Cur_Code,
-                    name: Cur_Name,
-                    abbreviation: Cur_Abbreviation,
-                    scale: Cur_Scale,
-                    rate: Cur_Rate,
-                    updated: Date.getTime()
-                };
-                this.setState( { currencyListValue }, () => {
-                    console.log( 'listItem_cbChanged: currencyListValue: ', currencyListValue );
-                } )
-            }
-        }*/
-
-
-        /*const { currencyListValue } = this.state;
-        let newCurrencyListValue = { ...currencyListValue };
-        newCurrencyListValue.name = ( isNotEmpty( value ) )
-            ? value
-            : '';
-        this.setState( {
-            currencyListValue: newCurrencyListValue,
-        } );*/
+        this.setState( { currencyListSelectedIndex }, () => {
+            console.log( 'CurrencyListCard: listItem_cbChanged: state: ', this.state );
+        } );
     };
 
     btnSave_cbChanged = () => {
-        const { currencyListValue } = this.state;
-        const { isNewCurrencyListAdded } = this.props;
-        ( isNewCurrencyListAdded )
-            ? this.createCurrencyListItem( currencyListValue )
-            : this.saveCurrencyListItem( currencyListValue );
+        const { currencyListSelectedIndex } = this.state;
+        const { currencyData } = this.props;
+        console.log( "TEST: currencyData: ", currencyData );
+
+        if ( isNotEmpty( currencyData ) && currencyListSelectedIndex > -1 ) {
+
+            const {
+                Cur_Code,
+                Cur_Name,
+                Cur_Abbreviation,
+                Cur_Scale,
+                Cur_OfficialRate,
+                Date
+            } = currencyData[ currencyListSelectedIndex ];
+
+            let currencyListValue = {
+                code: Cur_Code,
+                name: Cur_Name,
+                abbreviation: Cur_Abbreviation,
+                scale: Cur_Scale,
+                rate: Cur_OfficialRate,
+                updated: Date.getTime()
+            };
+
+            ( this.debug_mode ) &&
+                console.log( "CurrencyListCard: btnSave_cbChanged: currencyListValue: ", currencyListValue );
+            this.createCurrencyListItem( currencyListValue )
+        }
+
+
+
+        // ( isNewCurrencyListAdded )
+            // ?
+            // : this.saveCurrencyListItem( currencyListValue );
     };
 
     btnCancel_cbChanged = () => {
@@ -255,7 +224,7 @@ class CurrencyListCard extends React.PureComponent {
     createCurrencyListItem = ( newCurrencyListItem ) => {
         ( this.debug_mode ) &&
             console.log( 'CurrencyListCard: createCurrencyListItem: ', newCurrencyListItem );
-        // fDataCreateCurrencyToList( this.props.dispatch, null, null, newCurrencyListItem );
+        fDataCreateCurrencyToList( this.props.dispatch, null, null, newCurrencyListItem );
     };
 
     saveCurrencyListItem = (CurrencyListItem ) => {

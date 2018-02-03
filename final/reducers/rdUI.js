@@ -84,7 +84,7 @@ function rdUI ( state = initState, action ) {
             };
 
         case UI_SHOW_CURRENCY_LIST_CARD:
-            console.log( 'rdUI: UI_SHOW_CURRENCY_LIST_CARD: action: ', action );
+            // console.log( 'rdUI: UI_SHOW_CURRENCY_LIST_CARD: action: ', action );
             return {
                 ...state, ...{
                     modalContent:                   MODAL_CONTENT.CURRENCY_LIST_CARD,

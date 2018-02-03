@@ -175,7 +175,7 @@ const fDataCreateCurrencyToList = function (dispatch, cbSuccess, cbError, newCur
         headers: {
             "Content-Type": "application/x-www-form-urlencoded; charset=utf-8",
         },
-        body: 'command=save_currency' +
+        body: 'command=add_currency' +
         `&currency_code=${ code }` +
         `&currency_name=${ name }` +
         `&currency_abbreviation=${ abbreviation }` +

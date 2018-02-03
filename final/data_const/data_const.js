@@ -65,7 +65,7 @@ const DELETE_MODES = {
     OPERATIONS:             'OPERATIONS',
     ACCOUNTS:               'ACCOUNTS',
     OPERATION_CATEGORIES:   'OPERATION_CATEGORIES',
-    CURRENCY_LIST:          'CURRENCY_LIST_CARD',
+    CURRENCY_LIST:          'CURRENCY_LIST',
     NONE:                   'NONE',
 };
 

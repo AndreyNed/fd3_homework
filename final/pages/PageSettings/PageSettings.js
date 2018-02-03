@@ -27,7 +27,8 @@ import {
     acDataOperationCategorySelect,
     acDataAccountsShouldBeReloaded,
     acDataOperationCategoriesShouldBeReloaded,
-    acDataCurrencyListSelect
+    acDataCurrencyListSelect,
+    acDataCurrencyListShouldBeReloaded
 } from '../../actions/acData';
 
 import {findArrayItemIndex, isNotEmpty} from "../../utils/utils";
@@ -114,10 +115,12 @@ class PageSettings extends React.PureComponent {
             accountDeleteStatus,
             operationCategorySaveStatus,
             operationCategoryDeleteStatus,
+            currencyListSaveStatus,
+            currencyListDeleteStatus,
             settingsMode
         } = this.props;
 
-        const { ACCOUNTS, OPERATION_CATEGORIES } = SETTINGS_MODES;
+        const { ACCOUNTS, OPERATION_CATEGORIES, CURRENCY_LIST } = SETTINGS_MODES;
 
         if ( settingsMode === ACCOUNTS ) {
             if ( accountSaveStatus === 1 ) {
@@ -152,6 +155,24 @@ class PageSettings extends React.PureComponent {
             else if ( operationCategoryDeleteStatus > 1 ) {
                 setTimeout( () => {
                     dispatch( acDataOperationCategoriesShouldBeReloaded() );
+                }, CONFIG_UI_MODE_TIMEOUT );
+            }
+        }
+        else if ( settingsMode === CURRENCY_LIST ) {
+            if ( currencyListSaveStatus === 1 ) {
+                dispatch( acUIShowDataSavingMessage() );
+            }
+            else if ( currencyListSaveStatus > 1 ) {
+                setTimeout( () => {
+                    dispatch( acDataCurrencyListShouldBeReloaded() );
+                }, CONFIG_UI_MODE_TIMEOUT );
+            }
+            if ( currencyListDeleteStatus === 1 ) {
+                dispatch( acUIShowDataDeletingMessage() );
+            }
+            else if ( currencyListDeleteStatus > 1 ) {
+                setTimeout( () => {
+                    dispatch( acDataCurrencyListShouldBeReloaded() );
                 }, CONFIG_UI_MODE_TIMEOUT );
             }
         }

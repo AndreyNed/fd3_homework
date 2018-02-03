@@ -1,6 +1,6 @@
 const USER_LOGIN = ((( 'Andrei' )));
 
-const CONFIG_DEBUG_MODE = ((( true )));
+const CONFIG_DEBUG_MODE = ((( false )));
 
 const CONFIG_DEBUG_MODE_LOADER = ((( false )));
 
