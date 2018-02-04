@@ -11,24 +11,21 @@ import {DISPLAY_TYPES} from "../../../data_const/data_const";
 class ButtonClear extends Button {
 
     static propTypes = {
-        /*label:      PropTypes.string,
-        options:    PropTypes.shape({
 
-        }),
-        cbChanged:  PropTypes.func,*/
     };
 
     static defaultProps = {
-        label:      '',
-        display:    DISPLAY_TYPES.block,
+        label:                      '',
+        withLabel:                  true,
+        display:                    DISPLAY_TYPES.block,
         options:    {
-            iconWidth: 48,
-            iconHeight: 48,
-            viewBox:    '0 0 64 64',
-            preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'ButtonClear',
+            iconWidth:              48,
+            iconHeight:             48,
+            viewBox:                '0 0 64 64',
+            preserveAspectRatio:    'xMidYMid meet',
+            addedClass:             'ButtonClear',
         },
-        cbChanged:  null,
+        cbChanged:                  null,
     };
 
     static classID = 0;
@@ -46,10 +43,6 @@ class ButtonClear extends Button {
             htmlID: ButtonClear.getHtmlID( props.htmlID ),
         }
     }
-
-    /*componentWillMount() {
-
-    }*/
 
     render() {
         const { display } = this.props;

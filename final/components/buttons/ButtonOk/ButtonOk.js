@@ -11,24 +11,21 @@ import './ButtonOk.scss';
 class ButtonOk extends Button {
 
     static propTypes = {
-        /*label:      PropTypes.string,
-        options:    PropTypes.shape({
 
-        }),
-        cbChanged:  PropTypes.func,*/
     };
 
     static defaultProps = {
-        label:      '',
-        display:    DISPLAY_TYPES.block,
-        options:    {
-            iconWidth: 48,
-            iconHeight: 48,
-            viewBox:    '0 0 64 64',
-            preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'ButtonOk',
+        label:                      '',
+        withLabel:                  true,
+        display:                    DISPLAY_TYPES.block,
+        options: {
+            iconWidth:              48,
+            iconHeight:             48,
+            viewBox:                '0 0 64 64',
+            preserveAspectRatio:    'xMidYMid meet',
+            addedClass:             'ButtonOk',
         },
-        cbChanged:  null,
+        cbChanged:                  null,
     };
 
     static classID = 0;
@@ -47,13 +44,8 @@ class ButtonOk extends Button {
         }
     }
 
-    /*componentWillMount() {
-
-    }*/
-
     render() {
         const { display } = this.props;
-        // console.log( "TEST: BTNOK: display: ", display );
         const { addedClass } = this.props.options;
         let innerSVG = (
             <g className="ButtonOk_inner_svg">

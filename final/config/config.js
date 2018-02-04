@@ -1,12 +1,12 @@
 const USER_LOGIN = ((( 'Andrei' )));
 
-const CONFIG_DEBUG_MODE = ((( false )));
+const CONFIG_DEBUG_MODE = ((( true )));
 
 const CONFIG_DEBUG_MODE_LOADER = ((( false )));
 
 const CONFIG_DEBUG_MODE_PAGE_OPERATIONS = ((( false )));
 
-const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( true )));
+const CONFIG_DEBUG_MODE_PAGE_SETTINGS = ((( false )));
 
 const CONFIG_DEBUG_MODE_PAGE_CURRENCY = ((( false )));
 
@@ -24,7 +24,7 @@ const CONFIG_DEBUG_MODE_ACCOUNT_CARD = ((( false )));
 
 const CONFIG_DEBUG_MODE_OPERATION_CATEGORY_CARD = ((( false )));
 
-const CONFIG_DEBUG_MODE_CURRENCY_LIST_CARD = ((( true )));
+const CONFIG_DEBUG_MODE_CURRENCY_LIST_CARD = ((( false )));
 
 const CONFIG_DEBUG_MODE_SMART_GRID = ((( false )));
 
@@ -39,6 +39,8 @@ const CONFIG_DEBUG_MODE_NUMBER_INPUT = ((( false )));
 const CONFIG_DEBUG_MODE_EXCEL_TMPL = ((( false )));
 
 const CONFIG_DEBUG_MODE_EXCEL_CONVERTER = ((( false )));
+
+const CONFIG_DEBUG_MODE_CURRENCY_CALCULATOR = ((( true )));
 
 const CONFIG_DEBUG_MODE_F_DATA = ((( false )));
 
@@ -68,6 +70,7 @@ export {
     CONFIG_DEBUG_MODE_NUMBER_INPUT,
     CONFIG_DEBUG_MODE_EXCEL_TMPL,
     CONFIG_DEBUG_MODE_EXCEL_CONVERTER,
+    CONFIG_DEBUG_MODE_CURRENCY_CALCULATOR,
 
     CONFIG_DEBUG_MODE_F_DATA,
     CONFIG_DEBUG_MODE_F_CURRENCY,

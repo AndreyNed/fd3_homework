@@ -3,30 +3,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button';
-//import { connect } from 'react-redux';
 
 import './ButtonSave.scss';
 
 class ButtonSave extends Button {
 
     static propTypes = {
-        /*label:      PropTypes.string,
-        options:    PropTypes.shape({
 
-        }),
-        cbChanged:  PropTypes.func,*/
     };
 
     static defaultProps = {
-        label:      '',
-        options:    {
-            iconWidth: 48,
-            iconHeight: 48,
-            viewBox:    '0 0 64 64',
-            preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'ButtonSave',
+        label:                      '',
+        withLabel:                  true,
+        options: {
+            iconWidth:              48,
+            iconHeight:             48,
+            viewBox:                '0 0 64 64',
+            preserveAspectRatio:    'xMidYMid meet',
+            addedClass:             'ButtonSave',
         },
-        cbChanged:  null,
+        cbChanged:                  null,
     };
 
     static classID = 0;
@@ -45,13 +41,8 @@ class ButtonSave extends Button {
         }
     }
 
-    /*componentWillMount() {
-
-    }*/
-
     render() {
         const { display } = this.props;
-        // console.log( "TEST: BTNSAVE: display: ", display );
         let innerSVG = (
             <g className="ButtonSave_inner_svg">
                 <circle cx="32" cy="32" r="31"

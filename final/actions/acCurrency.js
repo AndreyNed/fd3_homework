@@ -28,6 +28,10 @@ const CURRENCY_DYNAMIC_SET_POINTS =                     'CURRENCY_DYNAMIC_SET_PO
 const CURRENCY_DYNAMIC_SELECT =                         'CURRENCY_DYNAMIC_SELECT';
 const CURRENCY_DYNAMIC_SET_CURRENCY_DATA =              'CURRENCY_DYNAMIC_SET_CURRENCY_DATA';
 
+const CURRENCY_SET_CALC_INP_ID =                        'CURRENCY_SET_CALC_INP_ID';
+const CURRENCY_SET_CALC_INP_VALUE =                     'CURRENCY_SET_CALC_INP_VALUE';
+const CURRENCY_SET_CALC_LIST_VALUE =                    'CURRENCY_SET_CALC_LIST_VALUE';
+
 const acCurrencyAllLoadStart = function () {
     // console.log( '1. acCurrencyAllLoadStart...' );
     return {
@@ -177,6 +181,27 @@ const acCurrencySetDynamicCurrencyData = function ( currencyDynamicData ) {
     }
 };
 
+const acCurrencySetCalcInpId = function ( calcInpId ) {
+    return {
+        type:                   CURRENCY_SET_CALC_INP_ID,
+        calcInpId:              calcInpId,
+    }
+};
+
+const acCurrencySetCalcInpValue = function ( calcInpValue ) {
+    return {
+        type:                   CURRENCY_SET_CALC_INP_VALUE,
+        calcInpValue:           calcInpValue,
+    }
+};
+
+const acCurrencySetCalcListValue = function ( calcListValue ) {
+    return {
+        type:                   CURRENCY_SET_CALC_LIST_VALUE,
+        calcListValue:          calcListValue,
+    }
+};
+
 export {
     CURRENCY_ALL_LOAD_START,        acCurrencyAllLoadStart,
     CURRENCY_ALL_LOAD_SUCCESS,      acCurrencyAllLoadSuccess,
@@ -205,4 +230,9 @@ export {
     CURRENCY_DYNAMIC_SET_POINTS,            acCurrencyDynamicSetPoints,
     CURRENCY_DYNAMIC_SELECT,                acCurrencyDynamicSelect,
     CURRENCY_DYNAMIC_SET_CURRENCY_DATA,     acCurrencySetDynamicCurrencyData,
+
+    CURRENCY_SET_CALC_INP_ID,       acCurrencySetCalcInpId,
+    CURRENCY_SET_CALC_INP_VALUE,    acCurrencySetCalcInpValue,
+    CURRENCY_SET_CALC_LIST_VALUE,   acCurrencySetCalcListValue,
+
 }

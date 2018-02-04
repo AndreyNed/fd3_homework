@@ -19,16 +19,17 @@ class ButtonAdd extends Button {
     };
 
     static defaultProps = {
-        label:      '',
-        display:    DISPLAY_TYPES.block,
+        label:                      '',
+        display:                    DISPLAY_TYPES.block,
+        withLabel:                  true,
         options:    {
-            iconWidth: 48,
-            iconHeight: 48,
-            viewBox:    '0 0 64 64',
-            preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'ButtonAdd',
+            iconWidth:              48,
+            iconHeight:             48,
+            viewBox:                '0 0 64 64',
+            preserveAspectRatio:    'xMidYMid meet',
+            addedClass:             'ButtonAdd',
         },
-        cbChanged:  null,
+        cbChanged:                  null,
     };
 
     static classID = 0;

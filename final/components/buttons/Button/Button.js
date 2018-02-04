@@ -12,37 +12,39 @@ import './Button.scss';
 class Button extends React.PureComponent {
 
     static propTypes = {
-        label:      PropTypes.string,
-        display:    PropTypes.oneOf([
+        label:                   PropTypes.string,
+        withLabel:               PropTypes.bool,
+        display:                 PropTypes.oneOf([
             DISPLAY_TYPES.block,
             DISPLAY_TYPES.inlineBlock,
             DISPLAY_TYPES.hidden,
             DISPLAY_TYPES.none,
         ]),
-        options:    PropTypes.shape({
-            hoverClass: PropTypes.string,
-            iconWidth: PropTypes.oneOfType([
+        options:                 PropTypes.shape({
+            hoverClass:          PropTypes.string,
+            iconWidth:           PropTypes.oneOfType([
                 PropTypes.number,
                 PropTypes.string,
             ]),
-            iconHeight: PropTypes.oneOfType([
+            iconHeight:          PropTypes.oneOfType([
                 PropTypes.number,
                 PropTypes.string,
             ]),
             preserveAspectRatio: PropTypes.string,
             viewBox:             PropTypes.string,
         }),
-        cbChanged:  PropTypes.func,
+        cbChanged:               PropTypes.func,
     };
 
     static defaultProps = {
-        label:      '',
-        display:    DISPLAY_TYPES.block,
+        label:          '',
+        display:        DISPLAY_TYPES.block,
+        withLabel:      true,
         options:    {
             iconWidth:  32,
             iconHeight: 32,
             viewBox:    '0 0 64 64',
-            preserveAspectRatio: 'xMidYMid',
+            preserveAspectRatio: 'xMidYMid meet',
         },
         cbChanged:  null,
     };
@@ -82,6 +84,7 @@ class Button extends React.PureComponent {
     };
 
     render( innerSVG, addedClass, display = DISPLAY_TYPES.block ) {
+        const { withLabel } = this.props;
         const { iconWidth, iconHeight, preserveAspectRatio, viewBox } = this.props.options;
         return ( display !== DISPLAY_TYPES.none ) &&
             <div className = { this.classCSS }
@@ -106,12 +109,15 @@ class Button extends React.PureComponent {
                         { innerSVG || null }
                     </svg>
                 </div>
-                <div className = { this.classCSS + '_label_box' }
-                     key='label'>
-                    <label className = { this.classCSS + '_label' }>
-                        { this.props.label }
-                    </label>
-                </div>
+                {
+                    ( withLabel ) &&
+                    <div className = { this.classCSS + '_label_box' }
+                         key='label'>
+                        <label className = { this.classCSS + '_label' }>
+                            { this.props.label }
+                        </label>
+                    </div>
+                }
             </div>
     }
 }

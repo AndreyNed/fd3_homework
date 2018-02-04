@@ -28,6 +28,10 @@ import {
     CURRENCY_DYNAMIC_SET_START_POINT,
     CURRENCY_DYNAMIC_SET_END_POINT,
     CURRENCY_DYNAMIC_SET_POINTS,
+
+    CURRENCY_SET_CALC_INP_ID,
+    CURRENCY_SET_CALC_INP_VALUE,
+    CURRENCY_SET_CALC_LIST_VALUE,
 } from "../actions/acCurrency";
 
 const initState = {
@@ -61,6 +65,10 @@ const initState = {
         dateStr:                    '31-12-2017',
         rate:                       0,
     },
+
+    calcListValue:                  null,
+    calcInpId:                      -1,
+    calcInpValue:                   0,
 };
 
 function rdCurrency ( state = initState, action ) {
@@ -241,6 +249,27 @@ function rdCurrency ( state = initState, action ) {
             return {
                 ...state, ...{
                     currencyDynamicCurID: action.currencyDynamicCurID,
+                }
+            };
+
+        case CURRENCY_SET_CALC_INP_ID:
+            return {
+                ...state, ...{
+                    calcInpId: action.calcInpId,
+                }
+            };
+
+        case CURRENCY_SET_CALC_INP_VALUE:
+            return {
+                ...state, ...{
+                    calcInpValue: action.calcInpValue,
+                }
+            };
+
+        case CURRENCY_SET_CALC_LIST_VALUE:
+            return {
+                ...state, ...{
+                    calcListValue: action.calcListValue,
                 }
             };
 

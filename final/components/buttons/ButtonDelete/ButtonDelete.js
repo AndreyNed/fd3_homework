@@ -3,7 +3,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from '../Button/Button';
-//import { connect } from 'react-redux';
 
 import './ButtonDelete.scss';
 import {DISPLAY_TYPES} from "../../../data_const/data_const";
@@ -11,24 +10,21 @@ import {DISPLAY_TYPES} from "../../../data_const/data_const";
 class ButtonDelete extends Button {
 
     static propTypes = {
-        /*label:      PropTypes.string,
-        options:    PropTypes.shape({
 
-        }),
-        cbChanged:  PropTypes.func,*/
     };
 
     static defaultProps = {
-        label:      '',
-        display:    DISPLAY_TYPES.block,
-        options:    {
-            iconWidth: 48,
-            iconHeight: 48,
-            viewBox:    '0 0 64 64',
-            preserveAspectRatio: 'xMidYMid meet',
-            addedClass: 'ButtonDelete',
+        label:                      '',
+        withLabel:                  true,
+        display:                    DISPLAY_TYPES.block,
+        options: {
+            iconWidth:              48,
+            iconHeight:             48,
+            viewBox:                '0 0 64 64',
+            preserveAspectRatio:    'xMidYMid meet',
+            addedClass:             'ButtonDelete',
         },
-        cbChanged:  null,
+        cbChanged:                  null,
     };
 
     static classID = 0;

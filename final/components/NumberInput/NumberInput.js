@@ -106,12 +106,10 @@ class NumberInput extends React.PureComponent {
         NumberInput.classID++;
         this.state = {
             htmlID: NumberInput.getHtmlID( props ),
-        }
+        };
+        this.debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_NUMBER_INPUT;
+        this.classCSS = 'NumberInput';
     }
-
-    debug_mode = CONFIG_DEBUG_MODE && CONFIG_DEBUG_MODE_NUMBER_INPUT;
-
-    classCSS = 'NumberInput';   // name of the className of component
 
     componentWillMount() {
         this.prepareProps( this.props );
@@ -121,19 +119,11 @@ class NumberInput extends React.PureComponent {
         this.prepareProps( newProps );
     }
 
-    componentDidMount() {
-        this.doStyle();
-    }
-
-    componentDidUpdate() {
-        this.doStyle();
-    }
-
     prepareProps = ( props ) => {
-        ( this.debug_mode ) && console.log( 'NumberInput: prepareProps: ', props );
+        ( this.debug_mode ) &&
+            console.log( 'NumberInput: prepareProps: ', props );
         let value = 0;
         if ( isExists( props ) ) {
-
             if ( isExists( props.defValue ) ) {
                 value = props.defValue;
             }
@@ -152,23 +142,26 @@ class NumberInput extends React.PureComponent {
         } );
     };
 
-    doStyle = () => {
+    /*doStyle = () => {
         if ( this.state.isReadOnly ) {
             this.input.setAttribute("readonly", "readonly");
         }
         else if ( this.input.hasAttribute( "readonly" ) ) {
             this.input.removeAttribute( "readonly" );
         }
-    };
+    };*/
 
     changed = () => {
+        // console.log("CHANGED");
+
         const { cbChanged } = this.props;
         const { currValue } = this.state;
 
         let valueObj = this.formatInput( currValue );
-
         if ( isExists( cbChanged ) ) {
-            cbChanged( valueObj.number );
+            this.setState( { currValue: valueObj.string }, () => {
+                cbChanged( valueObj.number );
+            } );
         }
         else {
             this.setState( {
@@ -183,23 +176,32 @@ class NumberInput extends React.PureComponent {
         this.setState( {
             currValue: e.currentTarget.value,
         }, ()=>{
-            // console.log( 'NumberInput: inputChange: state.currValue: ', this.state.currValue );
+            ( this.debug_mode ) &&
+            console.log( 'NumberInput: inputChange: state.currValue: ', this.state.currValue );
         } );
     };
 
     inputBlur = ( e ) => {
-        // let elm = e.currentTarget;
-        // let callback = () => { elm.blur() };
+        // console.log("BLUUUR");
         this.changed();
+    };
+
+    inputFocus = ( e ) => {
+        const { value, currValue } = this.state;
+        this.setState( {
+            currValue: value,
+        }, () => {
+            ( this.debug_mode ) &&
+                console.log( `NumberInput: inputFocus: currValue: ${this.state.currValue}, value: ${ this.state.value }` );
+        } );
     };
 
     inputKeyDown = ( e ) => {
         switch( e.keyCode ) {
             case 13:
-                this.changed( null );
-                /*let elm = e.currentTarget;
-                elm.blur();
-                elm.focus();*/
+                e.preventDefault();
+                e.stopPropagation();
+                e.currentTarget.blur();
                 break;
             case 27:
                 let re = new RegExp( /[\,]/ );
@@ -240,14 +242,14 @@ class NumberInput extends React.PureComponent {
         let value = valueArg + '';
         let re = new RegExp(/[ ]+/gi);
         value = value.replace( re, '' );
+
+        // console.log( `formatInput: valueArg: ${valueArg}, value: ${value}` );
+
         re = new RegExp( /[\,]/ );
         value = value.replace( re, '.' );
         value = parseFloat( value );
-
         if ( !isNotNaN( value ) ) { value = 0 }
-
         value = Math.round( value * 100 ) / 100;
-
         let string = new Intl.NumberFormat( 'ru-RU', { maximumFractionDigits: 2 } ).format( value );
 
         return { number: value, string: string }
@@ -285,8 +287,6 @@ class NumberInput extends React.PureComponent {
         return (
             <div className = { this.classCSS + "_input_box" }
                  key = { "input_box" }
-                 ref = { ( elm ) => { this.inputBox = elm } }
-                 onClick = { this.inputBoxClick }
                  style = {{
                      width: ( isExists( inputBoxWidth ) && inputBoxWidth !== 0 )
                          ? inputBoxWidth
@@ -294,16 +294,16 @@ class NumberInput extends React.PureComponent {
                  }}
                  data-label_vertical_align = { labelVerticalAlign || NumberInput.position.middle }>
                 <div className = { this.classCSS + "_input_container" }
-                     key = { "input_box_" + 1 }
-                     onClick = { ( !isReadOnly ) ? this.inputContainerClick : null }>
+                     key = { "input_box_" + 1 }>
                     <input type =      "text"
                            className = { this.classCSS + "_input" }
                            id =        { htmlID }
                            ref =       { ( elm ) => { this.input = elm } }
                            disabled =  { isReadOnly }
                            value =     { currValue || '0' }
-                           onChange =  { ( !isReadOnly ) ? this.inputChange : ()=>{} }
-                           onBlur =    { this.inputBlur }
+                           onChange =  { ( !isReadOnly ) ? this.inputChange : null }
+                           onBlur =    { ( !isReadOnly ) ? this.inputBlur : null }
+                           onFocus =   { ( !isReadOnly ) ? this.inputFocus : null }
                            onKeyDown = { this.inputKeyDown }/>
                 </div>
             </div>
@@ -326,8 +326,10 @@ class NumberInput extends React.PureComponent {
 
     render() {
         const { display } = this.props;
+        const { none } = NumberInput.displayTypes;
         const { labelPosition, addedClass } = this.props.options;
-        return (
+
+        return ( isNotEmpty( display ) && display !== none ) &&
             <div className = { this.classCSS + ' ' + ( addedClass || '' ) }
                  data-display = { display || NumberInput.displayTypes.block }
                  data-label_position = { labelPosition || NumberInput.position.top }>
@@ -336,9 +338,7 @@ class NumberInput extends React.PureComponent {
                       labelPosition === NumberInput.position.left ) ?
                         this.renderIfLeftOrTop() : this.renderIfRightOrBottom()
                 }
-
             </div>
-        )
     }
 
 }

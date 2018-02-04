@@ -286,7 +286,7 @@ class PageAccounts extends React.PureComponent {
 
             }
         }
-        result.amountBYN = result.amount / result.scale * result.rate;
+        result.amountBYN = Math.round( result.amount / result.scale * result.rate * 100 ) / 100;
         // ( this.debug_mode ) &&
             // console.log( 'PageAccounts: getAccountInfo: accountId: ', accountId, '; result: ', result );
         return result;

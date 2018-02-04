@@ -1,0 +1,32 @@
+.CurrencyCalculator {
+
+    & > .CurrencyCalculator_caption {
+        padding: 16px 16px 16px 32px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #898989;
+    }
+
+    & > .CurrencyCalculator_currency_input {
+        padding: 16px;
+        border-top: 1px dotted #898989;
+    }
+
+    & > .CurrencyCalculator_output {
+        padding: 16px;
+        border-top: 1px dotted #898989;
+        -ms-user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+
+        & > .currency_items > .items_btn_del {
+            vertical-align: bottom;
+        }
+    }
+
+    & > .CurrencyCalculator_buttons_panel {
+        padding: 16px;
+        border-top: 1px dotted #898989;
+    }
+}

@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import SmartGrid from '../../components/SmartGrid/SmartGrid';
 import DateRangeChart from '../../components/DateRangeChart/DateRangeChart';
 import ButtonLabel from '../../components/buttons/ButtonLabel/ButtonLabel';
+import CurrencyCalculator from '../../components/CurrencyCalculator/CurrencyCalculator';
 
 import './PageCurrency.scss';
 import { USER_LOGIN, CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_CURRENCY } from "../../config/config";
@@ -307,7 +308,7 @@ class PageCurrency extends React.PureComponent {
                 }
                 {
                     ( currencyMode === CURRENCY_CALCULATOR ) &&
-                        null
+                        <CurrencyCalculator />
                 }
             </div>
         )
