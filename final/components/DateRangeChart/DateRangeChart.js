@@ -330,6 +330,7 @@ class DateRangeChart extends React.PureComponent {
     /* == controller == */
 
     svgMouseOver = ( e ) => {
+        // e.preventDefault();
         if ( e.target.tagName === 'path' && ('point' in e.target.dataset) ) {
             this.legendDate.innerHTML = e.target.dataset.date_str;
             this.legendRate.innerHTML = e.target.dataset.rate;

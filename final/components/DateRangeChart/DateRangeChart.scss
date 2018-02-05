@@ -46,6 +46,10 @@
                 position: absolute;
                 bottom: -32px;
                 text-align: center;
+                -ms-user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                user-select: none;
             }
 
             div.os_y_zero {
