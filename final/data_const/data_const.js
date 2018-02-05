@@ -13,6 +13,7 @@ const MODAL_CONTENT = {
     ACCOUNT_CARD:               'ACCOUNT_CARD',
     OPERATION_CATEGORY_CARD:    'OPERATION_CATEGORY_CARD',
     CURRENCY_LIST_CARD:         'CURRENCY_LIST_CARD',
+    ACCOUNT_FILTERS:            'ACCOUNT_FILTERS',
     DELETE_CONFIRMATION:        'DELETE_CONFIRMATION',
     NONE:                       'NONE',
 };
@@ -32,6 +33,7 @@ const SORTING = {
 
 const DATA_TYPES = {
     NUMBER:         'NUMBER',
+    CURRENCY:       'CURRENCY',
     STRING:         'STRING',
     DATE:           'DATE',
     DATE_TIME:      'DATE_TIME',

@@ -155,6 +155,7 @@ class CurrencyCalculator extends React.PureComponent {
                 asText: 'name',
                 defValue: ( isExists( calcListValue[ itemIdIndex ] ) ) ? calcListValue[ itemIdIndex ].curId + '' : '',
                 display: ComboInput.displayTypes.block,
+                inputType: ComboInput.inputTypes.comboFilter,
                 cbChanged: ( value ) => {
                     let numValue = parseInt( value );
                     numValue = ( isNotNaN(numValue) ) ? numValue : -1;
@@ -258,7 +259,7 @@ class CurrencyCalculator extends React.PureComponent {
                 }
             } )
             : null;
-        console.log( "TEST:: renderItems: calcListValue: ", calcListValue, "; listValue: ", listValue );
+        // console.log( "TEST:: renderItems: calcListValue: ", calcListValue, "; listValue: ", listValue );
         return ( isNotEmpty( calcListValue ) ) &&
             calcListValue.map( ( item ) => {
                 const { id, curId, curScale, curRate } = item;

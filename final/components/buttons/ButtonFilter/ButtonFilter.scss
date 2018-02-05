@@ -1,0 +1,53 @@
+@import "../../../data_const/style_const";
+@import "../../../data_const/style_animations";
+
+.Button_icon_box {
+    transition: transform 0.3s;
+
+    & > svg.ButtonFilter_icon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: pointer;
+
+        circle {
+            fill: $wrapperFieldColor;
+        }
+    }
+
+    &:hover {
+        transform: scale(1.15);
+
+        & > svg.ButtonFilter_icon {
+
+            circle {
+                fill: rgba(255,255,255,1);
+                stroke: #d3d3d3;
+                stroke-width: 2;
+            }
+
+            path.ButtonFilter_voronka {
+                stroke: rgba(137,104,205,1);
+            }
+
+            path.ButtonFilter_filter {
+                stroke: rgba(191,62,255,1);
+                fill: rgba(191,62,255,0.8)
+            }
+        }
+    }
+
+    &:active {
+        transform: scale(0.85);
+        transition: transform 0.15s;
+
+        & > svg.ButtonFilter_icon {
+
+            circle {
+                stroke-width: 1;
+            }
+        }
+    }
+}
+
+

@@ -10,6 +10,7 @@ import OperationCard from "../OperationCard/OperationCard";
 import AccountCard from '../AccountCard/AccountCard';
 import OperationCategoryCard from '../OperationCategoryCard/OperationCategoryCard';
 import CurrencyListCard from '../CurrencyListCard/CurrencyListCard';
+import AccountFilterPanel from '../AccountFilterPanel/AccountFilterPanel';
 import DataLoading from "../DataLoading/DataLoading";
 import DataSaving from '../DataSaving/DataSaving';
 import DataDeleting from '../DataDeleting/DataDeleting';
@@ -61,6 +62,7 @@ class MatGlass extends React.PureComponent {
                 <DeleteConfirmation />
                 <OperationCard />
                 <AccountCard />
+                <AccountFilterPanel />
                 <OperationCategoryCard />
                 <CurrencyListCard />
             </div>

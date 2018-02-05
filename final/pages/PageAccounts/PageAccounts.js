@@ -5,13 +5,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CONFIG_DEBUG_MODE, CONFIG_DEBUG_MODE_PAGE_ACCOUNTS, CONFIG_UI_MODE_TIMEOUT, USER_LOGIN } from "../../config/config";
-import {ALIGN_TYPES, DATA_TYPES, OPERATION_TYPES, SORTING} from "../../data_const/data_const";
+import {ALIGN_TYPES, DATA_TYPES, DISPLAY_TYPES, OPERATION_TYPES, SORTING} from "../../data_const/data_const";
 import '../../utils/utils';
 
 import SmartGrid from '../../components/SmartGrid/SmartGrid';
+import ButtonFilter from '../../components/buttons/ButtonFilter/ButtonFilter';
 
 import './PageAccounts.scss';
-import {findArrayItemIndex, formatDate, isExists, isNotEmpty} from "../../utils/utils";
+import { findArrayItemIndex, formatDate, isExists, isNotEmpty } from '../../utils/utils';
+import { acUIShowAccountFilterPanel } from '../../actions/acUI';
 
 class PageAccounts extends React.PureComponent {
 
@@ -89,7 +91,7 @@ class PageAccounts extends React.PureComponent {
     };
 
     prepareTableProps = () => {
-        const { NUMBER, STRING, DATE } = DATA_TYPES;
+        const { NUMBER, CURRENCY, STRING, DATE } = DATA_TYPES;
         const { RIGHT, LEFT, CENTER } = ALIGN_TYPES;
         const { NONE } = SORTING;
         const { accountsData } = this.props;
@@ -178,7 +180,7 @@ class PageAccounts extends React.PureComponent {
                 {
                     id: 'debit',
                     title: 'Приход',
-                    dataType: NUMBER,
+                    dataType: CURRENCY,
                     align: RIGHT,
                     isSortable: true,
                     sorting: NONE,
@@ -189,7 +191,7 @@ class PageAccounts extends React.PureComponent {
                 {
                     id: 'credit',
                     title: 'Расход',
-                    dataType: NUMBER,
+                    dataType: CURRENCY,
                     align: RIGHT,
                     isSortable: true,
                     sorting: NONE,
@@ -200,7 +202,7 @@ class PageAccounts extends React.PureComponent {
                 {
                     id: 'amount',
                     title: 'Сумма',
-                    dataType: NUMBER,
+                    dataType: CURRENCY,
                     align: RIGHT,
                     isSortable: true,
                     sorting: NONE,
@@ -222,7 +224,7 @@ class PageAccounts extends React.PureComponent {
                 {
                     id: 'amountBYN',
                     title: 'Сумма (BYN)',
-                    dataType: NUMBER,
+                    dataType: CURRENCY,
                     align: RIGHT,
                     isSortable: true,
                     sorting: NONE,
@@ -256,6 +258,25 @@ class PageAccounts extends React.PureComponent {
             body,
             cbChanged:  null,
         }
+    };
+
+    btnPanelProps = () => {
+        const { block } = DISPLAY_TYPES;
+        return {
+            btnFilter: {
+                label: 'Фильтры',
+                display: block,
+                withLabel: true,
+                cbChanged: this.btnFilter_cbChanged,
+            },
+        }
+    };
+
+    /* == callbacks == */
+
+    btnFilter_cbChanged = () => {
+        const { dispatch } = this.props;
+        dispatch( acUIShowAccountFilterPanel() );
     };
 
     /* == service functions == */
@@ -309,10 +330,14 @@ class PageAccounts extends React.PureComponent {
     };
 
     renderButtonSection = () => {
+        let props = this.btnPanelProps();
         return (
-            <div className = { this.classCSS + "_button_section" }
+            <div className = { `${ this.classCSS }_button_section rows` }
                  key="button_section">
-                Button section
+                <div className="cols col_3"
+                     key="btn_filter">
+                    <ButtonFilter { ...props.btnFilter } />
+                </div>
             </div>
         )
     };

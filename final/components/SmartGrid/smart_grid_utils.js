@@ -10,7 +10,7 @@ import {
     isNotNaN,
     isGTZero,
     formatDate,
-    formatDateTime,
+    formatDateTime, formatNumber,
 } from "../../utils/utils";
 
 import {
@@ -20,7 +20,7 @@ import {
 } from "../../data_const/data_const";
 
 
-const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
+const { NUMBER, CURRENCY, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
 
 const { NONE, ASCENDED, DESCENDED } = SORTING;
 
@@ -80,6 +80,9 @@ export const textFromValue = ( value, dataType ) => {
         case DATE_MS_INT:
             let d = new Date( value );
             return formatDate( d );
+
+        case CURRENCY:
+            return formatNumber( value, 1, 2 );
 
         default:
             return value;

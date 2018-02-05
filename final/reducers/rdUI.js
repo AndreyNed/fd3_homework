@@ -8,6 +8,7 @@ import {
     UI_SHOW_OPERATION_CARD,
     UI_SHOW_ACCOUNT_CARD,
     UI_SHOW_CURRENCY_LIST_CARD,
+    UI_SHOW_ACCOUNT_FILTER_PANEL,
     UI_SHOW_OPERATION_CATEGORY_CARD,
     UI_SHOW_DATA_LOADING_MESSAGE,
     UI_SHOW_DATA_SAVING_MESSAGE,
@@ -71,6 +72,14 @@ function rdUI ( state = initState, action ) {
                     modalContent:        MODAL_CONTENT.ACCOUNT_CARD,
                     matGlassIsVisible:   true,
                     isNewAccountAdded:   action.isNewAccountAdded,
+                }
+            };
+
+        case UI_SHOW_ACCOUNT_FILTER_PANEL:
+            return {
+                ...state, ...{
+                    modalContent:        MODAL_CONTENT.ACCOUNT_FILTERS,
+                    matGlassIsVisible:   true,
                 }
             };
 

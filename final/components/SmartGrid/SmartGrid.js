@@ -46,6 +46,7 @@ class SmartGrid extends React.PureComponent {
                 title:                  PropTypes.string,
                 dataType:               PropTypes.oneOf([ // тип данных для ячеек в соответствующем столбце (для последующего преобразования в текст)
                     DATA_TYPES.NUMBER,
+                    DATA_TYPES.CURRENCY,
                     DATA_TYPES.STRING,
                     DATA_TYPES.DATE,
                     DATA_TYPES.DATE_TIME,

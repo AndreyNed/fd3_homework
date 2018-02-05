@@ -328,9 +328,10 @@ class AccountCard extends React.PureComponent {
 
     render() {
         const { modalContent, isNewAccountAdded } = this.props;
+        const { ACCOUNT_CARD } = MODAL_CONTENT;
         const { name, comment, currency } = this.state.accountValidationData;
         let props = this.formProps();
-        return ( modalContent === MODAL_CONTENT.ACCOUNT_CARD ) &&
+        return ( modalContent === ACCOUNT_CARD ) &&
             <div className = { this.classCSS }
                  onClick = { this.formClick }>
                 <div className = { this.classCSS + '_form' }>

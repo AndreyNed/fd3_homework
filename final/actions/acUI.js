@@ -6,6 +6,8 @@ const UI_SHOW_OPERATION_CARD = 'UI_SHOW_OPERATION_CARD';
 
 const UI_SHOW_ACCOUNT_CARD = 'UI_SHOW_ACCOUNT_CARD';
 
+const UI_SHOW_ACCOUNT_FILTER_PANEL = 'UI_SHOW_ACCOUNT_FILTER_PANEL';
+
 const UI_SHOW_CURRENCY_LIST_CARD = 'UI_SHOW_CURRENCY_LIST_CARD';
 
 const UI_SHOW_OPERATION_CATEGORY_CARD = 'UI_SHOW_OPERATION_CATEGORY_CARD';
@@ -45,6 +47,12 @@ const acUIShowAccountCard = function( isNew ) {
     return {
         type:                UI_SHOW_ACCOUNT_CARD,
         isNewAccountAdded:   isNew,
+    }
+};
+
+const acUIShowAccountFilterPanel = function() {
+    return {
+        type:                UI_SHOW_ACCOUNT_FILTER_PANEL,
     }
 };
 
@@ -106,6 +114,7 @@ export {
     UI_HIDE_MAT_GLASS,                  acUIHideMatGlass,
     UI_SHOW_OPERATION_CARD,             acUIShowOperationCard,
     UI_SHOW_ACCOUNT_CARD,               acUIShowAccountCard,
+    UI_SHOW_ACCOUNT_FILTER_PANEL,       acUIShowAccountFilterPanel,
     UI_SHOW_OPERATION_CATEGORY_CARD,    acUIShowOperationCategoryCard,
     UI_SHOW_CURRENCY_LIST_CARD,         acUIShowCurrencyListCard,
     UI_SHOW_DATA_LOADING_MESSAGE,       acUIShowDataLoadingMessage,

@@ -25,6 +25,7 @@ const DATA_ACCOUNT_DELETE_START =                       'DATA_ACCOUNT_DELETE_STA
 const DATA_ACCOUNT_DELETE_SUCCESS =                     'DATA_ACCOUNT_DELETE_SUCCESS';
 const DATA_ACCOUNT_DELETE_ERROR =                       'DATA_ACCOUNT_DELETE_ERROR';
 const DATA_ACCOUNT_SELECT =                             'DATA_ACCOUNT_SELECT';
+const DATA_ACCOUNT_SET_FILTERS =                        'DATA_ACCOUNT_SET_FILTERS';
 
 const DATA_OPERATION_CATEGORIES_LOAD_START =            'DATA_OPERATION_CATEGORIES_LOAD_START';
 const DATA_OPERATION_CATEGORIES_LOAD_SUCCESS =          'DATA_OPERATION_CATEGORIES_LOAD_SUCCESS';
@@ -199,6 +200,13 @@ const acDataAccountSelect = function ( index ) {
     return {
         type:               DATA_ACCOUNT_SELECT,
         accountSelectedIndex: index,
+    }
+};
+
+const acDataAccountSetFilters = function ( accountFilters ) {
+    return {
+        type:               DATA_ACCOUNT_SET_FILTERS,
+        accountFilters,
     }
 };
 
@@ -380,6 +388,7 @@ export {
     DATA_ACCOUNT_DELETE_ERROR,                    acDataAccountDeleteError,
 
     DATA_ACCOUNT_SELECT,                          acDataAccountSelect,
+    DATA_ACCOUNT_SET_FILTERS,                     acDataAccountSetFilters,
 
     DATA_OPERATION_CATEGORIES_LOAD_START,         acDataOperationCategoriesLoadStart,
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,       acDataOperationCategoriesLoadSuccess,

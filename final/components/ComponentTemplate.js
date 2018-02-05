@@ -66,7 +66,7 @@ class ComponentTemplate extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         accountsData:                   state.data.accountsData,
-        matGlassIsVisible:              state.ui.matGlassIsVisible,
+        modalContent:                   state.ui.modalContent,
     }
 };
 

@@ -26,6 +26,7 @@ import {
     DATA_ACCOUNT_DELETE_SUCCESS,
     DATA_ACCOUNT_DELETE_ERROR,
     DATA_ACCOUNT_SELECT,
+    DATA_ACCOUNT_SET_FILTERS,
 
     DATA_OPERATION_CATEGORIES_LOAD_START,
     DATA_OPERATION_CATEGORIES_LOAD_SUCCESS,
@@ -73,6 +74,12 @@ const initState = {
     accountDeleteStatus:            0,
     accountSelectedIndex:           -1,
     accountValue:                   {},
+    accountFilters:                 {
+        accountFilterDateStart:     null,
+        accountFilterDateEnd:       null,
+        accountFilterCategories:    null,
+        accountFilterAccounts:      null,
+    },
 
     operationCategoriesSource:      null,
     operationCategoriesData:        null,
@@ -283,6 +290,13 @@ function rdData ( state = initState, action ) {
             return {
                 ...state, ...{
                     accountSelectedIndex: action.accountSelectedIndex,
+                }
+            };
+
+        case DATA_ACCOUNT_SET_FILTERS:
+            return {
+                ...state, ...{
+                    accountFilters: action.accountFilters,
                 }
             };
 

@@ -1,5 +1,53 @@
 'use strict';
 
+// форматирует число
+// mainMode - режим отображения целой части:
+// 0 - просто числом
+// 1 - разбиение на тысячи пробелами
+// fractMode - режим отображения дробной части:
+// 0 - не отображать
+// -1 - отображать только значащие цифры
+// N>0 - отображать заданное количество цифр
+export const formatNumber = ( value, mainMode = 0, fractMode = -1 ) => {
+
+    if (value === null)
+        return "";
+
+    if (mainMode == 0 && fractMode == -1)
+        return value.toString().split(".").join(",");
+
+    let signStr = "";
+    if (value < 0) {
+        signStr = "-";
+        value = -value;
+    }
+
+    let mainPart = Math.floor(value);
+    let fractPart = Math.floor((value - mainPart) * 1e10) / 1e10;
+
+    let mainStr = mainPart.toString();
+    if (mainMode == 1) {
+        let mainStr2 = "";
+        let mainStrLen = mainStr.length;
+        while (mainStrLen > 3) {
+            mainStrLen -= 3;
+            mainStr2 = " " + mainStr.substr(mainStrLen, 3) + mainStr2;
+            mainStr = mainStr.substr(0, mainStrLen);
+        }
+        mainStr += mainStr2;
+    }
+
+    let fractStr = "";
+    if (fractMode == -1 && fractPart != 0) {
+        fractStr = "," + fractPart.toString().substr(2);
+    }
+    else if (fractMode > 0) {
+        fractStr = "," + fractPart.toFixed(fractMode).substr(2);
+    }
+
+    return signStr + mainStr + fractStr;
+}
+
 // дополняет строку Val слева нулями до длины Len
 export const str0l = (val, len) => {
     let strVal = val.toString();
