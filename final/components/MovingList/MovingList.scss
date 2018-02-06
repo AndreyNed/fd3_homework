@@ -1,0 +1,72 @@
+.MovingList {
+    text-align: center;
+
+    & > .MovingList_label_box {
+        text-align: left;
+        min-height: 32px;
+        font: normal 16px / 150% Arial,sans-serif;
+        padding: 4px 0 0 0;
+
+        & > .MovingList_label {
+            font-size: 14px;
+            color: #898989;
+            -ms-user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+    }
+
+    & > .MovingList_list_box {
+        display: inline-block;
+
+        & > .MovingList_list_value,
+        & > .MovingList_list_source
+        {
+            display: inline-block;
+            border: 1px solid #d3d3d3;
+            border-radius: 4px;
+            vertical-align: top;
+            padding: 8px 0;
+            background-color: #ffffff;
+            color: #898989;
+            text-align: left;
+
+            & > .MovingList_list_content_box {
+                overflow: auto;
+                height: 100%;
+                position: relative;
+
+                & > .MovingList_item {
+                    padding: 4px 16px;
+                    cursor: pointer;
+                    -ms-user-select: none;
+                    -moz-user-select: none;
+                    -webkit-user-select: none;
+                    user-select: none;
+                    position: relative;
+
+                    &:hover {
+                        color: #000000;
+                        background: #f2f2f2;
+                    }
+
+                    &[ data-selected="true" ] {
+                        color: #ffffff;
+                        background-color: #898989;
+                    }
+                }
+            }
+        }
+
+        & > .MovingList_list_value
+        {
+
+        }
+
+        & > .MovingList_list_source
+        {
+            margin-left: 16px;
+        }
+    }
+}

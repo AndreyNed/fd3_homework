@@ -3,8 +3,8 @@
 .AccountFilterPanel {
     position: absolute;
     z-index: 1010;
-    width: 600px;
-    min-height: 400px;
+    width: 900px;
+    min-height: 500px;
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
@@ -16,8 +16,8 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-        width: 550px;
-        min-height: 350px;
+        width: 850px;
+        min-height: 450px;
 
         & > .rows > .cols {
 

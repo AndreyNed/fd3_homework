@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import DateInput from '../DateInput/DateInput';
+import MovingList from '../MovingList/MovingList';
 import ButtonOk from '../buttons/ButtonOk/ButtonOk';
 import ButtonCancel from '../buttons/ButtonCancel/ButtonCancel';
 
@@ -17,7 +18,7 @@ import {acUIHideMatGlass} from '../../actions/acUI';
 import '../../utils/utils';
 
 import './AccountFilterPanel.scss';
-import {isExists} from "../../utils/utils";
+import {isExists, isNotEmpty} from '../../utils/utils';
 
 class AccountFilterPanel extends React.PureComponent {
 
@@ -89,8 +90,8 @@ class AccountFilterPanel extends React.PureComponent {
     };
 
     filterProps = () => {
-        const { accountFilters } = this.props;
-        const { dateStart, dateEnd } = accountFilters;
+        const { accountFilters, operationCategoriesData, accountsData } = this.props;
+        const { dateStart, dateEnd, categories, accounts } = accountFilters;
         return {
             dateStart: {
                 withLabel:      true,
@@ -106,9 +107,48 @@ class AccountFilterPanel extends React.PureComponent {
                 defValue:       ( isExists( dateEnd ) ) ? dateEnd : null,
                 cbChanged:      this.dateEnd_cbChanged,
             },
+            categories: {
+                withLabel: true,
+                label: 'Категории операций',
+                display: MovingList.DISPLAY_TYPES.BLOCK,
+                isEdited: true,
+                listValue: ( isNotEmpty( operationCategoriesData ) )
+                    ? [ ...operationCategoriesData ]
+                    : null,
+                asValue: 'id',
+                asText: 'name',
+                defValue: ( isNotEmpty( categories ) )
+                    ? categories.map( ( item ) => { return { id: item } } )
+                    : null,
+                options: {
+                    listBoxWidth: 0,
+                    listBoxHeight: 200,
+                },
+                cbChanged: this.categories_cbChanged,
+            },
+            accounts: {
+                withLabel: true,
+                label: 'Счета',
+                display: MovingList.DISPLAY_TYPES.BLOCK,
+                isEdited: true,
+                listValue: ( isNotEmpty( accountsData ) )
+                    ? [ ...accountsData ]
+                    : null,
+                asValue: 'id',
+                asText: 'name',
+                defValue: ( isNotEmpty( accounts ) )
+                    ? accounts.map( ( item ) => { return { id: item } } )
+                    : null,
+                options: {
+                    listBoxWidth: 0,
+                    listBoxHeight: 200,
+                },
+                cbChanged: this.accounts_cbChanged,
+            },
             btnOk: {
                 label:          'Применить',
-
+                withLabel:      true,
+                cbChanged:      this.btnOk_cbChanged,
             },
             btnCancel: {
                 label:          'Сбросить',
@@ -160,6 +200,33 @@ class AccountFilterPanel extends React.PureComponent {
         } ) );
     };
 
+    categories_cbChanged = ( value ) => {
+        const { dispatch, accountFilters } = this.props;
+        let categories = ( isNotEmpty( value ) )
+            ? value.map( ( item ) => { return item.id } )
+            : null;
+        dispatch( acDataAccountSetFilters( {
+            ...accountFilters,
+            categories
+        } ) )
+    };
+
+    accounts_cbChanged = ( value ) => {
+        const { dispatch, accountFilters } = this.props;
+        let accounts = ( isNotEmpty( value ) )
+            ? value.map( ( item ) => { return item.id } )
+            : null;
+        dispatch( acDataAccountSetFilters( {
+            ...accountFilters,
+            accounts
+        } ) )
+    };
+
+    btnOk_cbChanged = () => {
+        const { dispatch } = this.props;
+        dispatch( acUIHideMatGlass() );
+    };
+
     btnCancel_cbChanged = () => {
         const { dispatch } = this.props;
         dispatch( acDataAccountSetFilters( {
@@ -198,22 +265,33 @@ class AccountFilterPanel extends React.PureComponent {
                     </div>
                     <div className="rows filter_period"
                          key="filter_period">
-                        <div className="cols col_8"
+                        <div className="cols col_4"
                              key="period_start">
                             <DateInput { ...props.dateStart } />
                         </div>
-                        <div className="cols col_8"
+                        <div className="cols col_4"
                              key="period_end">
                             <DateInput { ...props.dateEnd } />
                         </div>
                     </div>
+                    <div className='rows categories'
+                         key="categories_accounts">
+                        <div className="cols col_8"
+                             key="categories">
+                            <MovingList { ...props.categories } />
+                        </div>
+                        <div className="cols col_8"
+                             key="accounts">
+                            <MovingList { ...props.accounts } />
+                        </div>
+                    </div>
                     <div className = { `${ this.classCSS }_buttons_panel rows` }
                          key="button_panel">
-                        <div className="cols col_4"
+                        <div className="cols col_2"
                              key="button_ok">
                             <ButtonOk { ...props.btnOk } />
                         </div>
-                        <div className="cols col_4"
+                        <div className="cols col_2"
                              key="button_cancel">
                             <ButtonCancel { ...props.btnCancel } />
                         </div>
