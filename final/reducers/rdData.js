@@ -75,10 +75,10 @@ const initState = {
     accountSelectedIndex:           -1,
     accountValue:                   {},
     accountFilters:                 {
-        accountFilterDateStart:     null,
-        accountFilterDateEnd:       null,
-        accountFilterCategories:    null,
-        accountFilterAccounts:      null,
+        dateStart:     null,
+        dateEnd:       null,
+        categories:    null,
+        accounts:      null,
     },
 
     operationCategoriesSource:      null,

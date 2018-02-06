@@ -17,6 +17,7 @@ import {acUIHideMatGlass} from '../../actions/acUI';
 import '../../utils/utils';
 
 import './AccountFilterPanel.scss';
+import {isExists} from "../../utils/utils";
 
 class AccountFilterPanel extends React.PureComponent {
 
@@ -37,12 +38,12 @@ class AccountFilterPanel extends React.PureComponent {
             })
         ),
         accountFilters:                 PropTypes.shape({
-            accountFilterDateStart:     PropTypes.objectOf( Date ),
-            accountFilterDateEnd:       PropTypes.objectOf( Date ),
-            accountFilterCategories:    PropTypes.arrayOf(
+            dateStart:                  PropTypes.objectOf( Date ),
+            dateEnd:                    PropTypes.objectOf( Date ),
+            categories:                 PropTypes.arrayOf(
                 PropTypes.number,
             ),
-            accountFilterAccounts:      PropTypes.arrayOf(
+            accounts:                   PropTypes.arrayOf(
                 PropTypes.number,
             ),
         }),
@@ -88,18 +89,22 @@ class AccountFilterPanel extends React.PureComponent {
     };
 
     filterProps = () => {
+        const { accountFilters } = this.props;
+        const { dateStart, dateEnd } = accountFilters;
         return {
             dateStart: {
                 withLabel:      true,
                 label:          'Начало периода',
                 display:        DateInput.displayTypes.block,
-
+                defValue:       ( isExists( dateStart ) ) ? dateStart : null,
+                cbChanged:      this.dateStart_cbChanged,
             },
             dateEnd: {
                 withLabel:      true,
                 label:          'конец',
                 display:        DateInput.displayTypes.block,
-
+                defValue:       ( isExists( dateEnd ) ) ? dateEnd : null,
+                cbChanged:      this.dateEnd_cbChanged,
             },
             btnOk: {
                 label:          'Применить',
@@ -115,13 +120,53 @@ class AccountFilterPanel extends React.PureComponent {
 
     /* == callbacks == */
 
+    dateStart_cbChanged = ( value ) => {
+        const { dispatch, accountFilters } = this.props;
+        let { dateEnd } = accountFilters;
+        let dateStart = ( value instanceof Date )
+            ? value
+            : null;
+        if ( !isExists( dateEnd ) ) {
+            dateEnd = dateStart;
+        } else {
+            dateEnd = ( dateStart.getTime() < dateEnd.getTime() )
+                ? dateEnd
+                : dateStart;
+        }
+        dispatch( acDataAccountSetFilters( {
+            ...accountFilters,
+            dateStart,
+            dateEnd,
+        } ) );
+    };
+
+    dateEnd_cbChanged = ( value ) => {
+        const { dispatch, accountFilters } = this.props;
+        let { dateStart } = accountFilters;
+        let dateEnd = ( value instanceof Date )
+            ? value
+            : null;
+        if ( !isExists( dateStart ) ) {
+            dateStart = dateEnd;
+        } else {
+            dateStart = ( dateEnd.getTime() > dateStart.getTime() )
+                ? dateStart
+                : dateEnd;
+        }
+        dispatch( acDataAccountSetFilters( {
+            ...accountFilters,
+            dateStart,
+            dateEnd,
+        } ) );
+    };
+
     btnCancel_cbChanged = () => {
         const { dispatch } = this.props;
         dispatch( acDataAccountSetFilters( {
-            accountFilterDateStart:  null,
-            accountFilterDateEnd:    null,
-            accountFilterCategories: null,
-            accountFilterAccounts:   null,
+            dateStart:  null,
+            dateEnd:    null,
+            categories: null,
+            accounts:   null,
         } ) );
         dispatch( acUIHideMatGlass() );
     };
