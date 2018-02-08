@@ -3,8 +3,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import PageAbout from './PageAbout';
-import PageMain  from './PageMain';
+import PageAbout from './PageAbout/PageAbout';
+import PageMain  from './PageMain/PageMain';
 import PageCurrency from './PageCurrency/PageCurrency';
 import PageAccounts from './PageAccounts/PageAccounts';
 import PageOperations from './PageOperations/PageOperations';

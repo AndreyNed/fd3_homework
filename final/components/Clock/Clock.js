@@ -7,6 +7,7 @@ import { DATA_TYPES } from "../../data_const/data_const";
 import '../../utils/utils';
 
 import './Clock.scss';
+import {isExists} from '../../utils/utils';
 
 class Clock extends React.PureComponent {
 
@@ -77,6 +78,7 @@ class Clock extends React.PureComponent {
     }
 
     componentDidMount() {
+        this.setHands();
         this.startClock();
     }
 
@@ -92,8 +94,6 @@ class Clock extends React.PureComponent {
     prepareData = ( props ) => {
         ( this.debug_mode ) &&
         console.log( 'Clock: prepareData: new props: ', props )
-
-        // todo
     };
 
     /* == action functions == */
@@ -104,16 +104,23 @@ class Clock extends React.PureComponent {
         const s = d.getTime();
         let ms = s % 1000;
         ms = ( ms !== 0 ) ? ms : 1;
-        const degrees = this.getDegrees();
         setTimeout(
             () => {
-                this.handS.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.s + "deg)";
-                this.handM.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.m + "deg)";
-                this.handH.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.h + "deg)";
-                // console.log( degrees );
-                this.startClock();
+                this.setHands();
             }, ( 1000 - ms )
         );
+    };
+
+    setHands = () => {
+        const degrees = this.getDegrees();
+        if ( isExists( this.handS ) )
+            this.handS.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.s + "deg)";
+        if ( isExists( this.handM ) )
+            this.handM.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.m + "deg)";
+        if ( isExists( this.handH ) )
+            this.handH.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.h + "deg)";
+        // console.log( degrees );
+        this.startClock();
     };
 
     /* == service functions == */
@@ -150,7 +157,7 @@ class Clock extends React.PureComponent {
                             stroke = { handHStroke }
                             strokeWidth="1"
                             fill = { handHFill }
-                             />;;
+                             />;
 
         const handM = <path key = { 2 }
                             ref = { ( elm ) => { this.handM = elm } }
@@ -159,8 +166,6 @@ class Clock extends React.PureComponent {
                             strokeWidth="1"
                             fill = { handMFill }
                             />;
-
-        /*transform = { `rotate(${ degrees.s }, 100, 100)` }*/
 
         const handS = <path key = { 3 }
                             ref = { ( elm ) => { this.handS = elm } }

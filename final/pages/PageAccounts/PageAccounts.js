@@ -50,7 +50,16 @@ class PageAccounts extends React.PureComponent {
             })
         ),
 
-
+        accountFilters:                 PropTypes.shape({
+            dateStart:                  PropTypes.objectOf( Date ),
+            dateEnd:                    PropTypes.objectOf( Date ),
+            categories:                 PropTypes.arrayOf(
+                PropTypes.number
+            ),
+            accounts:                   PropTypes.arrayOf(
+                PropTypes.number
+            ),
+        }),
     };
 
     static defaultProps = {
@@ -94,15 +103,20 @@ class PageAccounts extends React.PureComponent {
         const { NUMBER, CURRENCY, STRING, DATE } = DATA_TYPES;
         const { RIGHT, LEFT, CENTER } = ALIGN_TYPES;
         const { NONE } = SORTING;
-        const { accountsData } = this.props;
-        let body = ( isNotEmpty( accountsData ) )
-            ? accountsData.map( ( item, index ) => {
+        const { accountsData, accountFilters } = this.props;
+        const { dateStart, dateEnd, accounts } = accountFilters;
+
+        let body = null;
+
+        if ( isNotEmpty( accountsData ) ) {
+            body = [];
+            accountsData.forEach( ( item, index ) => {
+                if ( isExists( accounts ) && accounts.indexOf( item.id ) === -1 ) return;
                 let accountInfo = this.getAccountInfo( item.id, item.currency );
                 let date = ( isExists( accountInfo.updated ) )
                     ? new Date( accountInfo.updated )
                     : '';
-                // console.log( 'test: date: ', test );
-                return {
+                body.push( {
                     rowIndex: index,
                     cells: [
                         {
@@ -112,6 +126,10 @@ class PageAccounts extends React.PureComponent {
                         {
                             id: 'name',
                             value: item.name,
+                        },
+                        {
+                            id: 'base',
+                            value: accountInfo.base,
                         },
                         {
                             id: 'debit',
@@ -142,15 +160,20 @@ class PageAccounts extends React.PureComponent {
                             value: item.comment,
                         }
                     ]
-                }
-            } )
-            : null;
+                } );
+            } );
+        }
+
+        const caption = ( isExists( dateStart ) )
+            ? `Счета за период с ${ formatDate( dateStart ) } по ${ formatDate( dateEnd ) }`
+            : 'Счета';
+
         return {
             userLogin: USER_LOGIN,
             tableName: 'accountsMainTable',
             primaryId: 'id',
             withCaption: true,
-            caption: 'Счета',
+            caption,
             withFilter: true,
             withFooter: true,
             withButtonExport: true,
@@ -175,7 +198,18 @@ class PageAccounts extends React.PureComponent {
                     sorting: NONE,
                     isSearchable: true,
                     isVisible: true,
-                    width: '15%',
+                    width: '10%',
+                },
+                {
+                    id: 'base',
+                    title: 'База',
+                    dataType: CURRENCY,
+                    align: RIGHT,
+                    isSortable: true,
+                    sorting: NONE,
+                    isSearchable: false,
+                    isVisible: true,
+                    width: '10%',
                 },
                 {
                     id: 'debit',
@@ -248,7 +282,7 @@ class PageAccounts extends React.PureComponent {
                     title: 'Комментарий',
                     dataType: NUMBER,
                     align: RIGHT,
-                    isSortable: true,
+                    isSortable: false,
                     sorting: NONE,
                     isSearchable: false,
                     isVisible: true,
@@ -282,20 +316,60 @@ class PageAccounts extends React.PureComponent {
     /* == service functions == */
 
     getAccountInfo = ( accountId, currencyId ) => {
-        const { operationsData, currencyListData } = this.props;
+        const {
+            operationsData,
+            currencyListData,
+            accountFilters,
+        } = this.props;
+
         const { CREDIT } = OPERATION_TYPES;
-        let result = { amount: 0, credit: 0, debit: 0, currency: '', amountBYN: 0, rate: 1, scale: 1, updated: null };
+
+        let result = {
+            base: 0,
+            amount: 0,
+            credit: 0,
+            debit: 0,
+            currency: '',
+            amountBYN: 0,
+            rate: 1,
+            scale: 1,
+            updated: null
+        };
+
+        // base amount and debit / credit calculation
+        const { dateStart, dateEnd, categories } = accountFilters;
+
         if ( isNotEmpty( operationsData ) ) {
             operationsData.forEach( ( item ) => {
-                if ( item.accountId === accountId ) {
+                if ( item.accountId !== accountId ) return;
+
+                if ( isNotEmpty( categories ) ) {
+                    if ( categories.indexOf( item.categoryId ) === -1 ) return;
+                }
+
+                if ( ( isExists( dateEnd ) && dateEnd.getTime() < item.date ) ) return;
+
+                result.updated = Math.max( result.updated, item.date );
+
+                if ( isExists( dateStart ) && dateStart.getTime() > item.date ) {
+
+                    ( item.type === CREDIT )
+                        ? result.base -= item.sum
+                        : result.base += item.sum;
+
+                } else {
+
                     ( item.type === CREDIT )
                         ? result.credit += item.sum
                         : result.debit += item.sum;
-                    result.updated = Math.max( result.updated, item.date );
+
                 }
+
             } );
-            result.amount = result.debit - result.credit;
+
+            result.amount = result.base + result.debit - result.credit;
         }
+
         if ( isExists( currencyId ) && currencyId > 0 && isNotEmpty( currencyListData ) ) {
             let curIndex = findArrayItemIndex( currencyListData, { id: currencyId } );
             if ( curIndex > -1 ) {
@@ -303,13 +377,14 @@ class PageAccounts extends React.PureComponent {
                 result.rate = currencyListData[ curIndex ].rate;
                 result.scale = currencyListData[ curIndex ].scale;
                 // console.log( `AccountId: ${accountId}, curAbbreviation: ${curAbbreviation}` );
-            } else {
-
             }
         }
+
         result.amountBYN = Math.round( result.amount / result.scale * result.rate * 100 ) / 100;
+
         // ( this.debug_mode ) &&
-            // console.log( 'PageAccounts: getAccountInfo: accountId: ', accountId, '; result: ', result );
+             // console.log( 'PageAccounts: getAccountInfo: accountId: ', accountId, '; result: ', result );
+
         return result;
     };
 
@@ -358,6 +433,7 @@ class PageAccounts extends React.PureComponent {
 const mapStateToProps = function ( state ) {
     return {
         accountsData:                   state.data.accountsData,
+        accountFilters:                 state.data.accountFilters,
         operationsData:                 state.data.operationsData,
         currencyListData:               state.data.currencyListData,
 

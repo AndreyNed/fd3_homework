@@ -264,7 +264,7 @@ class PageOperations extends React.PureComponent {
 
             caption:                'Таблица операций',
             textFilterValue:        '',
-            rowsPerPage:            8,
+            rowsPerPage:            10,
 
             primaryId:              'id',
             defValue:               ( operationSelectedIndex > -1 )

@@ -1,58 +1,97 @@
+@import '../data_const/style_const';
+
 $mainMenuNavLinkColor: #d3d3d3;
 $mainMenuNavLinkColorHover: #898989;
 $mainMenuNavLinkColorActive: #000000;
 
-.iAccount_main_menu {
-    padding: 8px 16px;
+.iAccount_header {
     box-shadow: 0 2px 3px #898989;
 
-    & > .main_menu_links {
-        display: inline-block;
-        /*width: 150px;*/
-        margin: 0 16px;
-        text-align: center;
-        text-decoration: none;
-        font: normal 18px/100% Arial,sans-serif;
-        position: relative;
-        transition: color 300ms;
+    & > .iAccount_header_logo_bar {
+        padding: 16px 0;
 
-        &:after {
-            content: ' ';
-            position: absolute;
-            bottom: -4px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            transition: width 300ms;
-            height: 2px;
-            border-bottom: 1px dotted #898989;
-        }
+        & > .iAccount_header_logo {
+            width: $wrapperWidth;
+            padding: 0 16px 0 32px;
+            margin: 0 auto;
+            color: #898989;
 
-        &:hover {
-            color: $mainMenuNavLinkColorHover;
-        }
+            & > .iAccount_header_logo_title {
+                font-size: 48px;
+                font-weight: bold;
+                margin-right: 0.5em;
+                /*color: rgba(141,182,205,1);*/
+                color: rgba(16,78,139,1);
+            }
 
-        &:hover {
-            &:after {
-                width: 100%;
+            & > .iAccount_header_logo_subtitle {
+                font-size: 24px;
+                font-weight: 500;
+                font-style: italic;
+                /*color: rgba(141,182,205,1);*/
+                color: rgba(16,78,139,0.8);
             }
         }
     }
 
-    .iAccount_nav_link {
-        color: $mainMenuNavLinkColor;
-    }
+    & > .iAccount_header_menu_bar {
 
-    .iAccount_nav_link_active {
-        color: $mainMenuNavLinkColorActive;
+        & > .iAccount_main_menu {
+            padding: 8px 16px;
+            width: $wrapperWidth;
+            margin: 0 auto;
 
-        &:hover {
-            color: $mainMenuNavLinkColorActive;
+            & > .main_menu_links {
+                display: inline-block;
+                /*width: 150px;*/
+                margin: 0 16px;
+                text-align: center;
+                text-decoration: none;
+                font: normal 18px/100% Arial,sans-serif;
+                position: relative;
+                transition: color 300ms;
+
+                &:after {
+                    content: ' ';
+                    position: absolute;
+                    bottom: -4px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 0;
+                    transition: width 300ms;
+                    height: 2px;
+                    border-bottom: 1px dotted #898989;
+                }
+
+                &:hover {
+                    color: $mainMenuNavLinkColorHover;
+                }
+
+                &:hover {
+                    &:after {
+                        width: 100%;
+                    }
+                }
+            }
+
+            .iAccount_nav_link {
+                color: $mainMenuNavLinkColor;
+            }
+
+            .iAccount_nav_link_active {
+                color: $mainMenuNavLinkColorActive;
+
+                &:hover {
+                    color: $mainMenuNavLinkColorActive;
+                }
+
+                /*&:after {
+                    width: 100%;
+                }*/
+            }
         }
-
-        /*&:after {
-            width: 100%;
-        }*/
     }
 }
+
+
 

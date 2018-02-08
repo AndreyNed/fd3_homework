@@ -1,0 +1,45 @@
+.PageAbout {
+
+    & > .wrapper {
+
+        & > .PageAbout_header {
+            padding: 16px 16px 16px 32px;
+            font: normal 32px / 100% Arial,sans-serif;
+            font-weight: bold;
+            color: #898989;
+        }
+
+        & > .PageAbout_content {
+
+            & > .sections {
+                border-bottom: 1px dotted #d3d3d3;
+
+                & > .cols {
+
+                    & > .subheader {
+                        font-size: 24px;
+                        color: rgba(65,105,225,1);
+                        padding: 16px 0;
+                    }
+
+                    & > p {
+                        padding: 8px 0;
+                        font-size: 18px;
+                    }
+
+                    & > .cursive_list {
+                        font-style: italic;
+                        padding: 0 16px 16px 16px;
+
+                        & > li {
+                            padding: 8px 0;
+                            font-size: 18px;
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+}
