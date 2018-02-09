@@ -664,7 +664,7 @@ class SmartGrid extends React.PureComponent {
         this.thResizeHandler.dataset.active = "true";
         this.resizeStartX = e.clientX;
         ( this.debug_mode ) &&
-            console.log( 'SmartGrid: resizeHandlerMouseDown: ', this.thResizeHandler, '; clientX: ', this.resizeStartX );
+        console.log( 'SmartGrid: resizeHandlerMouseDown: ', this.thResizeHandler, '; clientX: ', this.resizeStartX );
         document.addEventListener( 'mouseup', this.documentMouseUpStopColumnResize, false );
         document.addEventListener( 'mousemove', this.documentMouseMoveColumnResize, false );
     };

@@ -381,6 +381,21 @@ class OperationCard extends React.PureComponent {
         e.stopPropagation();
     };
 
+    formMouseMove = ( e ) => {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+
+    formMouseOver = ( e ) => {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+
+    formMouseOut = ( e ) => {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+
     /* == action functions == */
 
     createOperation = ( newOperation ) => {

@@ -113,10 +113,16 @@ class Clock extends React.PureComponent {
 
     setHands = () => {
         const degrees = this.getDegrees();
+        /*if ( isExists( this.handS ) )
+            this.handS.style.cssText = "transform-origin: 50% 90.5%;transform: rotate(" +  degrees.s + "deg)";*/
         if ( isExists( this.handS ) )
             this.handS.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.s + "deg)";
+        /*if ( isExists( this.handM ) )
+            this.handM.style.cssText = "transform-origin: 50% 89.5%;transform: rotate(" +  degrees.m + "deg)";*/
         if ( isExists( this.handM ) )
             this.handM.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.m + "deg)";
+        /*if ( isExists( this.handH ) )
+            this.handH.style.cssText = "transform-origin: 50% 91.5%;transform: rotate(" +  degrees.h + "deg)";*/
         if ( isExists( this.handH ) )
             this.handH.style.cssText = "transform-origin: 50% 50%;transform: rotate(" +  degrees.h + "deg)";
         // console.log( degrees );
