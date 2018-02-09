@@ -14,7 +14,7 @@ const CONFIG_DEBUG_MODE_PAGE_ACCOUNTS = ((( false )));
 
 const CONFIG_DEBUG_MODE_PAGE_ABOUT = ((( false )));
 
-const CONFIG_DEBUG_MODE_PAGE_MAIN = ((( true )));
+const CONFIG_DEBUG_MODE_PAGE_MAIN = ((( false )));
 
 const CONFIG_DEBUG_MODE_DATA_LOADING = ((( false )));
 

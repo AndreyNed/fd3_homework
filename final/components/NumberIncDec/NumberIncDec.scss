@@ -1,0 +1,235 @@
+/* color */
+$inputContainerBorder:       #d3d3d3;
+
+/* size */
+$minBlockHeight:             32px;
+
+.NumberIncDec {
+
+    // == display ==
+    &[ data-display="dHidden" ] {
+        visibility: hidden !important;
+    }
+    &[ data-display="dBlock" ] {
+        display: block !important;
+    }
+    &[ data-display="dInlineBlock" ] {
+        display: inline-block !important;
+    }
+
+    // == labelPosition and labelVerticalAlign ==
+    &[ data-label_position="top" ] {
+        & > .NumberIncDec_label_box {
+            display: block;
+        }
+        & > .NumberIncDec_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="left" ] {
+        & > .NumberIncDec_label_box,
+        & > .NumberIncDec_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+    &[ data-label_position="bottom" ] {
+        & > .NumberIncDec_label_box {
+            display: block;
+        }
+        & > .NumberIncDec_input_box {
+            display: block;
+        }
+    }
+    &[ data-label_position="right" ] {
+        & > .NumberIncDec_label_box,
+        & > .NumberIncDec_input_box {
+            display: inline-block;
+            &[ data-label_vertical_align="top" ] {
+                vertical-align: top;
+            }
+            &[ data-label_vertical_align="middle" ] {
+                vertical-align: middle;
+            }
+            &[ data-label_vertical_align="bottom" ] {
+                vertical-align: bottom;
+            }
+        }
+    }
+
+    & > .NumberIncDec_label_box {
+        font: normal 16px / 150% Arial, sans-serif;
+        min-height: $minBlockHeight;
+        padding: 4px 0 0 0;
+    }
+
+    & > .NumberIncDec_input_box {
+        position: relative;
+
+        & > .NumberIncDec_input_container {
+            position: relative;
+            /*border: 1px solid #f2f2f2;*/
+            border: none;
+            border-radius: 4px;
+            background-color: #ffffff;
+            padding-right: 16px;
+
+            & > .NumberIncDec_input {
+                width: 100%;
+                min-height: $minBlockHeight;
+                outline: none;
+                padding: 2px 8px 2px 8px;
+                border: none;
+                background-color: rgba(255,255,255,0);
+                font: normal 16px / 150% Arial, sans-serif;
+            }
+
+
+
+            & > .NumberIncDec_cross_container {
+                /*background: grey;*/
+                width: 16px;
+                height: 16px;
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+
+                &[ data-is_enable="false" ] {
+                    cursor: default;
+                }
+            }
+        }
+
+        & > .NumberIncDec_btn_box {
+            width: 16px;
+            height: $minBlockHeight;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+
+            &[ data-is_enable="false" ] {
+                cursor: default;
+            }
+
+            & > .NumberIncDec_btn {
+                position: absolute;
+                left: 0;
+                width: 16px;
+                height: 16px;
+
+                &[ data-btn="INC" ] {
+                    top: 0;
+                    border-radius: 0 4px 0 0;
+                }
+
+                &[ data-btn="DEC" ] {
+                    bottom: 0;
+                    border-radius: 0 0 4px 0;
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+div.NumberIncDec {
+    display: table-cell;
+}
+
+div.NumberIncDec_label_box {
+    display: inline-block;
+    vertical-align: middle;
+    min-height: 2em;
+}
+
+label.Label_NumberIncDec {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    display: inline-block;
+    padding: 0.4em 0;
+}
+
+div.NumberIncDec_input_box {
+    height: 2em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+input.NumberIncDec_input {
+    display: inline-block;
+    width: calc( 100% - 1.2em );
+    height: 100%;
+    padding: 0.5em;
+    border: 1px solid #d3d3d3;
+}
+
+div.NumberIncDec_btn_box {
+    position: relative;
+    float: right;
+    width: 1em;
+    height: 100%;
+}
+
+div.NumberIncDec_btn {
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    border: 1px solid #d3d3d3;
+    cursor: pointer;
+}
+
+div.NumberIncDec_btn:hover {
+    background-color: #F2F2F2;
+}
+
+div.NumberIncDec_btn:active {
+    background-color: #d3d3d3;
+}
+
+div.NumberIncDec_btn[data-btn="inc"] {
+    top: 0;
+}
+
+div.NumberIncDec_btn[data-btn="dec"] {
+    bottom: 0;
+}

@@ -3,8 +3,8 @@
     & > .wrapper {
 
         & > .PageAbout_header {
-            padding: 16px 16px 16px 32px;
-            font: normal 32px / 100% Arial,sans-serif;
+            padding: 16px 16px 12px 32px;
+            font: normal 28px / 100% Arial,sans-serif;
             font-weight: bold;
             color: #898989;
         }
@@ -17,14 +17,14 @@
                 & > .cols {
 
                     & > .subheader {
-                        font-size: 24px;
+                        font-size: 20px;
                         color: rgba(65,105,225,1);
-                        padding: 16px 0;
+                        padding: 12px 0;
                     }
 
                     & > p {
-                        padding: 8px 0;
-                        font-size: 18px;
+                        padding: 4px 0;
+                        font-size: 16px;
                     }
 
                     & > .cursive_list {
@@ -32,8 +32,8 @@
                         padding: 0 16px 16px 16px;
 
                         & > li {
-                            padding: 8px 0;
-                            font-size: 18px;
+                            padding: 4px 0;
+                            font-size: 16px;
                         }
                     }
                 }

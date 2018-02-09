@@ -214,7 +214,9 @@ export const getPagesInfo = ( options ) => {
     if ( withFooter && isGTZero( rowsPerPage ) ) {
         pages = getPages( { rowsCount: body.length, rowsPerPage } );
         let rowBodyIndex = findArrayItemIndex( body, { rowIndex: rowSelectedIndex } );
-        pageSelectedIndex = Math.floor( Math.abs( rowBodyIndex ) / rowsPerPage );
+        pageSelectedIndex = ( rowsPerPage > 0 )
+            ? Math.floor( Math.abs( rowBodyIndex ) / rowsPerPage )
+            : 0;
         let indexes = getIndexesInPage( body.length, rowsPerPage, pageSelectedIndex );
         rowUpperIndex = indexes.rowUpperIndex;
         rowBottomIndex = indexes.rowBottomIndex;
@@ -230,7 +232,9 @@ export const getPagesInfo = ( options ) => {
 export const getPages = ( options ) => {
     const { rowsCount, rowsPerPage } = options;
 
-    let pagesCount = Math.ceil( rowsCount / rowsPerPage );
+    let pagesCount = ( rowsPerPage > 0 )
+        ? Math.ceil( rowsCount / rowsPerPage )
+        : 1;
     let pages = [];
 
     for ( let i = 0; i < pagesCount; i++ ) {
@@ -242,7 +246,9 @@ export const getPages = ( options ) => {
 
 export const getIndexesInPage = ( rowsCount, rowsPerPage, pageSelectedIndex ) => {
     let rowUpperIndex = pageSelectedIndex * rowsPerPage;
-    let rowBottomIndex = rowUpperIndex + rowsPerPage - 1;
+    let rowBottomIndex = ( rowsPerPage > 0 )
+        ? rowUpperIndex + rowsPerPage - 1
+        : rowsCount - 1;
     rowBottomIndex = rowBottomIndex < rowsCount ? rowBottomIndex : rowsCount - 1;
     let result = { rowUpperIndex, rowBottomIndex };
 

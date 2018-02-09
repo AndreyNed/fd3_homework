@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDom from 'react-dom';
 
 import TextInput from '../TextInput/TextInput';
+import NumberIncDec from '../NumberIncDec/NumberIncDec';
 import ExcelConverter from '../ExcelConverter/ExcelConverter';
 import ButtonExcel from '../buttons/ButtonExcel/ButtonExcel';
 
@@ -27,6 +28,7 @@ class SmartGrid extends React.PureComponent {
         withFilter:                     PropTypes.bool,
         withFooter:                     PropTypes.bool,
         withButtonExport:               PropTypes.bool,
+        withRowCounter:                 PropTypes.bool,
 
         caption:                        PropTypes.string,
         textFilterValue:                PropTypes.string,
@@ -160,6 +162,7 @@ class SmartGrid extends React.PureComponent {
         withFilter:                     false,
         withFooter:                     false,
         withButtonExport:               false,
+        withRowCounter:                 false,
 
         textFilterValue:                '',
 
@@ -323,6 +326,7 @@ class SmartGrid extends React.PureComponent {
             ...newState,
             headers,
             body,
+            rowsPerPage,
             newTextFilterValue,
             value,
             dragMode: draggingMode,
@@ -376,6 +380,25 @@ class SmartGrid extends React.PureComponent {
             label: 'Экспорт (.xls)',
             display: DISPLAY_TYPES.block,
             cbChanged: this.buttonExport_cbChanged,
+        }
+    };
+
+    rowCounterProps = () => {
+        // const { rowsPerPage } = this.props;
+        const { rowsPerPage } = this.state;
+        const { middle, left } = NumberIncDec.position;
+        return {
+            withLabel: true,
+            label: 'Количество строк: ',
+            maxValue: 20,
+            defValue: rowsPerPage,
+            options: {
+                labelPosition: left,
+                inputBoxWidth: 70,
+                labelBoxWidth: 150,
+                labelVerticalAlign: middle,
+            },
+            cbChanged: this.rowCounter_cbChanged,
         }
     };
 
@@ -514,7 +537,8 @@ class SmartGrid extends React.PureComponent {
 
     filter_cbChanged = ( text ) => {
         const { headers, value, rowSelectedIndex } = this.state;
-        const { body, withFilter, cbFiltered, withFooter, rowsPerPage, userLogin, tableName } = this.props;
+        const { body, withFilter, cbFiltered, withFooter, userLogin, tableName } = this.props;
+        const { rowsPerPage } = this.state;
 
         // 1. Привести порядок столбцов в теле к таковому в заголовке
         let newBody = buildOrderedRows( headers, body );
@@ -562,6 +586,36 @@ class SmartGrid extends React.PureComponent {
         this.setState( { exportToExcelStatus } );
     };
 
+    rowCounter_cbChanged = ( value ) => {
+        const { withFooter } = this.props;
+        const { body, rowSelectedIndex } = this.state;
+        // 6. Определяем пагинацию, верхний и нижний индекс в массиве строк, выделенную страницу
+        let options = {
+            withFooter,
+            rowsPerPage: value,
+            body,
+            rowSelectedIndex,
+        };
+        let newData = {
+            // ...newState,
+            ...getPagesInfo( options ),
+        };
+
+        // console.log( 'newData: ', newData );
+        const { pages, pageSelectedIndex, rowUpperIndex, rowBottomIndex } = newData;
+
+        this.setState( {
+            rowsPerPage: value,
+            pages,
+            pageSelectedIndex,
+            rowUpperIndex,
+            rowBottomIndex,
+        }, () => {
+            ( this.debug_mode ) &&
+                console.log( 'SmartGrid: rowCounter_cbChanged: state: ', this.state );
+        } );
+    };
+
     /* == controller == */
 
     trClick = ( e ) => {
@@ -580,6 +634,7 @@ class SmartGrid extends React.PureComponent {
         }
         else {
             this.setState( { value }, () => {
+                ( this.debug_mode ) &&
                 console.log( 'SmartGrid: cbChanged is missed, new value: ', this.state.value );
             } );
         }
@@ -588,7 +643,7 @@ class SmartGrid extends React.PureComponent {
     thMouseDown = ( e ) => {
         let elm = e.currentTarget;
 
-        (this.debug_mode) &&
+        ( this.debug_mode ) &&
             console.log( 'SmartGrid: thMouseDown: th start: ', elm );
 
         this.thTimer = setTimeout( this.startDragging, 300 );
@@ -824,8 +879,8 @@ class SmartGrid extends React.PureComponent {
     };
 
     selectPage = ( pageId ) => {
-        const { body } = this.state;
-        const { rowsPerPage } = this.props;
+        const { body, rowsPerPage } = this.state;
+        // const { rowsPerPage } = this.props;
         let indexes = getIndexesInPage( body.length, rowsPerPage, pageId );
         let rowUpperIndex = indexes.rowUpperIndex;
         let rowBottomIndex = indexes.rowBottomIndex;
@@ -1036,6 +1091,7 @@ class SmartGrid extends React.PureComponent {
         return (
             <div className = { this.classCSS + '_footer' }>
                 { this.renderPaginator() }
+                { this.renderRowCounter() }
                 { this.renderButtonPanel() }
             </div>
         )
@@ -1067,6 +1123,15 @@ class SmartGrid extends React.PureComponent {
                 }
             </div>
         )
+    };
+
+    renderRowCounter = () => {
+        const { withRowCounter } = this.props;
+        const props = this.rowCounterProps();
+        return ( withRowCounter ) &&
+            <div className = { `${ this.classCSS }_row_counter` }>
+                <NumberIncDec { ...props } />
+            </div>
     };
 
     renderButtonPanel = () => {

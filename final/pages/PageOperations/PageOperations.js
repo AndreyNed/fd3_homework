@@ -261,6 +261,7 @@ class PageOperations extends React.PureComponent {
             withFilter:             true,
             withFooter:             true,
             withButtonExport:       true,
+            withRowCounter:         true,
 
             caption:                'Таблица операций',
             textFilterValue:        '',

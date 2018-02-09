@@ -257,6 +257,13 @@
             }
         }
 
+        & > .SmartGrid_row_counter {
+            display: table-cell;
+            vertical-align: middle;
+            padding-right: 16px;
+            padding-left: 16px;
+        }
+
         & > .SmartGrid_button_panel {
             display: table-cell;
             width: 150px;
