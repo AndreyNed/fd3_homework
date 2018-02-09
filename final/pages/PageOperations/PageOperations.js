@@ -103,7 +103,7 @@ class PageOperations extends React.PureComponent {
     preparePropsTable = () => {
         const { operationsData, accountsData, operationCategoriesData, operationSelectedIndex } = this.props;
         const { NONE, ASCENDED, DESCENDED } = SORTING;
-        const { NUMBER, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
+        const { NUMBER, CURRENCY, STRING, DATE, DATE_TIME, DATE_MS_INT } = DATA_TYPES;
         let headers = [
             {
                 id:             'id',
@@ -160,7 +160,7 @@ class PageOperations extends React.PureComponent {
             {
                 id:             'sum',
                 title:          'Сумма',
-                dataType:       NUMBER,
+                dataType:       CURRENCY,
                 isSortable:     true,
                 sorting:        NONE,
                 isSearchable:   false,
