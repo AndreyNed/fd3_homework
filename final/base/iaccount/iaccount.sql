@@ -20,11 +20,11 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы iaccount.accounts: ~7 rows (приблизительно)
+-- Дамп данных таблицы iaccount.accounts: ~6 rows (приблизительно)
 /*!40000 ALTER TABLE `accounts` DISABLE KEYS */;
 REPLACE INTO `accounts` (`id`, `name`, `comment`, `currency`) VALUES
-	(1, 'Счет 1', '0', 4),
-	(2, 'Счет 2', '0', 4),
+	(1, 'Счет 1', '', 4),
+	(2, 'Счет 2', '', 4),
 	(3, 'Счет 3', 'тест', 4),
 	(4, 'Test33', '', 2),
 	(6, 'Test388', '', 4),
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS `operations` (
   KEY `account` (`account`),
   CONSTRAINT `account` FOREIGN KEY (`account`) REFERENCES `accounts` (`id`),
   CONSTRAINT `category` FOREIGN KEY (`category`) REFERENCES `operation_categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы iaccount.operations: ~95 rows (приблизительно)
+-- Дамп данных таблицы iaccount.operations: ~94 rows (приблизительно)
 /*!40000 ALTER TABLE `operations` DISABLE KEYS */;
 REPLACE INTO `operations` (`id`, `account`, `category`, `type`, `sum`, `date`, `comment`) VALUES
 	(1, 2, 1, 'CREDIT', 50, '2018-01-03 16:55:30', 'Квартплата'),
@@ -166,7 +166,9 @@ REPLACE INTO `operations` (`id`, `account`, `category`, `type`, `sum`, `date`, `
 	(97, 8, 23, 'CREDIT', 35, '2017-12-25 21:00:00', ''),
 	(98, 8, 14, 'DEBIT', 400, '2017-11-22 21:00:00', ''),
 	(99, 8, 14, 'DEBIT', 448, '2017-11-07 21:00:00', ''),
-	(100, 8, 19, 'CREDIT', 5, '2017-11-22 21:00:00', '');
+	(100, 8, 19, 'CREDIT', 5, '2017-11-22 21:00:00', ''),
+	(101, 8, 23, 'CREDIT', 75, '2018-02-08 21:00:00', 'Тюбинг'),
+	(102, 8, 19, 'CREDIT', 4, '2018-02-08 21:00:00', '');
 /*!40000 ALTER TABLE `operations` ENABLE KEYS */;
 
 -- Дамп структуры для таблица iaccount.operation_categories
@@ -177,10 +179,10 @@ CREATE TABLE IF NOT EXISTS `operation_categories` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 
--- Дамп данных таблицы iaccount.operation_categories: ~20 rows (приблизительно)
+-- Дамп данных таблицы iaccount.operation_categories: ~17 rows (приблизительно)
 /*!40000 ALTER TABLE `operation_categories` DISABLE KEYS */;
 REPLACE INTO `operation_categories` (`id`, `name`, `comment`) VALUES
-	(1, 'Квартплата', '0'),
+	(1, 'Квартплата', ''),
 	(2, 'Электроэнергия', '0'),
 	(3, 'Водоснабжение', ''),
 	(4, 'Коммуникации', 'тест1'),
