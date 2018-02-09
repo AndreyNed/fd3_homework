@@ -13,12 +13,12 @@ html {
 }
 
 .wrapper {
-    width: $wrapperWidth;
+    max-width: $wrapperWidth;
     margin: 0 auto;
     background-color: #f9f9f9;
     margin-top:4px;
     position: relative;
-    min-height: 800px;
+    min-height: calc( 100vh - 126px );
     padding: 0 32px;
 }
 
